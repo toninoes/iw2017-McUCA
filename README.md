@@ -1,6 +1,6 @@
 # iw2017-McUCA
 
-Integrantes:
+Integrantes de McUCA:
 
 - Manuel Jesús López Jiménez
 - Antonio Ruiz Rondán
