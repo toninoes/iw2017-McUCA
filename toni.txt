@@ -9,3 +9,5 @@ ccccccc
 sssss
 
 sdf
+
+http://blog.openalfa.com/como-evitar-que-git-solicite-usuario-y-contrasena-cada-vez
