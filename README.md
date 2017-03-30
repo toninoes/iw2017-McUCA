@@ -6,3 +6,5 @@ Integrantes de McUCA:
 - Antonio Ruiz Rondán
 - Luis Fernando Pérez Peregrino
 - Andrés Martínez Gavira
+
+Aplicación web en Java para la gestión de un establecimiento de comida rápida.
