@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+
 @Entity
 public class Cliente {
 	@Id
@@ -17,12 +18,12 @@ public class Cliente {
 	
 	private String domicilio;
 	
-	private String telefono;
+	private Integer telefono;
 
 	protected Cliente() {
 	}
 
-	public Cliente(String nombre, String apellidos, String domicilio, String telefono) {
+	public Cliente(String nombre, String apellidos, String domicilio, Integer telefono) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.domicilio = domicilio;
@@ -57,17 +58,17 @@ public class Cliente {
 		this.domicilio = domicilio;
 	}
 	
-	public String getTelefono() {
+	public Integer getTelefono() {
 		return telefono;
 	}
 	
-	public void setTelefono(String telefono) {
+	public void setTelefono(Integer telefono) {
 		this.telefono = telefono;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Cliente[id=%d, nombre='%s', apellidos='%s', domicilio='%s', telefono='%s']", id,
+		return String.format("Cliente[id=%d, nombre='%s', apellidos='%s', domicilio='%s', telefono=%d]", id,
 				nombre, apellidos, domicilio, telefono);
 	}
 
