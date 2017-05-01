@@ -18,9 +18,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.boot.VaadinAutoConfiguration;
 
 import mcuca.Cliente;
-import mcuca.ClienteEditor;
+import mcuca.IngredienteEditor;
 import mcuca.ClienteRepository;
-import mcuca.VaadinUI;
+import mcuca.ClienteUI;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +28,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = VaadinUITests.Config.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class VaadinUITests {
+@SpringBootTest(classes = ClienteUITests.Config.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+public class ClienteUITests {
 
 	@Autowired ClienteRepository repository;
 
@@ -37,12 +37,12 @@ public class VaadinUITests {
 
 	ClienteEditor editor;
 
-	VaadinUI vaadinUI;
+	ClienteUI vaadinUI;
 
 	@Before
 	public void setup() {
 		this.editor = new ClienteEditor(this.repository);
-		this.vaadinUI = new VaadinUI(this.repository, editor);
+		this.vaadinUI = new ClienteUI(this.repository, editor);
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class VaadinUITests {
 	public void shouldFillOutTheGridWithNewData() {
 		int initialCustomerCount = (int) this.repository.count();
 		this.vaadinUI.init(this.vaadinRequest);
-		customerDataWasFilled(editor, "Marcin", "Grzejszczak", "calle cualquiera", "956887845");
+		customerDataWasFilled(editor, "Marcin", "Grzejszczak", "calle cualquiera", 956887845);
 
 		this.editor.guardar.click();
 
@@ -79,7 +79,7 @@ public class VaadinUITests {
 	@Test
 	public void shouldFilterOutTheGridWithTheProvidedLastName() {
 		this.vaadinUI.init(this.vaadinRequest);
-		this.repository.save(new Cliente("Josh", "Long", "calle abc", "123456789"));
+		this.repository.save(new Cliente("Josh", "Long", "calle abc", 123456789));
 
 		vaadinUI.listarClientes("Long");
 
@@ -106,7 +106,7 @@ public class VaadinUITests {
 	}
 
 	private void customerDataWasFilled(ClienteEditor editor, String nombre,
-			String apellidos, String domicilio, String telefono) {
+			String apellidos, String domicilio, Integer telefono) {
 		this.editor.nombre.setValue(nombre);
 		this.editor.apellidos.setValue(apellidos);
 		this.editor.domicilio.setValue(domicilio);
@@ -123,11 +123,11 @@ public class VaadinUITests {
 
 		@PostConstruct
 		public void initializeData() {
-			this.repository.save(new Cliente("Jack", "Bauer", "calle a", "111111111"));
-			this.repository.save(new Cliente("Chloe", "O'Brian", "calle b", "222222222"));
-			this.repository.save(new Cliente("Kim", "Bauer", "calle c", "333333333"));
-			this.repository.save(new Cliente("David", "Palmer", "calle d", "444444444"));
-			this.repository.save(new Cliente("Michelle", "Dessler", "calle e", "555555555"));
+			this.repository.save(new Cliente("Jack", "Bauer", "calle a", 111111111));
+			this.repository.save(new Cliente("Chloe", "O'Brian", "calle b", 222222222));
+			this.repository.save(new Cliente("Kim", "Bauer", "calle c", 333333333));
+			this.repository.save(new Cliente("David", "Palmer", "calle d", 444444444));
+			this.repository.save(new Cliente("Michelle", "Dessler", "calle e", 555555555));
 		}
 	}
 }
