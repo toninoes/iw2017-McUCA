@@ -43,11 +43,7 @@ public class MesaEditor extends VerticalLayout{
 		addComponents(title, numero, acciones);
 
 		// bind using naming convention
-		//binder.bindInstanceFields(this);
-		binder.forField(numero)
-		  .withConverter(
-		    new StringToIntegerConverter("Por favor introduce un número"))
-		  .bind("numero");
+		binder.bindInstanceFields(this);
 
 		// Configure and style components
 		setSpacing(true);
