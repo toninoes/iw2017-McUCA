@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Mesa {
@@ -12,6 +13,9 @@ public class Mesa {
 	private Long id;
 
 	private String numero;
+	
+	@ManyToOne
+	private Zona zona;
 
 	protected Mesa() {
 	}
@@ -36,5 +40,13 @@ public class Mesa {
 	@Override
 	public String toString() {
 		return String.format("Mesa[id=%d, numero='%s']", id, numero);
+	}
+	
+	public Zona getZona() {
+		return zona;
+	}
+
+	public void setZona(Zona zona) {
+		this.zona = zona;
 	}
 }
