@@ -71,5 +71,6 @@ public class Cliente {
 		return String.format("Cliente[id=%d, nombre='%s', apellidos='%s', domicilio='%s', telefono='%s']", id,
 				nombre, apellidos, domicilio, telefono);
 	}
+	
 
 }
