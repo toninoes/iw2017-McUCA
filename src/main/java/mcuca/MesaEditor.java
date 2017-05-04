@@ -9,6 +9,8 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
@@ -58,10 +60,16 @@ public class MesaEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(e -> almacen.save(mesa));
+		guardar.addClickListener(this::salvar);
 		borrar.addClickListener(e -> almacen.delete(mesa));
 		cancelar.addClickListener(e -> editarMesa(mesa));
 		setVisible(false);
+	}
+
+	public void salvar(ClickEvent e) {
+		binder.setBean(mesa);
+		mesa.setZona(select.getValue());
+		almacen.save(mesa);// TODO Auto-generated method stub
 	}
 
 	public interface ChangeHandler {
