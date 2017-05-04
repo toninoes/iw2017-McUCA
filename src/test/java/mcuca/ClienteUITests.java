@@ -64,7 +64,7 @@ public class ClienteUITests {
 	public void shouldFillOutTheGridWithNewData() {
 		int initialCustomerCount = (int) this.repository.count();
 		this.vaadinUI.init(this.vaadinRequest);
-		customerDataWasFilled(editor, "Marcin", "Grzejszczak", "calle cualquiera", 956887845);
+		customerDataWasFilled(editor, "Marcin", "Grzejszczak", "calle cualquiera", "956887845");
 
 		this.editor.guardar.click();
 
@@ -79,7 +79,7 @@ public class ClienteUITests {
 	@Test
 	public void shouldFilterOutTheGridWithTheProvidedLastName() {
 		this.vaadinUI.init(this.vaadinRequest);
-		this.repository.save(new Cliente("Josh", "Long", "calle abc", 123456789));
+		this.repository.save(new Cliente("Josh", "Long", "calle abc", "123456789"));
 
 		vaadinUI.listarClientes("Long");
 
@@ -106,7 +106,7 @@ public class ClienteUITests {
 	}
 
 	private void customerDataWasFilled(ClienteEditor editor, String nombre,
-			String apellidos, String domicilio, Integer telefono) {
+			String apellidos, String domicilio, String telefono) {
 		this.editor.nombre.setValue(nombre);
 		this.editor.apellidos.setValue(apellidos);
 		this.editor.domicilio.setValue(domicilio);
@@ -123,11 +123,11 @@ public class ClienteUITests {
 
 		@PostConstruct
 		public void initializeData() {
-			this.repository.save(new Cliente("Jack", "Bauer", "calle a", 111111111));
-			this.repository.save(new Cliente("Chloe", "O'Brian", "calle b", 222222222));
-			this.repository.save(new Cliente("Kim", "Bauer", "calle c", 333333333));
-			this.repository.save(new Cliente("David", "Palmer", "calle d", 444444444));
-			this.repository.save(new Cliente("Michelle", "Dessler", "calle e", 555555555));
+			this.repository.save(new Cliente("Jack", "Bauer", "calle a", "111111111"));
+			this.repository.save(new Cliente("Chloe", "O'Brian", "calle b", "222222222"));
+			this.repository.save(new Cliente("Kim", "Bauer", "calle c", "333333333"));
+			this.repository.save(new Cliente("David", "Palmer", "calle d", "444444444"));
+			this.repository.save(new Cliente("Michelle", "Dessler", "calle e", "555555555"));
 		}
 	}
 }

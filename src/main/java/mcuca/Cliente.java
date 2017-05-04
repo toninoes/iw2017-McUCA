@@ -18,12 +18,12 @@ public class Cliente {
 	
 	private String domicilio;
 	
-	private Integer telefono;
+	private String telefono;
 
 	protected Cliente() {
 	}
 
-	public Cliente(String nombre, String apellidos, String domicilio, Integer telefono) {
+	public Cliente(String nombre, String apellidos, String domicilio, String telefono) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.domicilio = domicilio;
@@ -58,17 +58,17 @@ public class Cliente {
 		this.domicilio = domicilio;
 	}
 	
-	public Integer getTelefono() {
+	public String getTelefono() {
 		return telefono;
 	}
 	
-	public void setTelefono(Integer telefono) {
+	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Cliente[id=%d, nombre='%s', apellidos='%s', domicilio='%s', telefono=%d]", id,
+		return String.format("Cliente[id=%d, nombre='%s', apellidos='%s', domicilio='%s', telefono='%s']", id,
 				nombre, apellidos, domicilio, telefono);
 	}
 
