@@ -77,7 +77,7 @@ public class ZonaUI extends UI {
 		});
 
 		// Instantiate and edit new Zona the new button is clicked
-		agregarNuevoBoton.addClickListener(e -> editor.editarZona(new Zona("", 0)));
+		agregarNuevoBoton.addClickListener(e -> editor.editarZona(new Zona("", null)));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {

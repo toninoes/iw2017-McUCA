@@ -76,7 +76,7 @@ public class EstablecimientoUI extends UI {
 		});
 
 		// Instantiate and edit new Cliente the new button is clicked
-		agregarNuevoBoton.addClickListener(e -> editor.editarEstablecimiento(new Establecimiento("", "")));
+		agregarNuevoBoton.addClickListener(e -> editor.editarEstablecimiento(new Establecimiento()));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {

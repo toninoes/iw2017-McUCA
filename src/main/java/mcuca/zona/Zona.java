@@ -20,7 +20,7 @@ public class Zona {
 	private Integer aforo;
 	
 	@ManyToOne
-	private Establecimiento est;
+	private Establecimiento establecimiento;
 
 	protected Zona() {
 	}
@@ -41,7 +41,6 @@ public class Zona {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
 	
 	public Integer getAforo() {
 		return aforo;
@@ -57,11 +56,11 @@ public class Zona {
 	}
 	
 	public Establecimiento getEstablecimiento() {
-		return est;
+		return establecimiento;
 	}
 
-	public void setEstablecimiento(Establecimiento est) {
-		this.est = est;
+	public void setEstablecimiento(Establecimiento establecimiento) {
+		this.establecimiento = establecimiento;
 	}
 
 }

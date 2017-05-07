@@ -1,4 +1,4 @@
-package mcuca;
+package mcuca.cliente;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,8 @@ import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.boot.VaadinAutoConfiguration;
 
-import mcuca.Cliente;
-import mcuca.IngredienteEditor;
+import mcuca.cliente.Cliente;
+import mcuca.cliente.ClienteEditor;
 import mcuca.cliente.ClienteRepository;
 import mcuca.cliente.ClienteUI;
 

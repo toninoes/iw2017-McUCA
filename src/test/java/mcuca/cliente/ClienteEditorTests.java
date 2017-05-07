@@ -1,4 +1,4 @@
-package mcuca;
+package mcuca.cliente;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -8,8 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import mcuca.Cliente;
-import mcuca.ClienteEditor;
+import mcuca.cliente.Cliente;
+import mcuca.cliente.ClienteEditor;
 import mcuca.cliente.ClienteRepository;
 
 import static org.mockito.BDDMockito.*;
