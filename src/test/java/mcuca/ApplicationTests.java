@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import mcuca.Application;
-import mcuca.ClienteRepository;
+import mcuca.cliente.ClienteRepository;
 
 import static org.assertj.core.api.BDDAssertions.*;
 

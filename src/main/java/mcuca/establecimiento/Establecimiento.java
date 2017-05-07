@@ -1,4 +1,4 @@
-package mcuca;
+package mcuca.establecimiento;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,21 +7,21 @@ import javax.persistence.Id;
 
 
 @Entity
-public class Ingrediente {
+public class Establecimiento {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
 	private String nombre;
 	
-	private Double precio;
-
-	protected Ingrediente() {
+	private String domicilio;
+	
+	protected Establecimiento() {
 	}
 
-	public Ingrediente(String nombre, Double precio) {
+	public Establecimiento(String nombre, String domicilio) {
 		this.nombre = nombre;
-		this.precio = precio;
+		this.domicilio = domicilio;
 	}
 
 	public Long getId() {
@@ -36,18 +36,16 @@ public class Ingrediente {
 		this.nombre = nombre;
 	}
 
-	public Double getPrecio() {
-		return precio;
+	public String getDomicilio() {
+		return domicilio;
+	}
+
+	public void setDomicilio(String domicilio) {
+		this.domicilio = domicilio;
 	}
 	
-	public void setPrecio(Double precio) {
-		this.precio = precio;
-	}
-
 	@Override
 	public String toString() {
-		return String.format("Ingrediente[id=%d, nombre='%s', precio=%f]", id,
-				nombre, precio);
+		return String.format("%s", nombre);
 	}
-
 }

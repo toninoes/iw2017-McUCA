@@ -1,9 +1,12 @@
-package mcuca;
+package mcuca.zona;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import mcuca.establecimiento.Establecimiento;
 
 
 @Entity
@@ -15,6 +18,9 @@ public class Zona {
 	private String nombre;
 
 	private Integer aforo;
+	
+	@ManyToOne
+	private Establecimiento est;
 
 	protected Zona() {
 	}
@@ -47,7 +53,15 @@ public class Zona {
 
 	@Override
 	public String toString() {
-		return String.format("Zona '%s' Capacidad: %d personas", nombre, aforo);
+		return String.format("%s (%s)", nombre, getEstablecimiento());
+	}
+	
+	public Establecimiento getEstablecimiento() {
+		return est;
+	}
+
+	public void setEstablecimiento(Establecimiento est) {
+		this.est = est;
 	}
 
 }

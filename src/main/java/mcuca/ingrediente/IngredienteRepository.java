@@ -1,4 +1,4 @@
-package mcuca;
+package mcuca.ingrediente;
 
 import org.springframework.data.repository.CrudRepository;
 

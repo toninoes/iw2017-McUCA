@@ -1,4 +1,4 @@
-package mcuca;
+package mcuca.ingrediente;
 
 import java.util.Collection;
 
@@ -18,28 +18,28 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 
-@SpringUI(path="/cliente")
-public class ClienteUI extends UI {
+@SpringUI(path="/ingrediente")
+public class IngredienteUI extends UI {
 
 	private static final long serialVersionUID = 1L;
 
-	private final ClienteRepository almacen;
+	private final IngredienteRepository almacen;
 
-	private final ClienteEditor editor;
+	private final IngredienteEditor editor;
 
-	final Grid<Cliente> parrilla;
+	final Grid<Ingrediente> parrilla;
 
 	final TextField filtro;
 
 	private final Button agregarNuevoBoton;
 
 	@Autowired
-	public ClienteUI(ClienteRepository almacen, ClienteEditor editor) {
+	public IngredienteUI(IngredienteRepository almacen, IngredienteEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
-		this.parrilla = new Grid<>(Cliente.class);
+		this.parrilla = new Grid<>(Ingrediente.class);
 		this.filtro = new TextField();
-		this.agregarNuevoBoton = new Button("Nuevo Cliente");
+		this.agregarNuevoBoton = new Button("Nuevo Ingrediente");
 	}
 
 	@Override
@@ -57,46 +57,44 @@ public class ClienteUI extends UI {
 		editor.setWidth(300, Unit.PIXELS); //
 		parrilla.setHeight(420, Unit.PIXELS);
 		parrilla.setWidth(1100, Unit.PIXELS);
-		parrilla.setColumns("id", "nombre", "apellidos", "domicilio", "telefono");
+		parrilla.setColumns("id", "nombre", "precio");
 		parrilla.getColumn("nombre").setCaption("Nombre");
-		parrilla.getColumn("apellidos").setCaption("Apellidos");
-		parrilla.getColumn("domicilio").setCaption("Domicilio");
-		parrilla.getColumn("telefono").setCaption("Telefono");
+		parrilla.getColumn("precio").setCaption("Precio");
 
 		filtro.setWidth(300, Unit.PIXELS);
-		filtro.setPlaceholder("Búsqueda por apellidos");
+		filtro.setPlaceholder("Búsqueda por nombre");
 
 		// Hook logic to components
 
 		// Replace listing with filtered content when user changes filtro
 		filtro.setValueChangeMode(ValueChangeMode.LAZY);
-		filtro.addValueChangeListener(e -> listarClientes(e.getValue()));
+		filtro.addValueChangeListener(e -> listarIngrediente(e.getValue()));
 
-		// Connect selected Cliente to editor or hide if none is selected
+		// Connect selected Ingrediente to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
-			editor.editarCliente(e.getValue());
+			editor.editarIngrediente(e.getValue());
 		});
 
-		// Instantiate and edit new Cliente the new button is clicked
-		agregarNuevoBoton.addClickListener(e -> editor.editarCliente(new Cliente("", "", "", "")));
+		// Instantiate and edit new Ingrediente the new button is clicked
+		agregarNuevoBoton.addClickListener(e -> editor.editarIngrediente(new Ingrediente("", 0.0)));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {
 			editor.setVisible(false);
-			listarClientes(filtro.getValue());
+			listarIngrediente(filtro.getValue());
 		});
 
 		// Initialize listing
-		listarClientes(null);
+		listarIngrediente(null);
 	}
 
 
-	void listarClientes(String texto) {
+	void listarIngrediente(String texto) {
 		if (StringUtils.isEmpty(texto)) {
-			parrilla.setItems((Collection<Cliente>) almacen.findAll());
+			parrilla.setItems((Collection<Ingrediente>) almacen.findAll());
 		}
 		else {
-			parrilla.setItems(almacen.findByApellidosStartsWithIgnoreCase(texto));
+			parrilla.setItems(almacen.findByNombreStartsWithIgnoreCase(texto));
 		}
 	}
 

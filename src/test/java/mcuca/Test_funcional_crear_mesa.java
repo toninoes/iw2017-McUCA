@@ -28,7 +28,7 @@ public class TestFuncionalCrearMesa {
     driver.findElement(By.cssSelector("div.v-button.v-widget")).click();
     driver.findElement(By.id("gwt-uid-3")).clear();
     driver.findElement(By.id("gwt-uid-3")).sendKeys("1");
-    new Select(driver.findElement(By.cssSelector("select.v-select-select"))).selectByVisibleText("Zona 'Salon' Capacidad: 200 personas");
+    new Select(driver.findElement(By.cssSelector("zonas.v-zonas-zonas"))).selectByVisibleText("Zona 'Salon' Capacidad: 200 personas");
   }
 
   @After

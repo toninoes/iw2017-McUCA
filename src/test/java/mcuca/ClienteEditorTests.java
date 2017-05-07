@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import mcuca.Cliente;
 import mcuca.ClienteEditor;
-import mcuca.ClienteRepository;
+import mcuca.cliente.ClienteRepository;
 
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Matchers.argThat;

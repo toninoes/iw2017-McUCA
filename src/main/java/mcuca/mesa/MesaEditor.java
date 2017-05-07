@@ -1,59 +1,62 @@
-package mcuca;
+package mcuca.mesa;
+
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.converter.StringToDoubleConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.establecimiento.EstablecimientoRepository;
+import mcuca.zona.Zona;
+import mcuca.zona.ZonaRepository;
+
 @SpringComponent
 @UIScope
-public class IngredienteEditor extends VerticalLayout {
+public class MesaEditor extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
 
-	private final IngredienteRepository almacen;
+	private final MesaRepository repoMesa;
+	private final ZonaRepository repoZona;
+	private final EstablecimientoRepository repoEst;
 
-	private Ingrediente ingrediente;
+	private Mesa mesa;
 
+	/* Fields to edit properties in Mesa entity */
+	Label title = new Label("Nueva Mesa");
+	TextField numero = new TextField("Número");
+	NativeSelect<Zona> zonas = new NativeSelect<>("Zona");
 	
-	/* Fields to edit properties in Ingrediente entity */
-	Label title = new Label("Nuevo Ingrediente");
-	TextField nombre = new TextField("Nombre");
-	TextField precio = new TextField("precio");
-
 	
-
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
 	Button cancelar = new Button("Cancelar");
 	Button borrar = new Button("Borrar");
 	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
-	Binder<Ingrediente> binder = new Binder<>(Ingrediente.class);
+	Binder<Mesa> binder = new Binder<>(Mesa.class);
 
-	
 	@Autowired
-	public IngredienteEditor(IngredienteRepository almacen) {
-		this.almacen = almacen;
-
-		addComponents(title, nombre, precio, acciones);
+	public MesaEditor(MesaRepository repoMesa, ZonaRepository repoZona, EstablecimientoRepository repoEst) {
+		this.repoMesa = repoMesa;
+		this.repoZona = repoZona;
+		this.repoEst = repoEst;
+		zonas.setItems((Collection<Zona>) repoZona.findAll());
+		addComponents(title, numero, zonas, acciones);
 
 		// bind using naming convention
-		//binder.bindInstanceFields(this);
-		binder.bind(nombre, "nombre");
-		binder.forField(precio)
-		  .withConverter(
-		    new StringToDoubleConverter("Por favor introduce un número"))
-		  .bind("precio");
+		binder.bindInstanceFields(this);
 
 		// Configure and style components
 		setSpacing(true);
@@ -62,10 +65,16 @@ public class IngredienteEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(e -> almacen.save(ingrediente));
-		borrar.addClickListener(e -> almacen.delete(ingrediente));
-		cancelar.addClickListener(e -> editarIngrediente(ingrediente));
+		guardar.addClickListener(this::salvar);
+		borrar.addClickListener(e -> repoMesa.delete(mesa));
+		cancelar.addClickListener(e -> editarMesa(mesa));
 		setVisible(false);
+	}
+	
+	public void salvar(ClickEvent e) {
+		binder.setBean(mesa);
+		mesa.setZona(zonas.getValue());
+		repoMesa.save(mesa);
 	}
 
 	public interface ChangeHandler {
@@ -73,7 +82,7 @@ public class IngredienteEditor extends VerticalLayout {
 		void onChange();
 	}
 
-	public final void editarIngrediente(Ingrediente c) {
+	public final void editarMesa(Mesa c) {
 		if (c == null) {
 			setVisible(false);
 			return;
@@ -81,24 +90,24 @@ public class IngredienteEditor extends VerticalLayout {
 		final boolean persisted = c.getId() != null;
 		if (persisted) {
 			// Find fresh entity for editing
-			ingrediente = almacen.findOne(c.getId());
+			mesa = repoMesa.findOne(c.getId());
 		}
 		else {
-			ingrediente = c;
+			mesa = c;
 		}
 		cancelar.setVisible(persisted);
 
 		// Bind mcuca properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
-		binder.setBean(ingrediente);
+		binder.setBean(mesa);
 
 		setVisible(true);
 
 		// A hack to ensure the whole form is visible
 		guardar.focus();
-		// Select all text in nombre field automatically
-		nombre.selectAll();
+		// Select all text in numero field automatically
+		numero.selectAll();
 	}
 
 	public void setChangeHandler(ChangeHandler h) {
@@ -108,4 +117,11 @@ public class IngredienteEditor extends VerticalLayout {
 		borrar.addClickListener(e -> h.onChange());
 	}
 
+	public ZonaRepository getRepoZona() {
+		return repoZona;
+	}
+
+	public EstablecimientoRepository getRepoEst() {
+		return repoEst;
+	}
 }

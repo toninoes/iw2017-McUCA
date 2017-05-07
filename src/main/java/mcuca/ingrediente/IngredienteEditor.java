@@ -1,8 +1,9 @@
-package mcuca;
+package mcuca.ingrediente;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.converter.StringToDoubleConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -15,20 +16,21 @@ import com.vaadin.ui.themes.ValoTheme;
 
 @SpringComponent
 @UIScope
-public class ClienteEditor extends VerticalLayout {
+public class IngredienteEditor extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
 
-	private final ClienteRepository almacen;
+	private final IngredienteRepository almacen;
 
-	private Cliente cliente;
+	private Ingrediente ingrediente;
 
-	/* Fields to edit properties in Cliente entity */
-	Label title = new Label("Nuevo Cliente");
+	
+	/* Fields to edit properties in Ingrediente entity */
+	Label title = new Label("Nuevo Ingrediente");
 	TextField nombre = new TextField("Nombre");
-	TextField apellidos = new TextField("Apellidos");
-	TextField domicilio = new TextField("Domicilio");
-	TextField telefono = new TextField("Telefono");
+	TextField precio = new TextField("precio");
+
+	
 
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
@@ -36,23 +38,22 @@ public class ClienteEditor extends VerticalLayout {
 	Button borrar = new Button("Borrar");
 	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
-	Binder<Cliente> binder = new Binder<>(Cliente.class);
+	Binder<Ingrediente> binder = new Binder<>(Ingrediente.class);
 
+	
 	@Autowired
-	public ClienteEditor(ClienteRepository almacen) {
+	public IngredienteEditor(IngredienteRepository almacen) {
 		this.almacen = almacen;
 
-		addComponents(title, nombre, apellidos, domicilio, telefono, acciones);
+		addComponents(title, nombre, precio, acciones);
 
 		// bind using naming convention
-		binder.bindInstanceFields(this);
-		/*binder.bind(nombre, "nombre");
-		binder.bind(apellidos, "apellidos");
-		binder.bind(domicilio, "domicilio");
-		binder.forField(telefono)
+		//binder.bindInstanceFields(this);
+		binder.bind(nombre, "nombre");
+		binder.forField(precio)
 		  .withConverter(
-		    new StringToIntegerConverter("Por favor introduce un número"))
-		  .bind("telefono");*/
+		    new StringToDoubleConverter("Por favor introduce un número"))
+		  .bind("precio");
 
 		// Configure and style components
 		setSpacing(true);
@@ -61,9 +62,9 @@ public class ClienteEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(e -> almacen.save(cliente));
-		borrar.addClickListener(e -> almacen.delete(cliente));
-		cancelar.addClickListener(e -> editarCliente(cliente));
+		guardar.addClickListener(e -> almacen.save(ingrediente));
+		borrar.addClickListener(e -> almacen.delete(ingrediente));
+		cancelar.addClickListener(e -> editarIngrediente(ingrediente));
 		setVisible(false);
 	}
 
@@ -72,7 +73,7 @@ public class ClienteEditor extends VerticalLayout {
 		void onChange();
 	}
 
-	public final void editarCliente(Cliente c) {
+	public final void editarIngrediente(Ingrediente c) {
 		if (c == null) {
 			setVisible(false);
 			return;
@@ -80,17 +81,17 @@ public class ClienteEditor extends VerticalLayout {
 		final boolean persisted = c.getId() != null;
 		if (persisted) {
 			// Find fresh entity for editing
-			cliente = almacen.findOne(c.getId());
+			ingrediente = almacen.findOne(c.getId());
 		}
 		else {
-			cliente = c;
+			ingrediente = c;
 		}
 		cancelar.setVisible(persisted);
 
 		// Bind mcuca properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
-		binder.setBean(cliente);
+		binder.setBean(ingrediente);
 
 		setVisible(true);
 

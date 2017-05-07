@@ -1,4 +1,4 @@
-package mcuca;
+package mcuca.mesa;
 
 import org.springframework.data.repository.CrudRepository;
 

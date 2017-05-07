@@ -1,10 +1,14 @@
-package mcuca;
+package mcuca.mesa;
+
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import mcuca.establecimiento.Establecimiento;
+import mcuca.zona.Zona;
 
 @Entity
 public class Mesa {
@@ -48,5 +52,9 @@ public class Mesa {
 
 	public void setZona(Zona zona) {
 		this.zona = zona;
+	}
+	
+	public Establecimiento getEstablecimiento() {
+		return zona.getEstablecimiento();
 	}
 }

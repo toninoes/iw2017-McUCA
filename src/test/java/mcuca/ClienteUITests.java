@@ -19,8 +19,8 @@ import com.vaadin.spring.boot.VaadinAutoConfiguration;
 
 import mcuca.Cliente;
 import mcuca.IngredienteEditor;
-import mcuca.ClienteRepository;
-import mcuca.ClienteUI;
+import mcuca.cliente.ClienteRepository;
+import mcuca.cliente.ClienteUI;
 
 import org.junit.Before;
 import org.junit.Test;

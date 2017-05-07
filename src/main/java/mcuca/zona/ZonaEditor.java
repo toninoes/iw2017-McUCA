@@ -1,16 +1,16 @@
-package mcuca;
+package mcuca.zona;
 
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
@@ -18,40 +18,48 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.establecimiento.Establecimiento;
+import mcuca.establecimiento.EstablecimientoRepository;
+
 @SpringComponent
 @UIScope
-public class MesaEditor extends VerticalLayout {
+public class ZonaEditor extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
 
-	private final MesaRepository almacen;
-	//private final ZonaRepository almacen2;
+	private final ZonaRepository repoZona;
+	private final EstablecimientoRepository repoEstablecimiento;
 
-	private Mesa mesa;
+	private Zona zona;
 
-	/* Fields to edit properties in Mesa entity */
-	Label title = new Label("Nueva Mesa");
-	TextField numero = new TextField("Número");
-	NativeSelect<Zona> select = new NativeSelect<>("Zona");
-	
-	
+	/* Fields to edit properties in Zona entity */
+	Label title = new Label("Nueva Zona");
+	TextField nombre = new TextField("Nombre");
+	TextField aforo = new TextField("Aforo");
+	NativeSelect<Establecimiento> select = new NativeSelect<>("Establecimiento");
+
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
 	Button cancelar = new Button("Cancelar");
 	Button borrar = new Button("Borrar");
 	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
-	Binder<Mesa> binder = new Binder<>(Mesa.class);
+	Binder<Zona> binder = new Binder<>(Zona.class);
 
 	@Autowired
-	public MesaEditor(MesaRepository almacen, ZonaRepository a) {
-		this.almacen = almacen;
-		ZonaRepository almacen2 = a;
-		select.setItems((Collection<Zona>) almacen2.findAll());
-		addComponents(title, numero, select, acciones);
+	public ZonaEditor(ZonaRepository repoZona, EstablecimientoRepository repoEstablecimiento) {
+		this.repoZona = repoZona;
+		this.repoEstablecimiento = repoEstablecimiento;
+		select.setItems((Collection<Establecimiento>) repoEstablecimiento.findAll());
+		addComponents(title, nombre, aforo, select, acciones);
 
 		// bind using naming convention
-		binder.bindInstanceFields(this);
+		//binder.bindInstanceFields(this);
+		binder.bind(nombre, "nombre");
+		binder.forField(aforo)
+		  .withConverter(
+		    new StringToIntegerConverter("Por favor introduce un número"))
+		  .bind("aforo");
 
 		// Configure and style components
 		setSpacing(true);
@@ -61,15 +69,15 @@ public class MesaEditor extends VerticalLayout {
 
 		// wire action buttons to guardar, borrar and reset
 		guardar.addClickListener(this::salvar);
-		borrar.addClickListener(e -> almacen.delete(mesa));
-		cancelar.addClickListener(e -> editarMesa(mesa));
+		borrar.addClickListener(e -> repoZona.delete(zona));
+		cancelar.addClickListener(e -> editarZona(zona));
 		setVisible(false);
 	}
-
+	
 	public void salvar(ClickEvent e) {
-		binder.setBean(mesa);
-		mesa.setZona(select.getValue());
-		almacen.save(mesa);// TODO Auto-generated method stub
+		binder.setBean(zona);
+		zona.setEstablecimiento(select.getValue());
+		repoZona.save(zona);// TODO Auto-generated method stub
 	}
 
 	public interface ChangeHandler {
@@ -77,7 +85,7 @@ public class MesaEditor extends VerticalLayout {
 		void onChange();
 	}
 
-	public final void editarMesa(Mesa c) {
+	public final void editarZona(Zona c) {
 		if (c == null) {
 			setVisible(false);
 			return;
@@ -85,24 +93,24 @@ public class MesaEditor extends VerticalLayout {
 		final boolean persisted = c.getId() != null;
 		if (persisted) {
 			// Find fresh entity for editing
-			mesa = almacen.findOne(c.getId());
+			zona = repoZona.findOne(c.getId());
 		}
 		else {
-			mesa = c;
+			zona = c;
 		}
 		cancelar.setVisible(persisted);
 
 		// Bind mcuca properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
-		binder.setBean(mesa);
+		binder.setBean(zona);
 
 		setVisible(true);
 
 		// A hack to ensure the whole form is visible
 		guardar.focus();
-		// Select all text in numero field automatically
-		numero.selectAll();
+		// Select all text in nombre field automatically
+		nombre.selectAll();
 	}
 
 	public void setChangeHandler(ChangeHandler h) {
@@ -111,4 +119,9 @@ public class MesaEditor extends VerticalLayout {
 		guardar.addClickListener(e -> h.onChange());
 		borrar.addClickListener(e -> h.onChange());
 	}
+
+	public EstablecimientoRepository getRepoEstablecimiento() {
+		return repoEstablecimiento;
+	}
+
 }

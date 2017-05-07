@@ -1,9 +1,8 @@
-package mcuca;
+package mcuca.establecimiento;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -14,20 +13,21 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+
 @SpringComponent
 @UIScope
-public class ZonaEditor extends VerticalLayout {
+public class EstablecimientoEditor extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
 
-	private final ZonaRepository almacen;
+	private final EstablecimientoRepository repoEst;
 
-	private Zona zona;
+	private Establecimiento est;
 
-	/* Fields to edit properties in Zona entity */
-	Label title = new Label("Nueva Zona");
+	/* Fields to edit properties in Establecimiento entity */
+	Label title = new Label("Nuevo Establecimiento");
 	TextField nombre = new TextField("Nombre");
-	TextField aforo = new TextField("Aforo");
+	TextField domicilio = new TextField("Domicilio");
 
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
@@ -35,21 +35,17 @@ public class ZonaEditor extends VerticalLayout {
 	Button borrar = new Button("Borrar");
 	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
-	Binder<Zona> binder = new Binder<>(Zona.class);
+	Binder<Establecimiento> binder = new Binder<>(Establecimiento.class);
 
 	@Autowired
-	public ZonaEditor(ZonaRepository almacen) {
-		this.almacen = almacen;
+	public EstablecimientoEditor(EstablecimientoRepository almacen) {
+		this.repoEst = almacen;
 
-		addComponents(title, nombre, aforo, acciones);
+		addComponents(title, nombre, domicilio, acciones);
 
 		// bind using naming convention
-		//binder.bindInstanceFields(this);
-		binder.bind(nombre, "nombre");
-		binder.forField(aforo)
-		  .withConverter(
-		    new StringToIntegerConverter("Por favor introduce un número"))
-		  .bind("aforo");
+		binder.bindInstanceFields(this);
+
 
 		// Configure and style components
 		setSpacing(true);
@@ -58,9 +54,9 @@ public class ZonaEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(e -> almacen.save(zona));
-		borrar.addClickListener(e -> almacen.delete(zona));
-		cancelar.addClickListener(e -> editarZona(zona));
+		guardar.addClickListener(e -> almacen.save(est));
+		borrar.addClickListener(e -> almacen.delete(est));
+		cancelar.addClickListener(e -> editarEstablecimiento(est));
 		setVisible(false);
 	}
 
@@ -69,7 +65,7 @@ public class ZonaEditor extends VerticalLayout {
 		void onChange();
 	}
 
-	public final void editarZona(Zona c) {
+	public final void editarEstablecimiento(Establecimiento c) {
 		if (c == null) {
 			setVisible(false);
 			return;
@@ -77,17 +73,17 @@ public class ZonaEditor extends VerticalLayout {
 		final boolean persisted = c.getId() != null;
 		if (persisted) {
 			// Find fresh entity for editing
-			zona = almacen.findOne(c.getId());
+			est = repoEst.findOne(c.getId());
 		}
 		else {
-			zona = c;
+			est = c;
 		}
 		cancelar.setVisible(persisted);
 
 		// Bind mcuca properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
-		binder.setBean(zona);
+		binder.setBean(est);
 
 		setVisible(true);
 

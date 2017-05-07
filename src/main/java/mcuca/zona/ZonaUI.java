@@ -1,4 +1,4 @@
-package mcuca;
+package mcuca.zona;
 
 import java.util.Collection;
 
@@ -18,29 +18,28 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 
-
-@SpringUI(path="/ingrediente")
-public class IngredienteUI extends UI {
+@SpringUI(path="/zona")
+public class ZonaUI extends UI {
 
 	private static final long serialVersionUID = 1L;
 
-	private final IngredienteRepository almacen;
+	private final ZonaRepository almacen;
 
-	private final IngredienteEditor editor;
+	private final ZonaEditor editor;
 
-	final Grid<Ingrediente> parrilla;
+	final Grid<Zona> parrilla;
 
 	final TextField filtro;
 
 	private final Button agregarNuevoBoton;
 
 	@Autowired
-	public IngredienteUI(IngredienteRepository almacen, IngredienteEditor editor) {
+	public ZonaUI(ZonaRepository almacen, ZonaEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
-		this.parrilla = new Grid<>(Ingrediente.class);
+		this.parrilla = new Grid<>(Zona.class);
 		this.filtro = new TextField();
-		this.agregarNuevoBoton = new Button("Nuevo Ingrediente");
+		this.agregarNuevoBoton = new Button("Nueva Zona");
 	}
 
 	@Override
@@ -58,9 +57,10 @@ public class IngredienteUI extends UI {
 		editor.setWidth(300, Unit.PIXELS); //
 		parrilla.setHeight(420, Unit.PIXELS);
 		parrilla.setWidth(1100, Unit.PIXELS);
-		parrilla.setColumns("id", "nombre", "precio");
+		parrilla.setColumns("id", "nombre", "aforo", "establecimiento");
 		parrilla.getColumn("nombre").setCaption("Nombre");
-		parrilla.getColumn("precio").setCaption("Precio");
+		parrilla.getColumn("aforo").setCaption("Aforo");
+		parrilla.getColumn("establecimiento").setCaption("Establecimiento");
 
 		filtro.setWidth(300, Unit.PIXELS);
 		filtro.setPlaceholder("Búsqueda por nombre");
@@ -69,30 +69,30 @@ public class IngredienteUI extends UI {
 
 		// Replace listing with filtered content when user changes filtro
 		filtro.setValueChangeMode(ValueChangeMode.LAZY);
-		filtro.addValueChangeListener(e -> listarIngrediente(e.getValue()));
+		filtro.addValueChangeListener(e -> listarZonas(e.getValue()));
 
-		// Connect selected Ingrediente to editor or hide if none is selected
+		// Connect selected Zona to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
-			editor.editarIngrediente(e.getValue());
+			editor.editarZona(e.getValue());
 		});
 
-		// Instantiate and edit new Ingrediente the new button is clicked
-		agregarNuevoBoton.addClickListener(e -> editor.editarIngrediente(new Ingrediente("", 0.0)));
+		// Instantiate and edit new Zona the new button is clicked
+		agregarNuevoBoton.addClickListener(e -> editor.editarZona(new Zona("", 0)));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {
 			editor.setVisible(false);
-			listarIngrediente(filtro.getValue());
+			listarZonas(filtro.getValue());
 		});
 
 		// Initialize listing
-		listarIngrediente(null);
+		listarZonas(null);
 	}
 
 
-	void listarIngrediente(String texto) {
+	void listarZonas(String texto) {
 		if (StringUtils.isEmpty(texto)) {
-			parrilla.setItems((Collection<Ingrediente>) almacen.findAll());
+			parrilla.setItems((Collection<Zona>) almacen.findAll());
 		}
 		else {
 			parrilla.setItems(almacen.findByNombreStartsWithIgnoreCase(texto));
@@ -100,3 +100,4 @@ public class IngredienteUI extends UI {
 	}
 
 }
+

@@ -1,4 +1,4 @@
-package mcuca;
+package mcuca.cliente;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
