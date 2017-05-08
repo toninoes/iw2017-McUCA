@@ -1,4 +1,4 @@
-package com.example.tests;
+package mcuca.cliente;
 
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +9,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class TestFuncionalCrearMesa {
+public class TestFuncionalCliente {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -18,17 +18,22 @@ public class TestFuncionalCrearMesa {
   @Before
   public void setUp() throws Exception {
     driver = new FirefoxDriver();
-    baseUrl = "http://localhost:8181/mesa";
+    baseUrl = "http://localhost:8181/cliente";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
   }
 
   @Test
-  public void testFuncionalCrearMesa() throws Exception {
-    driver.get(baseUrl + "/mesa");
+  public void testFuncionalCliente() throws Exception {
+    driver.get(baseUrl + "/cliente");
     driver.findElement(By.cssSelector("div.v-button.v-widget")).click();
     driver.findElement(By.id("gwt-uid-3")).clear();
-    driver.findElement(By.id("gwt-uid-3")).sendKeys("1");
-    new Select(driver.findElement(By.cssSelector("zonas.v-zonas-zonas"))).selectByVisibleText("Zona 'Salon' Capacidad: 200 personas");
+    driver.findElement(By.id("gwt-uid-3")).sendKeys("Manuel");
+    driver.findElement(By.id("gwt-uid-5")).clear();
+    driver.findElement(By.id("gwt-uid-5")).sendKeys("Padilla");
+    driver.findElement(By.id("gwt-uid-7")).clear();
+    driver.findElement(By.id("gwt-uid-7")).sendKeys("Calle 1");
+    driver.findElement(By.id("gwt-uid-9")).clear();
+    driver.findElement(By.id("gwt-uid-9")).sendKeys("657342354");
   }
 
   @After

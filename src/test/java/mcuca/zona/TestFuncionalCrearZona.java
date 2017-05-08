@@ -1,4 +1,4 @@
-package com.example.tests;
+package mcuca.zona;
 
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +9,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class TestFuncionalCrearIngrediente {
+public class TestFuncionalCrearZona {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -18,18 +18,19 @@ public class TestFuncionalCrearIngrediente {
   @Before
   public void setUp() throws Exception {
     driver = new FirefoxDriver();
-    baseUrl = "http://localhost:8181/ingrediente";
+    baseUrl = "http://localhost:8181/zona";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
   }
 
   @Test
-  public void testFuncionalCrearIngrediente() throws Exception {
-    driver.get(baseUrl + "/ingrediente");
+  public void testFuncionalCrearZona() throws Exception {
+    driver.get(baseUrl + "/zona");
     driver.findElement(By.cssSelector("div.v-button.v-widget")).click();
     driver.findElement(By.id("gwt-uid-3")).clear();
-    driver.findElement(By.id("gwt-uid-3")).sendKeys("Salami");
+    driver.findElement(By.id("gwt-uid-3")).sendKeys("Salon");
     driver.findElement(By.id("gwt-uid-5")).clear();
-    driver.findElement(By.id("gwt-uid-5")).sendKeys("1,50");
+    driver.findElement(By.id("gwt-uid-5")).sendKeys("200");
+    driver.findElement(By.xpath("//div[@id='ROOT-2521314']/div/div[2]/div[5]/div/div[3]/div/div[7]/div/div")).click();
   }
 
   @After
