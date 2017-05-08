@@ -113,7 +113,7 @@ public class Usuario {
 		return establecimientos;
 	}
 	   
-	public void setEst(Set<Establecimiento> establecimientos) {
+	public void setEstablecimientos(Set<Establecimiento> establecimientos) {
 		this.establecimientos = establecimientos;
 	}
 	

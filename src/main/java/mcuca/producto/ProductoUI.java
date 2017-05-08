@@ -1,5 +1,5 @@
 package mcuca.producto;
 
-public class PedidoEditor {
+public class ProductoUI {
 
 }

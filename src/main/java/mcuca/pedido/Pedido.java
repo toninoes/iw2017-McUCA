@@ -1,14 +1,20 @@
 package mcuca.pedido;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import mcuca.cliente.Cliente;
+import mcuca.producto.Producto;
+import mcuca.usuario.Usuario;
 
 
 @Entity
@@ -30,13 +36,21 @@ public class Pedido {
 	@ManyToOne
 	private Cliente cliente;
 	
+	@ManyToOne
+	private Usuario usuario;
+
+	@ManyToMany(targetEntity=Producto.class)
+	@JoinTable(name = "pedido_producto", joinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"))
+	private Set<Producto> productos;
+	
 	protected Pedido() {
 	}
 
-	public Pedido(String nombre, Float precio, Tipo tipo) {
+	public Pedido(String nombre, Float precio, Tipo tipo, Set<Producto> productos) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.tipo = tipo;
+		this.productos = productos;
 	}
 	
 	public Long getId() {
@@ -81,5 +95,34 @@ public class Pedido {
 
 	public void setHora(Date hora) {
 		this.hora = hora;
+	}
+	
+	public Set<Producto> getProductos() {
+		return productos;
+	}
+	   
+	public void setProductos(Set<Producto> productos) {
+		this.productos = productos;
+	}
+	
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s", nombre);
 	}
 }
