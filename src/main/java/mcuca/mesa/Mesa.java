@@ -26,7 +26,6 @@ public class Mesa {
 
 	public Mesa(String numero) {
 		this.numero = numero;
-
 	}
 
 	public Long getId() {
