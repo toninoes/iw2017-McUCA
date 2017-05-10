@@ -51,6 +51,7 @@ public class IngredienteEditor extends VerticalLayout {
 		//binder.bindInstanceFields(this);
 		binder.bind(nombre, "nombre");
 		binder.forField(precio)
+		  .withNullRepresentation("")
 		  .withConverter(
 		    new StringToDoubleConverter("Por favor introduce un número"))
 		  .bind("precio");

@@ -27,9 +27,9 @@ public class Zona {
 	
 	public Zona(String nombre, String aforo) {
 		this.nombre = nombre;
-		if (aforo == "") {
+		
+		if (aforo == "")
 			this.aforo = null;
-		}				
 	}
 
 	public Zona(String nombre, Integer aforo) {

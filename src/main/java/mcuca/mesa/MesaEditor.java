@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -56,6 +57,12 @@ public class MesaEditor extends VerticalLayout {
 		addComponents(title, numero, zonas, acciones);
 
 		// bind using naming convention
+		binder.forField(numero)
+		  .withNullRepresentation("")
+		  .withConverter(
+		    new StringToIntegerConverter("Por favor introduce un número"))
+		  .bind("numero");
+		
 		binder.bindInstanceFields(this);
 
 		// Configure and style components

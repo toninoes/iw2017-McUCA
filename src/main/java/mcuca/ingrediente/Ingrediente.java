@@ -18,6 +18,13 @@ public class Ingrediente {
 
 	protected Ingrediente() {
 	}
+	
+	public Ingrediente(String nombre, String precio) {
+		this.nombre = nombre;
+		
+		if (precio == "")
+			this.precio = null;
+	}
 
 	public Ingrediente(String nombre, Double precio) {
 		this.nombre = nombre;

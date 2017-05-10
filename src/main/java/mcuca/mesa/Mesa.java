@@ -16,15 +16,20 @@ public class Mesa {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	private String numero;
+	private Integer numero;
 	
 	@ManyToOne
 	private Zona zona;
 
 	protected Mesa() {
 	}
-
+	
 	public Mesa(String numero) {
+		if (numero == "")
+			this.numero = null;
+	}
+
+	public Mesa(Integer numero) {
 		this.numero = numero;
 	}
 
@@ -32,17 +37,17 @@ public class Mesa {
 		return id;
 	}
 
-	public String getNumero() {
+	public Integer getNumero() {
 		return numero;
 	}
 
-	public void setNumero(String numero) {
+	public void setNumero(Integer numero) {
 		this.numero = numero;
 	}	
 
 	@Override
 	public String toString() {
-		return String.format("Mesa[id=%d, numero='%s']", id, numero);
+		return String.format("Mesa[id=%d, numero= %d]", id, numero);
 	}
 	
 	public Zona getZona() {
