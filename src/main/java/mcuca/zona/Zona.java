@@ -17,15 +17,22 @@ public class Zona {
 
 	private String nombre;
 
-	private String aforo;
+	private Integer aforo;
 	
 	@ManyToOne
 	private Establecimiento establecimiento;
 
 	protected Zona() {
 	}
-
+	
 	public Zona(String nombre, String aforo) {
+		this.nombre = nombre;
+		if (aforo == "") {
+			this.aforo = null;
+		}				
+	}
+
+	public Zona(String nombre, Integer aforo) {
 		this.nombre = nombre;
 		this.aforo = aforo;
 	}
@@ -42,11 +49,11 @@ public class Zona {
 		this.nombre = nombre;
 	}
 	
-	public String getAforo() {
+	public Integer getAforo() {
 		return aforo;
 	}
 	
-	public void setAforo(String aforo) {
+	public void setAforo(Integer aforo) {
 		this.aforo = aforo;
 	}
 
