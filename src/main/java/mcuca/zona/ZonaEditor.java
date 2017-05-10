@@ -55,11 +55,14 @@ public class ZonaEditor extends VerticalLayout {
 
 		// bind using naming convention
 		//binder.bindInstanceFields(this);
-		binder.bind(nombre, "nombre");
-		binder.forField(aforo)
+		//binder.bind(nombre, "nombre");
+		//binder.bind(select, "establecimiento");
+		/*binder.forField(aforo)
 		  .withConverter(
 		    new StringToIntegerConverter("Por favor introduce un número"))
-		  .bind("aforo");
+		  .bind("aforo");*/
+		
+		binder.bindInstanceFields(this);
 
 		// Configure and style components
 		setSpacing(true);
