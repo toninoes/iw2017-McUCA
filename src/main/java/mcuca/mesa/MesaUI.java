@@ -76,7 +76,7 @@ public class MesaUI extends UI {
 		});
 
 		// Instantiate and edit new Mesa the new button is clicked
-		agregarNuevoBoton.addClickListener(e -> editor.editarMesa(new Mesa("", "")));
+		agregarNuevoBoton.addClickListener(e -> editor.editarMesa(new Mesa("")));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {
