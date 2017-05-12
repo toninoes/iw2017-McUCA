@@ -37,7 +37,7 @@ public class Application {
 		return (args) -> {
 
 			if (service.findAll().size() == 0) {
-				// save a couple of users with default password: default
+				// guardar a couple of users with default password: default
 				service.save(new Usuario("Jack", "Bauer"));
 				service.save(new Usuario("Chloe", "O'Brian"));
 				service.save(new Usuario("Kim", "Bauer"));
@@ -66,7 +66,7 @@ public class Application {
 				// fetch users by last name
 				log.info("Usuario found with findByLastNameStartsWithIgnoreCase('Bauer'):");
 				log.info("--------------------------------------------");
-				for (Usuario bauer : service.findByLastNameStartsWithIgnoreCase("Bauer")) {
+				for (Usuario bauer : service.findByApellidosStartsWithIgnoreCase("Bauer")) {
 					log.info(bauer.toString());
 				}
 				log.info("");

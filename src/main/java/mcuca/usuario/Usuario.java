@@ -3,14 +3,20 @@ package mcuca.usuario;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import mcuca.establecimiento.Establecimiento;
 
 @SuppressWarnings("serial")
 @Entity
@@ -18,46 +24,63 @@ public class Usuario implements UserDetails{
 	@Id
 	@GeneratedValue
 	private Long id;
+	
+	private String dni;
 
-	private String firstName;
+	private String nombre;
 
-	private String lastName;
+	private String apellidos;
 
 	private String username;
 
 	private String password;
+	
+	private Rol rol;
+	
+	@ManyToMany(targetEntity=Establecimiento.class)
+	@JoinTable(name = "establecimiento_usuario", joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "establecimiento_id", referencedColumnName = "id"))
+	private Set<Establecimiento> establecimientos;
 
 	protected Usuario() {
 	}
+	
+	public Usuario(String dni, String nombre, String apellidos, String username, Rol rol, Set<Establecimiento> establecimientos) {
+		this.dni = dni;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.username = username;
+		this.rol = rol;
+		this.establecimientos = establecimientos;
+	}
 
-	public Usuario(String firstName, String lastName, String username) {
-		this.firstName = firstName;
-		this.lastName = lastName;
+	public Usuario(String nombre, String apellidos, String username) {
+		this.nombre = nombre;
+		this.apellidos = apellidos;
 		this.username = username;
 	}
 
-	public Usuario(String firstName, String lastName) {
-		this(firstName,lastName,firstName);
+	public Usuario(String nombre, String apellidos) {
+		this(nombre, apellidos, nombre);
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public String getApellidos() {
+		return apellidos;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
 	}
 
 	public void setUsername(String username) {
@@ -71,8 +94,8 @@ public class Usuario implements UserDetails{
 
 	@Override
 	public String toString() {
-		return String.format("Usuario[id=%d, firstName='%s', lastName='%s', username='%s', password='%s']", id,
-				firstName, lastName,username,password);
+		return String.format("Usuario[id=%d, nombre='%s', apellidos='%s', username='%s', password='%s']", id,
+				nombre, apellidos,username,password);
 	}
 
 	@Override
@@ -117,6 +140,30 @@ public class Usuario implements UserDetails{
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public String getDni() {
+		return dni;
+	}
+
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	public Rol getRol() {
+		return rol;
+	}
+
+	public void setRol(Rol rol) {
+		this.rol = rol;
+	}
+	
+	public Set<Establecimiento> getEstablecimientos() {
+		return establecimientos;
+	}
+	   
+	public void setEstablecimientos(Set<Establecimiento> establecimientos) {
+		this.establecimientos = establecimientos;
 	}
 
 }

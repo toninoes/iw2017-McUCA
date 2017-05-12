@@ -32,8 +32,8 @@ public class UsuarioService implements UserDetailsService {
 		return repo.save(user);
 	}
 
-	public List<Usuario> findByLastNameStartsWithIgnoreCase(String lastName) {
-		return repo.findByLastNameStartsWithIgnoreCase(lastName);
+	public List<Usuario> findByApellidosStartsWithIgnoreCase(String lastName) {
+		return repo.findByApellidosStartsWithIgnoreCase(lastName);
 	}
 
 	public Usuario findOne(Long arg0) {

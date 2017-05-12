@@ -19,37 +19,34 @@ import mcuca.security.SecurityUtils;
 @UIScope
 public class UsuarioEditor extends VerticalLayout {
 
-	private final UsuarioService service;
+	private final UsuarioService servicio;
 
-
-	/**
-	 * The currently edited user
-	 */
-	private Usuario user;
+	private Usuario usuario;
 
 	private Binder<Usuario> binder = new Binder<>(Usuario.class);
 
 
 	/* Fields to edit properties in Usuario entity */
-	TextField firstName = new TextField("First name");
-	TextField lastName = new TextField("Last name");
+	TextField dni = new TextField("Dni");
+	TextField nombre = new TextField("Nombre");
+	TextField apellidos = new TextField("Apellidos");
 	TextField username = new TextField("Username");
 	TextField password = new TextField("Password");
 
 	/* Action buttons */
-	Button save = new Button("Save");
-	Button cancel = new Button("Cancel");
-	Button delete = new Button("Delete");
+	Button guardar = new Button("Guardar");
+	Button cancelar = new Button("Cancelar");
+	Button borrar = new Button("Borrar");
 
 	/* Layout for buttons */
-	CssLayout actions = new CssLayout(save, cancel, delete);
+	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
 
 	@Autowired
-	public UsuarioEditor(UsuarioService service) {
-		this.service = service;
+	public UsuarioEditor(UsuarioService servicio) {
+		this.servicio = servicio;
 
-		addComponents(firstName, lastName, username, password, actions);
+		addComponents(dni, nombre, apellidos, username, password, acciones);
 
 		// bind using naming convention
 		binder.bindInstanceFields(this);
@@ -57,18 +54,18 @@ public class UsuarioEditor extends VerticalLayout {
 
 		// Configure and style components
 		setSpacing(true);
-		actions.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-		save.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+		acciones.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+		guardar.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
-		// wire action buttons to save, delete and reset
-		save.addClickListener(e -> service.save(user));
-		delete.addClickListener(e -> service.delete(user));
-		cancel.addClickListener(e -> editUser(user));
+		// wire action buttons to guardar, borrar and reset
+		guardar.addClickListener(e -> servicio.save(usuario));
+		borrar.addClickListener(e -> servicio.delete(usuario));
+		cancelar.addClickListener(e -> editUser(usuario));
 		setVisible(false);
 
 		// Solo borra el admin
-		delete.setEnabled(SecurityUtils.hasRole("ADMIN"));
+		borrar.setEnabled(SecurityUtils.hasRole("ADMIN"));
 	}
 
 	public interface ChangeHandler {
@@ -84,31 +81,31 @@ public class UsuarioEditor extends VerticalLayout {
 		final boolean persisted = c.getId() != null;
 		if (persisted) {
 			// Find fresh entity for editing
-			user = service.findOne(c.getId());
+			usuario = servicio.findOne(c.getId());
 		}
 		else {
-			user = c;
+			usuario = c;
 		}
-		cancel.setVisible(persisted);
+		cancelar.setVisible(persisted);
 
-		// Bind user properties to similarly named fields
+		// Bind usuario properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
-		binder.setBean(user);
+		binder.setBean(usuario);
 
 		setVisible(true);
 
 		// A hack to ensure the whole form is visible
-		save.focus();
-		// Select all text in firstName field automatically
-		firstName.selectAll();
+		guardar.focus();
+		// Select all text in nombre field automatically
+		nombre.selectAll();
 	}
 
 	public void setChangeHandler(ChangeHandler h) {
-		// ChangeHandler is notified when either save or delete
+		// ChangeHandler is notified when either guardar or borrar
 		// is clicked
-		save.addClickListener(e -> h.onChange());
-		delete.addClickListener(e -> h.onChange());
+		guardar.addClickListener(e -> h.onChange());
+		borrar.addClickListener(e -> h.onChange());
 	}
 
 }

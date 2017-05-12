@@ -50,7 +50,7 @@ public class UsuarioManagementView extends VerticalLayout implements View {
 		addComponents(actions, grid, editor);
 
 		grid.setHeight(300, Unit.PIXELS);
-		grid.setColumns("id", "firstName", "lastName");
+		grid.setColumns("id", "nombre", "apellidos");
 
 		filter.setPlaceholder("Filter by last name");
 
@@ -83,7 +83,7 @@ public class UsuarioManagementView extends VerticalLayout implements View {
 		if (StringUtils.isEmpty(filterText)) {
 			grid.setItems(service.findAll());
 		} else {
-			grid.setItems(service.findByLastNameStartsWithIgnoreCase(filterText));
+			grid.setItems(service.findByApellidosStartsWithIgnoreCase(filterText));
 		}
 	}
 
