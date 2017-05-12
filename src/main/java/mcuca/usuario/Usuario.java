@@ -1,126 +1,122 @@
 package mcuca.usuario;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 
-import mcuca.establecimiento.Establecimiento;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+@SuppressWarnings("serial")
 @Entity
-public class Usuario {
+public class Usuario implements UserDetails{
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue
 	private Long id;
 
-	private String dni;
-	
-	private String nombre;
-	
-	private String apellidos;
-	
+	private String firstName;
+
+	private String lastName;
+
 	private String username;
-	
+
 	private String password;
-	
-	private Rol rol;
-	
-	@ManyToMany(targetEntity=Establecimiento.class)
-	@JoinTable(name = "establecimiento_usuario", joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "establecimiento_id", referencedColumnName = "id"))
-	private Set<Establecimiento> establecimientos;
-	
-	public Usuario() {	
-	}
-	
-	public Usuario(String dni) {	
-		this.dni = dni;
+
+	protected Usuario() {
 	}
 
-
-	public Usuario(String dni, String nombre, String apellidos, String username, String password, Rol rol, Set<Establecimiento> establecimientos) {
-		this.dni = dni;
-		this.nombre = nombre;
-		this.apellidos = apellidos;
+	public Usuario(String firstName, String lastName, String username) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.username = username;
-		this.password = password;
-		this.rol = rol;
-		this.establecimientos = establecimientos;
 	}
-	
+
+	public Usuario(String firstName, String lastName) {
+		this(firstName,lastName,firstName);
+	}
+
 	public Long getId() {
 		return id;
 	}
-	
-	public void setId(Long id) {
-        this.id = id;
-    }
 
-	public String getDni() {
-		return dni;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setDni(String dni) {
-		this.dni = dni;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getApellidos() {
-		return apellidos;
-	}
-
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
-	}
-
-	public String getUsername() {
-		return username;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.username= username;
 	}
 
-	public String getPassword() {
-		return password;
-	}
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public Rol getRol() {
-		return rol;
-	}
-
-	public void setRol(Rol rol) {
-		this.rol = rol;
-	}
-	
-
-	public Set<Establecimiento> getEstablecimientos() {
-		return establecimientos;
-	}
-	   
-	public void setEstablecimientos(Set<Establecimiento> establecimientos) {
-		this.establecimientos = establecimientos;
-	}
-	
 	@Override
 	public String toString() {
-		return String.format("%s", username);
+		return String.format("Usuario[id=%d, firstName='%s', lastName='%s', username='%s', password='%s']", id,
+				firstName, lastName,username,password);
 	}
-	
-}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> list=new ArrayList<GrantedAuthority>();
+		list.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+		return list;
+
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return username;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+}

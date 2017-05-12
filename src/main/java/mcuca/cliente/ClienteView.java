@@ -1,40 +1,36 @@
 package mcuca.cliente;
 
 import java.util.Collection;
+import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.vaadin.server.VaadinRequest;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.ValueChangeMode;
-import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.spring.annotation.SpringView;
 
 
-@SpringUI(path="/cliente")
-public class ClienteUI extends UI {
-
-	private static final long serialVersionUID = 1L;
+@SuppressWarnings("serial")
+@SpringView(name = ClienteView.VIEW_NAME)
+public class ClienteView extends VerticalLayout implements View {
+	public static final String VIEW_NAME = "cliente";
 
 	private final ClienteRepository almacen;
-
 	private final ClienteEditor editor;
-
 	final Grid<Cliente> parrilla;
-
 	final TextField filtro;
 
 	private final Button agregarNuevoBoton;
 
 	@Autowired
-	public ClienteUI(ClienteRepository almacen, ClienteEditor editor) {
+	public ClienteView(ClienteRepository almacen, ClienteEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
 		this.parrilla = new Grid<>(Cliente.class);
@@ -42,21 +38,18 @@ public class ClienteUI extends UI {
 		this.agregarNuevoBoton = new Button("Nuevo Cliente");
 	}
 
-	@Override
-	protected void init(VaadinRequest request) {
-
-		Label titulo = new Label("iw2017-McUCA");
-		titulo.setStyleName("h1");
-		HorizontalLayout cabecera = new HorizontalLayout(titulo);		
+	@PostConstruct
+	void init() {
+		//addComponent(new Label("asfdddddddddddde"));
 		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton);
 		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
-		VerticalLayout todo = new VerticalLayout(cabecera, acciones, contenido);
-		todo.setComponentAlignment(cabecera, Alignment.MIDDLE_CENTER);
-		setContent(todo);
+		VerticalLayout todo = new VerticalLayout(acciones, contenido);
 
-		editor.setWidth(300, Unit.PIXELS); //
+		/*editor.setWidth(300, Unit.PIXELS);
 		parrilla.setHeight(420, Unit.PIXELS);
-		parrilla.setWidth(1100, Unit.PIXELS);
+		parrilla.setWidth(1100, Unit.PIXELS);*/
+		editor.setWidth("30%");
+		parrilla.setWidth("60%");
 		parrilla.setColumns("id", "nombre", "apellidos", "domicilio", "telefono");
 		parrilla.getColumn("nombre").setCaption("Nombre");
 		parrilla.getColumn("apellidos").setCaption("Apellidos");
@@ -88,8 +81,9 @@ public class ClienteUI extends UI {
 
 		// Initialize listing
 		listarClientes(null);
-	}
 
+		addComponent(todo);
+	}
 
 	void listarClientes(String texto) {
 		if (StringUtils.isEmpty(texto)) {
@@ -98,6 +92,20 @@ public class ClienteUI extends UI {
 		else {
 			parrilla.setItems(almacen.findByApellidosStartsWithIgnoreCase(texto));
 		}
+	}
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public ClienteEditor getEditor() {
+		return editor;
+	}
+
+	public ClienteRepository getAlmacen() {
+		return almacen;
 	}
 
 }
