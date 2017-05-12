@@ -2,39 +2,37 @@ package mcuca.establecimiento;
 
 import java.util.Collection;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import com.vaadin.server.VaadinRequest;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.ValueChangeMode;
-import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Alignment;
+import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 
-@SpringUI(path="/establecimiento")
-public class EstablecimientoUI extends UI {
-
-	private static final long serialVersionUID = 1L;
+@SuppressWarnings("serial")
+@SpringView(name = EstablecimientoView.VIEW_NAME)
+public class EstablecimientoView extends VerticalLayout implements View {
+	public static final String VIEW_NAME = "establecimiento";
+	
 
 	private final EstablecimientoRepository almacen;
-
 	private final EstablecimientoEditor editor;
-
 	final Grid<Establecimiento> parrilla;
-
 	final TextField filtro;
 
 	private final Button agregarNuevoBoton;
 
 	@Autowired
-	public EstablecimientoUI(EstablecimientoRepository almacen, EstablecimientoEditor editor) {
+	public EstablecimientoView(EstablecimientoRepository almacen, EstablecimientoEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
 		this.parrilla = new Grid<>(Establecimiento.class);
@@ -42,17 +40,12 @@ public class EstablecimientoUI extends UI {
 		this.agregarNuevoBoton = new Button("Nuevo Establecimiento");
 	}
 
-	@Override
-	protected void init(VaadinRequest request) {
-
-		Label titulo = new Label("iw2017-McUCA");
-		titulo.setStyleName("h1");
-		HorizontalLayout cabecera = new HorizontalLayout(titulo);		
+	@PostConstruct
+	void init() {
+		
 		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton);
 		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
-		VerticalLayout todo = new VerticalLayout(cabecera, acciones, contenido);
-		todo.setComponentAlignment(cabecera, Alignment.MIDDLE_CENTER);
-		setContent(todo);
+		VerticalLayout todo = new VerticalLayout(acciones, contenido);
 
 		editor.setWidth(300, Unit.PIXELS); //
 		parrilla.setHeight(420, Unit.PIXELS);
@@ -86,6 +79,8 @@ public class EstablecimientoUI extends UI {
 
 		// Initialize listing
 		listarEstablecimientos(null);
+		
+		addComponent(todo);
 	}
 
 
@@ -96,6 +91,12 @@ public class EstablecimientoUI extends UI {
 		else {
 			parrilla.setItems(almacen.findByNombreStartsWithIgnoreCase(texto));
 		}
+	}
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

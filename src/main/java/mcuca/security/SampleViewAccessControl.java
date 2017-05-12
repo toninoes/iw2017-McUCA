@@ -5,9 +5,6 @@ import org.springframework.stereotype.Component;
 import com.vaadin.spring.access.ViewAccessControl;
 import com.vaadin.ui.UI;
 
-/**
- * This demonstrates how you can control access to views.
- */
 @Component
 public class SampleViewAccessControl implements ViewAccessControl {
 
@@ -19,6 +16,8 @@ public class SampleViewAccessControl implements ViewAccessControl {
     	if(SecurityUtils.hasRole("ROLE_ADMIN")){
     		return true;
     	} else if (beanName.equals("clienteView")) {
+            return true;
+        } else if (beanName.equals("establecimientoView")) {
             return true;
         } else if (beanName.equals("userView")) {
             return SecurityUtils.hasRole("ROLE_USER") || SecurityUtils.hasRole("ROLE_MANAGER");

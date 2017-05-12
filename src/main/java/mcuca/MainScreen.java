@@ -16,6 +16,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.cliente.ClienteView;
+import mcuca.establecimiento.EstablecimientoView;
 import mcuca.usuario.UsuarioManagementView;
 import mcuca.usuario.UsuarioView;
 
@@ -39,8 +40,6 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		root.setSizeFull();
 
 		// Creamos la cabecera
-		//root.addComponent(new Label("This is the session: " + VaadinSession.getCurrent()));
-		//root.addComponent(new Label("This is the UI: " + this.toString()));
 		Label titulo = new Label("iw2017-McUCA");
 		titulo.setStyleName("h1");
 		root.addComponent(titulo);
@@ -54,6 +53,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		final CssLayout navigationBar = new CssLayout();
 		navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 		navigationBar.addComponent(createNavigationButton("Cliente", ClienteView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Est", EstablecimientoView.VIEW_NAME));
 		//navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
 		//navigationBar.addComponent(createNavigationButton("Usuario Management", UsuarioManagementView.VIEW_NAME));
 		root.addComponent(navigationBar);

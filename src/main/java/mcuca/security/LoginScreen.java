@@ -7,6 +7,7 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings("serial")
 public class LoginScreen extends VerticalLayout {
 
   
@@ -37,12 +38,5 @@ public class LoginScreen extends VerticalLayout {
 
         boolean login(String username, String password);
     }
-
-	
-    /**
-  	 * 
-  	 */
-  	private static final long serialVersionUID = 5304492736395275231L;
-
 	
 }

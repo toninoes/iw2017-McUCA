@@ -40,16 +40,14 @@ public class ClienteView extends VerticalLayout implements View {
 
 	@PostConstruct
 	void init() {
-		//addComponent(new Label("asfdddddddddddde"));
+		
 		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton);
 		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
 		VerticalLayout todo = new VerticalLayout(acciones, contenido);
 
-		/*editor.setWidth(300, Unit.PIXELS);
+		editor.setWidth(300, Unit.PIXELS);
 		parrilla.setHeight(420, Unit.PIXELS);
-		parrilla.setWidth(1100, Unit.PIXELS);*/
-		editor.setWidth("30%");
-		parrilla.setWidth("60%");
+		parrilla.setWidth(1100, Unit.PIXELS);
 		parrilla.setColumns("id", "nombre", "apellidos", "domicilio", "telefono");
 		parrilla.getColumn("nombre").setCaption("Nombre");
 		parrilla.getColumn("apellidos").setCaption("Apellidos");
