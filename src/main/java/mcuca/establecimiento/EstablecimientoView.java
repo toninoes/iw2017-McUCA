@@ -21,7 +21,7 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 @SpringView(name = EstablecimientoView.VIEW_NAME)
 public class EstablecimientoView extends VerticalLayout implements View {
-	public static final String VIEW_NAME = "establecimiento";
+	public static final String VIEW_NAME = "establecimientoView";
 	
 
 	private final EstablecimientoRepository almacen;

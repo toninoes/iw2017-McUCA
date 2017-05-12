@@ -44,6 +44,15 @@ public class Usuario implements UserDetails{
 	protected Usuario() {
 	}
 	
+	public Usuario(String dni, String nombre, String apellidos, String username, Rol rol) {
+		this.dni = dni;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.username = username;
+		this.rol = rol;
+		this.setPassword(dni);
+	}
+	
 	public Usuario(String dni, String nombre, String apellidos, String username, Rol rol, Set<Establecimiento> establecimientos) {
 		this.dni = dni;
 		this.nombre = nombre;
@@ -95,7 +104,7 @@ public class Usuario implements UserDetails{
 	@Override
 	public String toString() {
 		return String.format("Usuario[id=%d, nombre='%s', apellidos='%s', username='%s', password='%s']", id,
-				nombre, apellidos,username,password);
+				nombre, apellidos, username, password);
 	}
 
 	@Override

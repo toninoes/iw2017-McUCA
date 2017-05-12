@@ -12,6 +12,7 @@ import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.spring.annotation.SpringView;
@@ -20,7 +21,7 @@ import com.vaadin.spring.annotation.SpringView;
 @SuppressWarnings("serial")
 @SpringView(name = ClienteView.VIEW_NAME)
 public class ClienteView extends VerticalLayout implements View {
-	public static final String VIEW_NAME = "cliente";
+	public static final String VIEW_NAME = "clienteView";
 
 	private final ClienteRepository almacen;
 	private final ClienteEditor editor;
@@ -40,10 +41,11 @@ public class ClienteView extends VerticalLayout implements View {
 
 	@PostConstruct
 	void init() {
-		
+		Label titulo = new Label("Clientes");
+		titulo.setStyleName("h2");
 		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton);
 		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
-		VerticalLayout todo = new VerticalLayout(acciones, contenido);
+		VerticalLayout todo = new VerticalLayout(titulo, acciones, contenido);
 
 		editor.setWidth(300, Unit.PIXELS);
 		parrilla.setHeight(420, Unit.PIXELS);

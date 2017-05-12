@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
+import mcuca.usuario.Rol;
 import mcuca.usuario.Usuario;
 import mcuca.usuario.UsuarioService;
 
@@ -43,6 +44,7 @@ public class Application {
 				service.save(new Usuario("Kim", "Bauer"));
 				service.save(new Usuario("David", "Palmer"));
 				service.save(new Usuario("Michelle", "Dessler"));
+				service.save(new Usuario("111", "Antonio", "Ruiz", "toni", Rol.CAMARERO));
 
 				Usuario root = new Usuario("root", "root");
 				root.setPassword("root");

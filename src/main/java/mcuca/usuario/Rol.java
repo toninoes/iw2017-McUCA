@@ -1,9 +1,9 @@
 package mcuca.usuario;
 
 public enum Rol {
-	GERENTE("Gerente", 1), 
-	ENCARGADO("Encargado", 2), 
-	CAMARERO("Camarero", 3);
+	GERENTE("Gerente", 0), 
+	ENCARGADO("Encargado", 1), 
+	CAMARERO("Camarero", 2);
 	
 	private final String cargo;
 	private final int id;

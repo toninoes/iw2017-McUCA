@@ -19,7 +19,7 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 @SpringView(name = UsuarioManagementView.VIEW_NAME)
 public class UsuarioManagementView extends VerticalLayout implements View {
-	public static final String VIEW_NAME = "userManagementView";
+	public static final String VIEW_NAME = "usuarioManagementView";
 
 	private Grid<Usuario> grid;
 	private TextField filter;
@@ -36,7 +36,7 @@ public class UsuarioManagementView extends VerticalLayout implements View {
 		this.editor = editor;
 		this.grid = new Grid<>(Usuario.class);
 		this.filter = new TextField();
-		this.addNewBtn = new Button("New user");
+		this.addNewBtn = new Button("Nuevo Usuario");
 
 	}
 
@@ -52,7 +52,7 @@ public class UsuarioManagementView extends VerticalLayout implements View {
 		grid.setHeight(300, Unit.PIXELS);
 		grid.setColumns("id", "nombre", "apellidos");
 
-		filter.setPlaceholder("Filter by last name");
+		filter.setPlaceholder("Filtrar por apellidos");
 
 		// Hook logic to components
 

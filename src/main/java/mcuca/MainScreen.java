@@ -4,7 +4,6 @@ import javax.annotation.PostConstruct;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -40,7 +39,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		root.setSizeFull();
 
 		// Creamos la cabecera
-		Label titulo = new Label("iw2017-McUCA");
+		Label titulo = new Label("McUCA");
 		titulo.setStyleName("h1");
 		root.addComponent(titulo);
 		root.setComponentAlignment(titulo, Alignment.MIDDLE_CENTER);
@@ -52,10 +51,10 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		// Creamos la barra de navegación
 		final CssLayout navigationBar = new CssLayout();
 		navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-		navigationBar.addComponent(createNavigationButton("Cliente", ClienteView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Est", EstablecimientoView.VIEW_NAME));
-		//navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
-		//navigationBar.addComponent(createNavigationButton("Usuario Management", UsuarioManagementView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("C", ClienteView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("E", EstablecimientoView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Usuario Management", UsuarioManagementView.VIEW_NAME));
 		root.addComponent(navigationBar);
 
 		// Creamos el panel

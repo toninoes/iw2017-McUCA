@@ -18,7 +18,7 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 @SpringView(name = UsuarioView.VIEW_NAME)
 public class UsuarioView extends VerticalLayout implements View {
-	public static final String VIEW_NAME = "userView";
+	public static final String VIEW_NAME = "usuarioView";
 
 	private Grid<Usuario> grid;
 	private TextField filter;
@@ -46,7 +46,7 @@ public class UsuarioView extends VerticalLayout implements View {
 		grid.setHeight(300, Unit.PIXELS);
 		grid.setColumns("id", "nombre", "apellidos");
 
-		filter.setPlaceholder("Filter by last name");
+		filter.setPlaceholder("Filtrar por apellidos");
 
 		// Hook logic to components
 
