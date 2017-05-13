@@ -2,39 +2,36 @@ package mcuca.ingrediente;
 
 import java.util.Collection;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import com.vaadin.server.VaadinRequest;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.ValueChangeMode;
-import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Alignment;
+import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 
-@SpringUI(path="/ingrediente")
-public class IngredienteUI extends UI {
-
-	private static final long serialVersionUID = 1L;
+@SuppressWarnings("serial")
+@SpringView(name = IngredienteView.VIEW_NAME)
+public class IngredienteView extends VerticalLayout implements View {
+	public static final String VIEW_NAME = "ingredienteView";
 
 	private final IngredienteRepository almacen;
-
 	private final IngredienteEditor editor;
-
 	final Grid<Ingrediente> parrilla;
-
 	final TextField filtro;
-
 	private final Button agregarNuevoBoton;
 
 	@Autowired
-	public IngredienteUI(IngredienteRepository almacen, IngredienteEditor editor) {
+	public IngredienteView(IngredienteRepository almacen, IngredienteEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
 		this.parrilla = new Grid<>(Ingrediente.class);
@@ -42,17 +39,14 @@ public class IngredienteUI extends UI {
 		this.agregarNuevoBoton = new Button("Nuevo Ingrediente");
 	}
 
-	@Override
-	protected void init(VaadinRequest request) {
+	@PostConstruct
+	void init() {
 
-		Label titulo = new Label("iw2017-McUCA");
-		titulo.setStyleName("h1");
-		HorizontalLayout cabecera = new HorizontalLayout(titulo);		
+		Label titulo = new Label("Ingredientes");
+		titulo.setStyleName("h2");		
 		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton);
 		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
-		VerticalLayout todo = new VerticalLayout(cabecera, acciones, contenido);
-		todo.setComponentAlignment(cabecera, Alignment.MIDDLE_CENTER);
-		setContent(todo);
+		VerticalLayout todo = new VerticalLayout(titulo, acciones, contenido);
 
 		editor.setWidth(300, Unit.PIXELS); //
 		parrilla.setHeight(420, Unit.PIXELS);
@@ -86,6 +80,8 @@ public class IngredienteUI extends UI {
 
 		// Initialize listing
 		listarIngrediente(null);
+		
+		addComponent(todo);
 	}
 
 
@@ -96,6 +92,12 @@ public class IngredienteUI extends UI {
 		else {
 			parrilla.setItems(almacen.findByNombreStartsWithIgnoreCase(texto));
 		}
+	}
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

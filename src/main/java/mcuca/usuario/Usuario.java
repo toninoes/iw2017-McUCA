@@ -110,7 +110,14 @@ public class Usuario implements UserDetails{
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> list=new ArrayList<GrantedAuthority>();
-		list.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+		//list.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+		if (this.rol.getId() == 0) 
+			list.add(new SimpleGrantedAuthority("GERENTE"));
+		else if (this.rol.getId() == 1)
+			list.add(new SimpleGrantedAuthority("ENCARGADO"));
+		else if (this.rol.getId() == 2)
+			list.add(new SimpleGrantedAuthority("CAMARERO"));
+		
 		return list;
 
 	}

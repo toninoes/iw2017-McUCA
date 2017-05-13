@@ -14,6 +14,7 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -42,10 +43,11 @@ public class EstablecimientoView extends VerticalLayout implements View {
 
 	@PostConstruct
 	void init() {
-		
+		Label titulo = new Label("Establecimientos");
+		titulo.setStyleName("h2");
 		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton);
 		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
-		VerticalLayout todo = new VerticalLayout(acciones, contenido);
+		VerticalLayout todo = new VerticalLayout(titulo, acciones, contenido);
 
 		editor.setWidth(300, Unit.PIXELS); //
 		parrilla.setHeight(420, Unit.PIXELS);

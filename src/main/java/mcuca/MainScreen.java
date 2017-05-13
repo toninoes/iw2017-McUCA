@@ -2,8 +2,10 @@ package mcuca;
 
 import javax.annotation.PostConstruct;
 
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -16,11 +18,16 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.cliente.ClienteView;
 import mcuca.establecimiento.EstablecimientoView;
+import mcuca.ingrediente.IngredienteView;
+import mcuca.menu.MenuView;
+import mcuca.mesa.MesaView;
+import mcuca.pedido.PedidoView;
+import mcuca.producto.ProductoView;
 import mcuca.usuario.UsuarioManagementView;
 import mcuca.usuario.UsuarioView;
 
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "deprecation" })
 @SpringViewDisplay
 public class MainScreen extends VerticalLayout implements ViewDisplay {
 
@@ -45,16 +52,23 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		root.setComponentAlignment(titulo, Alignment.MIDDLE_CENTER);
 
 		Button logoutButton = new Button("Salir", event -> logout());
-		logoutButton.setStyleName(ValoTheme.BUTTON_LINK);
+		//logoutButton.setStyleName(ValoTheme.BUTTON_LINK);
+		logoutButton.setIcon(FontAwesome.POWER_OFF);
 		root.addComponent(logoutButton);
 
+		
 		// Creamos la barra de navegación
 		final CssLayout navigationBar = new CssLayout();
 		navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-		navigationBar.addComponent(createNavigationButton("C", ClienteView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("E", EstablecimientoView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Estb", EstablecimientoView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Ingr", IngredienteView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Menu", MenuView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Mesa", MesaView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Prod", ProductoView.VIEW_NAME));
 		navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Usuario Management", UsuarioManagementView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("UsMan", UsuarioManagementView.VIEW_NAME));
 		root.addComponent(navigationBar);
 
 		// Creamos el panel

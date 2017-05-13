@@ -2,39 +2,36 @@ package mcuca.mesa;
 
 import java.util.Collection;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import com.vaadin.server.VaadinRequest;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.ValueChangeMode;
-import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Alignment;
+import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 
-@SpringUI(path="/mesa")
-public class MesaUI extends UI {
-
-	private static final long serialVersionUID = 1L;
+@SuppressWarnings("serial")
+@SpringView(name = MesaView.VIEW_NAME)
+public class MesaView extends VerticalLayout implements View {
+	public static final String VIEW_NAME = "mesaView";
 
 	private final MesaRepository almacen;
-
 	private final MesaEditor editor;
-
 	final Grid<Mesa> parrilla;
-
 	final TextField filtro;
-
 	private final Button agregarNuevoBoton;
 
 	@Autowired
-	public MesaUI(MesaRepository almacen, MesaEditor editor) {
+	public MesaView(MesaRepository almacen, MesaEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
 		this.parrilla = new Grid<>(Mesa.class);
@@ -42,17 +39,13 @@ public class MesaUI extends UI {
 		this.agregarNuevoBoton = new Button("Nueva Mesa");
 	}
 
-	@Override
-	protected void init(VaadinRequest request) {
-
-		Label titulo = new Label("iw2017-McUCA");
-		titulo.setStyleName("h1");
-		HorizontalLayout cabecera = new HorizontalLayout(titulo);		
+	@PostConstruct
+	void init() {
+		Label titulo = new Label("Mesas");
+		titulo.setStyleName("h2");		
 		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton);
 		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
-		VerticalLayout todo = new VerticalLayout(cabecera, acciones, contenido);
-		todo.setComponentAlignment(cabecera, Alignment.MIDDLE_CENTER);
-		setContent(todo);
+		VerticalLayout todo = new VerticalLayout(titulo, acciones, contenido);
 
 		editor.setWidth(300, Unit.PIXELS); //
 		parrilla.setHeight(420, Unit.PIXELS);
@@ -86,6 +79,8 @@ public class MesaUI extends UI {
 
 		// Initialize listing
 		listarMesas(null);
+		
+		addComponent(todo);
 	}
 
 
@@ -96,6 +91,12 @@ public class MesaUI extends UI {
 		else {
 			parrilla.setItems(almacen.findByNumeroStartsWithIgnoreCase(texto));
 		}
+	}
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -27,7 +27,6 @@ public class ClienteView extends VerticalLayout implements View {
 	private final ClienteEditor editor;
 	final Grid<Cliente> parrilla;
 	final TextField filtro;
-
 	private final Button agregarNuevoBoton;
 
 	@Autowired

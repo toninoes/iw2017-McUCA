@@ -38,17 +38,15 @@ public class Application {
 		return (args) -> {
 
 			if (service.findAll().size() == 0) {
-				// guardar a couple of users with default password: default
-				service.save(new Usuario("Jack", "Bauer"));
-				service.save(new Usuario("Chloe", "O'Brian"));
-				service.save(new Usuario("Kim", "Bauer"));
-				service.save(new Usuario("David", "Palmer"));
-				service.save(new Usuario("Michelle", "Dessler"));
-				service.save(new Usuario("111", "Antonio", "Ruiz", "toni", Rol.CAMARERO));
+				// Guardar algunos usuarios de prueba: user: manu; pass:12
+				service.save(new Usuario("12", "Manuel Jesús", "López Jiménez", "manu", Rol.GERENTE));
+				service.save(new Usuario("34", "Antonio", "Ruiz Rondán", "toni", Rol.ENCARGADO));
+				service.save(new Usuario("56", "Andrés", "Martínez Gavira", "andres", Rol.CAMARERO));
+				service.save(new Usuario("78", "Luis Fernando", "Pérez Peregrino", "luisfe", Rol.CAMARERO));
 
-				Usuario root = new Usuario("root", "root");
-				root.setPassword("root");
-				service.save(root);
+				//Usuario root = new Usuario("root", "root");
+				//root.setPassword("root");
+				//service.save(root);
 
 				// fetch all users
 				log.info("Users found with findAll():");
