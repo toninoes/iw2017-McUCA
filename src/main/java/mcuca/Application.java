@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ import mcuca.usuario.Usuario;
 import mcuca.usuario.UsuarioService;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@EnableCaching
 public class Application {
 
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
