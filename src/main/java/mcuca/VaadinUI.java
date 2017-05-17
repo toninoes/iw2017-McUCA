@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
@@ -18,6 +19,7 @@ import mcuca.security.ErrorView;
 import mcuca.security.LoginScreen;
 import mcuca.security.SecurityUtils;
 
+@Theme("dashboard")
 @SuppressWarnings("serial")
 @SpringUI
 public class VaadinUI extends UI {
