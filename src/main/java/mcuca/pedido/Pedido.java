@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import mcuca.cliente.Cliente;
 import mcuca.producto.Producto;
 import mcuca.usuario.Usuario;
+import mcuca.zona.Zona;
 
 
 @Entity
@@ -32,6 +33,9 @@ public class Pedido {
 	private Tipo tipo;
 	
 	private Date hora;
+	
+	@ManyToOne
+	private Zona zona;
 	
 	@ManyToOne
 	private Cliente cliente;

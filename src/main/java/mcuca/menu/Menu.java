@@ -3,7 +3,10 @@ package mcuca.menu;
 import java.util.ArrayList;
 
 import javax.persistence.Entity;
-
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import mcuca.producto.Producto;
 
 @Entity
@@ -15,6 +18,8 @@ public class Menu extends Producto {
 	
 	private Float descuento;
 	
+	@ManyToMany(targetEntity=Producto.class, fetch=FetchType.EAGER)
+	@JoinTable(name = "menu_producto", joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"))
 	private ArrayList<Producto> productos;
 	
 	protected Menu() {

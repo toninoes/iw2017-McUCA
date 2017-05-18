@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
 import mcuca.pedido.Pedido;
 import mcuca.ingrediente.Ingrediente;
 
@@ -29,10 +29,12 @@ public class Producto {
 	
 	private String foto; //la url
 	
-	@ManyToMany(targetEntity=Pedido.class)
+	@ManyToMany(targetEntity=Pedido.class, fetch=FetchType.EAGER)
 	@JoinTable(name = "pedido_producto", joinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id"))
 	private Set<Pedido> pedidos;
 	
+	@ManyToMany(targetEntity=Ingrediente.class, fetch=FetchType.EAGER)
+	@JoinTable(name = "producto_ingredientes", joinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "ingrediente_id", referencedColumnName = "id"))
 	private ArrayList<Ingrediente> ingredientes;
 	
 	protected Producto() {
