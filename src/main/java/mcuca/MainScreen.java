@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Responsive;
 import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -43,6 +44,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	void init() {
 
 		final VerticalLayout root = new VerticalLayout();
+		Responsive.makeResponsive(root);
 		root.setSizeFull();
 
 		// Creamos la cabecera

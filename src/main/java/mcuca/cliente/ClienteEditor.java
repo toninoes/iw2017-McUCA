@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
@@ -13,11 +14,11 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+@SuppressWarnings({ "deprecation", "serial" })
 @SpringComponent
 @UIScope
 public class ClienteEditor extends VerticalLayout {
-
-	private static final long serialVersionUID = 1L;
+	
 
 	private final ClienteRepository almacen;
 
@@ -30,10 +31,10 @@ public class ClienteEditor extends VerticalLayout {
 	TextField domicilio = new TextField("Domicilio");
 	TextField telefono = new TextField("Telefono");
 
-	/* Action buttons */
-	Button guardar = new Button("Guardar");
-	Button cancelar = new Button("Cancelar");
-	Button borrar = new Button("Borrar");
+	/* Action buttons */	
+	Button guardar = new Button(FontAwesome.SAVE);
+	Button cancelar = new Button(FontAwesome.TIMES);
+	Button borrar = new Button(FontAwesome.ERASER);
 	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
 	Binder<Cliente> binder = new Binder<>(Cliente.class);

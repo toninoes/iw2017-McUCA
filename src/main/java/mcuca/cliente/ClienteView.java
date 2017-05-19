@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Responsive;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -42,23 +43,39 @@ public class ClienteView extends VerticalLayout implements View {
 	void init() {
 		Label titulo = new Label("Clientes");
 		titulo.setStyleName("h2");
-		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton);
-		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
-		VerticalLayout todo = new VerticalLayout(titulo, acciones, contenido);
-
-		editor.setWidth(300, Unit.PIXELS);
-		parrilla.setHeight(420, Unit.PIXELS);
-		parrilla.setWidth(1100, Unit.PIXELS);
+		addComponent(titulo);		
+		
+		filtro.setPlaceholder("Búsqueda por apellidos");
+		HorizontalLayout acciones = new HorizontalLayout();	
+		Responsive.makeResponsive(acciones);
+		acciones.setSpacing(false);
+		acciones.setMargin(false);
+		acciones.addComponent(filtro);
+		acciones.addComponent(agregarNuevoBoton);
+		addComponent(acciones);	
+		
+		parrilla.setWidth("100%");
 		parrilla.setColumns("id", "nombre", "apellidos", "domicilio", "telefono");
 		parrilla.getColumn("nombre").setCaption("Nombre");
 		parrilla.getColumn("apellidos").setCaption("Apellidos");
 		parrilla.getColumn("domicilio").setCaption("Domicilio");
 		parrilla.getColumn("telefono").setCaption("Telefono");
+		
+		editor.setWidth("100%");
 
-		filtro.setWidth(300, Unit.PIXELS);
-		filtro.setPlaceholder("Búsqueda por apellidos");
+		
+		HorizontalLayout contenido = new HorizontalLayout();
+		Responsive.makeResponsive(contenido);
+		contenido.setSpacing(false);
+		contenido.setMargin(false);
+		contenido.setSizeFull();
+		
+		contenido.addComponent(parrilla);
+		contenido.addComponent(editor);
+		contenido.setExpandRatio(parrilla, 0.7f);
+		contenido.setExpandRatio(editor, 0.3f);
+		addComponent(contenido);
 
-		// Hook logic to components
 
 		// Replace listing with filtered content when user changes filtro
 		filtro.setValueChangeMode(ValueChangeMode.LAZY);
@@ -81,7 +98,7 @@ public class ClienteView extends VerticalLayout implements View {
 		// Initialize listing
 		listarClientes(null);
 
-		addComponent(todo);
+		
 	}
 
 	void listarClientes(String texto) {
