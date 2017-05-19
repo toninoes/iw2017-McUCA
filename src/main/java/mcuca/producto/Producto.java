@@ -35,7 +35,7 @@ public class Producto {
 	
 	@ManyToMany(targetEntity=Ingrediente.class, fetch=FetchType.EAGER)
 	@JoinTable(name = "producto_ingredientes", joinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "ingrediente_id", referencedColumnName = "id"))
-	private ArrayList<Ingrediente> ingredientes;
+	private Set<Ingrediente> ingredientes;
 	
 	protected Producto() {
 	}
@@ -98,11 +98,11 @@ public class Producto {
 		return String.format("%s", nombre);
 	}
 
-	public ArrayList<Ingrediente> getIngredientes() {
+	public Set<Ingrediente> getIngredientes() {
 		return ingredientes;
 	}
 
-	public void setIngredientes(ArrayList<Ingrediente> ingredientes) {
+	public void setIngredientes(Set<Ingrediente> ingredientes) {
 		this.ingredientes = ingredientes;
 	}
 	
