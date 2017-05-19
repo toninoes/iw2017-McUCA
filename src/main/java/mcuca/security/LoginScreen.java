@@ -9,7 +9,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -20,7 +19,6 @@ import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings({ "serial", "deprecation" })
 public class LoginScreen extends VerticalLayout {
-
   
 	public LoginScreen(LoginCallback callback) {
      
@@ -29,8 +27,6 @@ public class LoginScreen extends VerticalLayout {
         Component loginForm = buildLoginForm(callback);
         addComponent(loginForm);
         setComponentAlignment(loginForm, Alignment.MIDDLE_CENTER);
-        
-        
 	}
 	
 	private Component buildLoginForm(LoginCallback callback) {
@@ -67,6 +63,7 @@ public class LoginScreen extends VerticalLayout {
                 username.focus();
             }
         });
+        
         login.addStyleName(ValoTheme.BUTTON_PRIMARY);
         login.setClickShortcut(KeyCode.ENTER);
         login.focus();
@@ -83,13 +80,13 @@ public class LoginScreen extends VerticalLayout {
         CssLayout labels = new CssLayout();
         labels.addStyleName("labels");
 
-        Label welcome = new Label("Bienvenidos a ");
+        Label welcome = new Label("Bienvenidos a");
         welcome.setSizeUndefined();
         welcome.addStyleName(ValoTheme.LABEL_H4);
         welcome.addStyleName(ValoTheme.LABEL_COLORED);
         labels.addComponent(welcome);
 
-        Label title = new Label(" McUCA");
+        Label title = new Label("McUCA");
         title.setSizeUndefined();
         title.addStyleName(ValoTheme.LABEL_H3);
         title.addStyleName(ValoTheme.LABEL_LIGHT);

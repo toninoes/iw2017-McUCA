@@ -9,11 +9,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.security.AccessDeniedView;
 import mcuca.security.ErrorView;
@@ -33,11 +35,15 @@ public class VaadinUI extends UI {
 	AuthenticationManager authenticationManager;
 
 	@Autowired
-    MainScreen mainScreen;
+	MainScreen mainScreen;
 
 
 	@Override
 	protected void init(VaadinRequest request) {
+		
+		Responsive.makeResponsive(this);
+        addStyleName(ValoTheme.UI_WITH_MENU);
+        
 
 	   	this.getUI().getNavigator().setErrorView(ErrorView.class);
 		viewProvider.setAccessDeniedViewClass(AccessDeniedView.class);
