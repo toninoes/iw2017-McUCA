@@ -1,0 +1,51 @@
+@mixin v-progressbar {
+    $mat-track-color: valo-font-color( $mat-background-color, 0.2) !default;
+    .v-progressbar-wrapper {
+        height: 5px;
+        border-radius: 0px;
+    }
+    .v-progressbar-indicator {
+        border-radius: 0px;
+    }
+    .v-progressbar-point .v-progressbar-indicator:before {
+        width: 6px;
+    }
+    .v-slider-base {
+        border-radius: 0px;
+    }
+    .v-slider-handle:before {
+        background: $v-selection-color;
+        box-shadow: none;
+    }
+    .v-slider-handle:before,
+    .demo .v-slider-handle:after {
+        margin-top: 8px;
+    }
+    .v-slider-base {
+        height: 4px;
+    }
+    .v-slider-vertical .v-slider-base {
+        width: 4px;
+    }
+    .v-slider-base {
+        background: $mat-track-color;
+    }
+    .v-slider-vertical .v-slider-base {
+        background: $mat-track-color;
+    }
+    .v-progressbar-wrapper {
+        background: $mat-track-color;
+    }
+    .v-slider-vertical .v-slider-handle:before, .v-slider-vertical .v-slider-handle:after {
+        width: 18px;
+        height: 18px;
+        margin-left: -7px;
+    }
+   .v-slider-handle:before, .v-slider-handle:after {
+        margin-top: 10px;
+    }
+    .v-slider-handle:before, .v-slider-handle:after {
+        width: 18px;
+        height: 18px;
+    }
+}

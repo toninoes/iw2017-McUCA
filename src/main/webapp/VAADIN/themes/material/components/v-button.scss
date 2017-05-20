@@ -1,0 +1,160 @@
+body:not(.v-touch) .v-button:not(.v-disabled):not(.borderless):not(.borderless-colored):not(.floating-action):hover,
+body.v-touch .v-button:not(.v-disabled):not(.borderless):not(.borderless-colored):not(.floating-action):active {
+    background: valo-font-color($v-background-color, 0.05);
+}
+body:not(.v-touch) .v-button.floating:not(.v-disabled):not(.borderless):not(.borderless-colored):not(.floating-action):hover,
+body.v-touch .v-button.floating:not(.v-disabled):not(.borderless):not(.borderless-colored):not(.floating-action):active {
+    box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+}
+body:not(.v-touch) .friendly.v-button:not(.v-disabled):not(.borderless):not(.borderless-colored):hover,
+body.v-touch .friendly.v-button:not(.v-disabled):not(.borderless):not(.borderless-colored):active {
+    background: valo-font-color($v-friendly-color, 0.1);
+}
+body:not(.v-touch) .danger.v-button:not(.v-disabled):not(.borderless):not(.borderless-colored):hover,
+body.v-touch .danger.v-button:not(.v-disabled):not(.borderless):not(.borderless-colored):active {
+    background: valo-font-color($v-error-indicator-color, 0.1);
+}
+body:not(.v-touch) .primary.v-button:not(.v-disabled):not(.borderless):not(.borderless-colored):hover,
+body.v-touch .primary.v-button:not(.v-disabled):not(.borderless):not(.borderless-colored):active {
+    background: valo-font-color($v-selection-color, 0.1);
+}
+body:not(.v-touch) .v-button.borderless:not(.v-disabled):hover,
+body:not(.v-touch) .v-button.borderless-colored:not(.v-disabled):hover,
+body.v-touch .v-button.borderless:not(.v-disabled):active,
+body.v-touch .v-button.borderless-colored:not(.v-disabled):active {
+    background: valo-font-color($v-background-color, 0.1);
+}
+body:not(.v-touch) .v-button.floating-action:hover,
+body.v-touch .v-button.floating-action:active {
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3) !important;
+    background: valo-font-color($v-selection-color, 0.1);
+}
+body:not(.v-touch) .v-button.floating-action.friendly:hover,
+body.v-touch .v-button.floating-action.friendly:active {
+    background: valo-font-color($v-friendly-color, 0.1);
+}
+body:not(.v-touch) .v-button.floating-action.danger:hover,
+body.v-touch .v-button.floating-action.danger:active {
+    background: valo-font-color($v-error-indicator-color, 0.1);
+}
+body:not(.v-touch) .v-button.border:hover,
+body.v-touch .v-button.border:active {
+    color: valo-font-color(valo-font-color($mat-background-color, 1),1);
+    background: valo-font-color($mat-background-color, 1) !important;
+}
+body:not(.v-touch) .v-button.border.primary:hover,
+body.v-touch .v-button.border:active {
+    color: valo-font-color($v-focus-color, 1);
+    background: $v-focus-color !important;
+}
+body:not(.v-touch) .v-button.border.friendly:hover,
+body.v-touch .v-button.border.friendly:active {
+    color: valo-font-color($v-friendly-color, 1);
+    background: $v-friendly-color !important;
+}
+body:not(.v-touch) .v-button.border.danger:hover,
+body.v-touch .v-button.border.danger:active {
+    color: valo-font-color($v-error-indicator-color, 1);
+    background: $v-error-indicator-color !important;
+}
+body:not(.v-touch) .v-button.borderless:hover,
+body.v-touch .v-button.borderless:active {
+    background: mix($mat-background-color, valo-font-color($mat-background-color), 80%) !important;
+}
+body:not(.v-touch) .v-button.borderless.primary:hover,
+body.v-touch .v-button.borderless:active {
+    background: mix($mat-background-color, $v-focus-color, 80%) !important;
+}
+body:not(.v-touch) .v-button.borderless.friendly:hover,
+body.v-touch .v-button.borderless.friendly:active {
+    background: mix($mat-background-color, $v-friendly-color, 80%) !important;
+}
+body:not(.v-touch) .v-button.borderless.danger:hover,
+body.v-touch .v-button.borderless.danger:active {
+    background: mix($mat-background-color, $v-error-indicator-color, 80%) !important;
+}
+@mixin v-button {
+    .v-button {
+        @extend .z-depth-0;
+        transition: box-shadow .3s ease-out, background .3s;
+        text-transform: uppercase;
+    }
+    .v-button.floating:not(.borderless):not(.floating-action):not(.border) {
+        @extend .z-depth-1;
+        transition: box-shadow .3s ease-out, background .3s;
+        text-transform: uppercase;
+    }
+    .v-button.round {
+        border-radius: 30px;
+    }
+    .v-button.floating-action {
+        @extend .z-depth-3;
+        width: 56px;
+        height: 56px;
+        padding: 0px;
+        border-radius: 100%;
+        background: $v-selection-color;
+        color: valo-font-color($v-selection-color, 1.0);
+    }
+    .v-button.border {
+        @extend .z-depth-0;
+        border: 1px solid valo-font-color($mat-background-color);
+        background: transparent;
+        color: valo-font-color($mat-background-color);
+    }
+    .v-button.border.primary {
+        border: 1px solid $v-focus-color;
+        color: $v-focus-color;
+    }
+    .v-button.border:after {
+        border: 0px solid $v-focus-color;
+    }
+    .v-button.border.friendly {
+        border: 1px solid $v-friendly-color;
+        color: $v-friendly-color;
+    }
+    .v-button.border.danger {
+        border: 1px solid $v-error-indicator-color;
+        color: $v-error-indicator-color;
+    }
+    .v-button.borderless {
+        color: valo-font-color($mat-background-color);
+    }
+    .v-button.borderless.primary {
+        color: $v-focus-color;
+    }
+    .v-button.borderless.friendly {
+        color: $v-friendly-color;
+    }
+    .v-button.borderless.danger {
+        color: $v-error-indicator-color;
+    }
+    .v-button.floating-action .v-icon {
+        line-height: 56px;
+    }
+    .v-button.floating-action.friendly {
+        background: $v-friendly-color;
+    }
+    .v-button.floating-action.danger {
+        background: $v-error-indicator-color;
+    }
+    .v-button.v-disabled {
+        background: valo-font-color($v-background-color, 0.2);
+        color: valo-font-color(valo-font-color($v-background-color, 0.2), 0.7);
+        box-shadow: none;
+    }
+    .v-button-quiet {
+        visibility: visible;
+        background: transparent;
+        @extend .z-depth-0;
+    }
+    .v-button:hover:after {
+        background-color: transparent;
+    }
+    .v-button-primary {
+        font-weight: 500;
+    }
+    .v-button-primary.floating-action{
+        min-width: 56px;
+    }
+}

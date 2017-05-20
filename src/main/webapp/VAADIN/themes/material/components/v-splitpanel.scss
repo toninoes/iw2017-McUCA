@@ -1,0 +1,18 @@
+ @mixin v-splitpanel {
+     .v-splitpanel-horizontal,
+     .v-splitpanel-vertical {
+         @extend .z-depth-1;
+     }
+     .v-splitpanel-hsplitter div:before {
+         border: 1px solid #b2b2b2 !important;
+     }
+     .v-splitpanel-hsplitter div:after {
+         border: 1px solid #b2b2b2 !important;
+     }
+     .v-splitpanel-vsplitter div:before {
+         border: 1px solid #b2b2b2 !important;
+     }
+     .v-splitpanel-vsplitter div:after {
+         border: 1px solid #b2b2b2 !important;
+     }
+ }

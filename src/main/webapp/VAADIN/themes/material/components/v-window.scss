@@ -1,0 +1,33 @@
+@mixin v-window {
+    .v-window-outerheader:after {
+        border-top: none;
+    }
+    .v-window-closebox {
+        padding-right: 0px;
+    }
+    .v-window-maximizebox,
+    .v-window-restorebox {
+        right: 45px;
+    }
+    .v-window-closebox-disabled + .v-window-closebox,
+    .v-window-resizebox-disabled + .v-window-closebox,
+    .v-window-restorebox-disabled + .v-window-closebox,
+    .v-window-maximizebox-disabled + .v-window-closebox {
+        width: 64px;
+        padding-right: 0;
+        border-bottom-left-radius: 2px;
+    }
+    .v-window-header {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 64px;
+    }
+    .v-window-closebox,
+    .v-window-maximizebox,
+    .v-window-restorebox {
+        width: 64px;
+        height: 64px;
+        line-height: 62px;
+        font-size: 31px;
+    }
+}

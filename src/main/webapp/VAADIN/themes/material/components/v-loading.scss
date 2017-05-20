@@ -1,0 +1,8 @@
+@mixin v-loading {
+    .v-reconnect-dialog {
+        background: $mat-card-color;
+        color: $v-selection-color;
+        border-radius: 2px;
+        font-weight: 400;
+    }
+}

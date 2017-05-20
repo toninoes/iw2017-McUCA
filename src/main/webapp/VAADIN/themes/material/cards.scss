@@ -1,0 +1,40 @@
+body:not(.v-touch) .card-hoverable:hover,
+body.v-touch .card-hoverable:active {
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.3);
+}
+
+@mixin cards {
+    .material-card {
+        padding: 20px;
+        border-radius: 2px;
+        background: $mat-card-color;
+    }
+    .card-0 {
+        @extend .z-depth-0;
+        @extend .material-card;
+    }
+    .card-1 {
+        @extend .z-depth-1;
+        @extend .material-card;
+    }
+    .card-2 {
+        @extend .z-depth-2;
+        @extend .material-card;
+    }
+    .card-3 {
+        @extend .z-depth-3;
+        @extend .material-card;
+    }
+    .card-4 {
+        @extend .z-depth-4;
+        @extend .material-card;
+    }
+    .card-5 {
+        @extend .z-depth-5;
+        @extend .material-card;
+    }
+    .card-hoverable {
+        @extend .hoverable;
+        @extend .material-card;
+    }
+}

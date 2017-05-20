@@ -1,0 +1,8 @@
+@mixin v-select-twincol {
+    .v-select-twincol select {
+        @extend .z-depth-1;
+    }
+    select.v-select-select {
+        @extend .z-depth-1;
+    }
+}

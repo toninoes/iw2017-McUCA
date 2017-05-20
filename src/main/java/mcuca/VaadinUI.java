@@ -23,7 +23,7 @@ import mcuca.security.LoginScreen;
 import mcuca.security.SecurityUtils;
 
 @Title("McUCA")
-@Theme("dashboard")
+@Theme("material")
 @SuppressWarnings("serial")
 @SpringUI
 public class VaadinUI extends UI {
