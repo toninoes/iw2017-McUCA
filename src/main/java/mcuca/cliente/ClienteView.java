@@ -23,7 +23,6 @@ import com.vaadin.spring.annotation.SpringView;
 @SpringView(name = ClienteView.VIEW_NAME)
 public class ClienteView extends VerticalLayout implements View {
 	public static final String VIEW_NAME = "clienteView";
-
 	private final ClienteRepository almacen;
 	private final ClienteEditor editor;
 	final Grid<Cliente> parrilla;
@@ -62,7 +61,6 @@ public class ClienteView extends VerticalLayout implements View {
 		parrilla.getColumn("telefono").setCaption("Telefono");
 		
 		editor.setWidth("100%");
-
 		
 		HorizontalLayout contenido = new HorizontalLayout();
 		Responsive.makeResponsive(contenido);
@@ -75,7 +73,6 @@ public class ClienteView extends VerticalLayout implements View {
 		contenido.setExpandRatio(parrilla, 0.7f);
 		contenido.setExpandRatio(editor, 0.3f);
 		addComponent(contenido);
-
 
 		// Replace listing with filtered content when user changes filtro
 		filtro.setValueChangeMode(ValueChangeMode.LAZY);
@@ -96,9 +93,7 @@ public class ClienteView extends VerticalLayout implements View {
 		});
 
 		// Initialize listing
-		listarClientes(null);
-
-		
+		listarClientes(null);		
 	}
 
 	void listarClientes(String texto) {
