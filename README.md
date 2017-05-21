@@ -29,9 +29,11 @@ Aplicación web en Java para la gestión de un establecimiento de comida rápida
 - La primera vez: ejecutar los siguientes comandos en el directorio donde vaya a almacenar los archivos de la aplicación ("workspace"):
 
 ```sh
-iw2017@mcUCA ~/workspace $ git init
-iw2017@mcUCA ~/workspace $ git remote add origin https://github.com/toninoes/iw2017-McUCA.git
-iw2017@mcUCA ~/workspace $ git pull
+iw2017@mcUCA ~/workspace $ mkdir iw2017-McUCA
+iw2017@mcUCA ~/workspace $ cd iw2017-McUCA
+iw2017@mcUCA ~/workspace/iw2017-McUCA $ git init
+iw2017@mcUCA ~/workspace/iw2017-McUCA $ git remote add origin https://github.com/toninoes/iw2017-McUCA.git
+iw2017@mcUCA ~/workspace/iw2017-McUCA $ git pull origin master
 ```
 
 - El resto de las veces: para descargar archivos con las últimas modificaciones de los demás participantes en el proyecto, ubicados ya dentro del directorio del proyecto ("~/workspace/iw2017-McUCA"):
