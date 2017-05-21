@@ -19,6 +19,7 @@ public class Cliente {
 	private String domicilio;
 	
 	private String telefono;
+	
 
 	protected Cliente() {
 	}
