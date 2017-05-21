@@ -1,57 +1,55 @@
 package mcuca.pedido;
 
-import java.util.Collection;
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
-@SuppressWarnings("serial")
 @SpringComponent
 @UIScope
-public class PedidoEditor extends VerticalLayout {
+public class LineaPedidoEditor extends VerticalLayout {
 	
-	private final PedidoRepository repoPedido;
+	private static final long serialVersionUID = 1L;
+	
 	private final LineaPedidoRepository repoLineaPedido;
 	
-	private Pedido pedido;
-	
-	/* Fields to edit properties in Pedido entity */
-	Label title = new Label("Nuevo Pedido");
-	NativeSelect<Tipo> tipo = new NativeSelect<>("Tipo");
-	NativeSelect<LineaPedido> linea_pedidos = new NativeSelect<>("LineaPedido");
+	private LineaPedido lineaPedido;
+
+	/* Fields to edit properties in LineaPedido entity */
+	Label title = new Label("Nueva Linea de Pedido");
+	TextField cantidad = new TextField("Cantidad");
+	TextField en_cocina = new TextField("EnCocina");
 	
 	/* Action buttons */
-	Button abierto = new Button("Cerrar Pedido");
 	Button guardar = new Button("Guardar");
 	Button cancelar = new Button("Cancelar");
 	Button borrar = new Button("Borrar");
 	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
-	Binder<Pedido> binder = new Binder<>(Pedido.class);
+	Binder<LineaPedido> binder = new Binder<>(LineaPedido.class);
 	
 	@Autowired
-	public PedidoEditor(LineaPedidoRepository repoLineaPedido, PedidoRepository repoPedido) {
+	public LineaPedidoEditor(LineaPedidoRepository repoLineaPedido) {
 		this.repoLineaPedido = repoLineaPedido;
-		this.repoPedido = repoPedido;
-
-		tipo.setItems(Tipo.class.getEnumConstants());
 		
-		linea_pedidos.setItems((Collection<LineaPedido>) repoLineaPedido.findAll());
-		addComponents(title, abierto, tipo, acciones);
+		addComponents(title, cantidad, en_cocina, acciones);
 		
-		binder.bindInstanceFields(this);
+		//binder.bindInstanceFields(this);
+		binder.bind(cantidad, "cantidad");
+		binder.forField(cantidad)
+		  .withNullRepresentation("")
+		  .withConverter(
+		    new StringToIntegerConverter("Por favor introduce un número"))
+		  .bind("cantidad");
 
 		// Configure and style components
 		setSpacing(true);
@@ -60,26 +58,10 @@ public class PedidoEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(this::salvar);
-		borrar.addClickListener(e -> repoPedido.delete(pedido));
-		cancelar.addClickListener(e -> editarPedido(pedido));
-		abierto.addClickListener(this::cerrar);
-		
+		guardar.addClickListener(e -> repoLineaPedido.save(lineaPedido));
+		borrar.addClickListener(e -> repoLineaPedido.delete(lineaPedido));
+		cancelar.addClickListener(e -> editarLineaPedido(lineaPedido));
 		setVisible(false);
-	}
-	
-	public void salvar(ClickEvent e) {
-		binder.setBean(pedido);
-		//pedido.setLineaPedido(linea_pedidos.getValue());
-		pedido.setAbierto(true);
-		pedido.setFecha(new Date());
-		repoPedido.save(pedido);
-	}
-	
-	public void cerrar(ClickEvent e) {
-		binder.setBean(pedido);
-		pedido.setAbierto(false);
-		repoPedido.save(pedido);
 	}
 	
 	public interface ChangeHandler {
@@ -87,7 +69,7 @@ public class PedidoEditor extends VerticalLayout {
 		void onChange();
 	}
 	
-	public final void editarPedido(Pedido c) {
+	public final void editarLineaPedido(LineaPedido c) {
 		if (c == null) {
 			setVisible(false);
 			return;
@@ -95,22 +77,24 @@ public class PedidoEditor extends VerticalLayout {
 		final boolean persisted = c.getId() != null;
 		if (persisted) {
 			// Find fresh entity for editing
-			pedido = repoPedido.findOne(c.getId());
+			lineaPedido = repoLineaPedido.findOne(c.getId());
 		}
 		else {
-			pedido = c;
+			lineaPedido = c;
 		}
 		cancelar.setVisible(persisted);
 
 		// Bind mcuca properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
-		binder.setBean(pedido);
+		binder.setBean(lineaPedido);
 
 		setVisible(true);
 
 		// A hack to ensure the whole form is visible
 		guardar.focus();
+		// Select all text in numero field automatically
+		cantidad.selectAll();
 	}
 	
 	public void setChangeHandler(ChangeHandler h) {
@@ -118,7 +102,6 @@ public class PedidoEditor extends VerticalLayout {
 		// is clicked
 		guardar.addClickListener(e -> h.onChange());
 		borrar.addClickListener(e -> h.onChange());
-		abierto.addClickListener(e -> h.onChange());
 	}
 	
 	public LineaPedidoRepository getRepoProducto() {
