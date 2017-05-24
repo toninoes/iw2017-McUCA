@@ -1,15 +1,12 @@
-package com.example.tests;
+package mcuca.cliente;
 
-import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.Select;
 
-public class CrearIngrediente {
+public class TestFuncionalBuscarCliente {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -18,19 +15,15 @@ public class CrearIngrediente {
   @Before
   public void setUp() throws Exception {
     driver = new FirefoxDriver();
-    baseUrl = "http://localhost:8181/ingrediente";
+    baseUrl = "http://localhost:8181/cliente";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
   }
 
   @Test
-  public void testCrearIngrediente() throws Exception {
-    driver.get(baseUrl + "/ingrediente");
-    driver.findElement(By.cssSelector("div.v-button.v-widget")).click();
-    driver.findElement(By.id("gwt-uid-3")).clear();
-    driver.findElement(By.id("gwt-uid-3")).sendKeys("Mortadela");
-    driver.findElement(By.id("gwt-uid-5")).clear();
-    driver.findElement(By.id("gwt-uid-5")).sendKeys("1");
-    driver.findElement(By.xpath("//div[@id='ROOT-2521314']/div/div[2]/div[5]/div/div[3]/div/div[7]/div/div")).click();
+  public void testFuncionalBuscarCliente() throws Exception {
+    driver.get(baseUrl + "/cliente");
+    driver.findElement(By.xpath("//input[@type='text']")).clear();
+    driver.findElement(By.xpath("//input[@type='text']")).sendKeys("a");
   }
 
   @After
