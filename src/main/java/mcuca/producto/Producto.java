@@ -1,6 +1,5 @@
 package mcuca.producto;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -11,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import mcuca.pedido.Pedido;
 import mcuca.ingrediente.Ingrediente;
 
 
@@ -29,9 +27,9 @@ public class Producto {
 	
 	private String foto; //la url
 	
-	@ManyToMany(targetEntity=Pedido.class, fetch=FetchType.EAGER)
-	@JoinTable(name = "pedido_producto", joinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id"))
-	private Set<Pedido> pedidos;
+	//@ManyToMany(targetEntity=Pedido.class, fetch=FetchType.EAGER)
+	//@JoinTable(name = "pedido_producto", joinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id"))
+	//private Set<Pedido> pedidos;
 	
 	@ManyToMany(targetEntity=Ingrediente.class, fetch=FetchType.EAGER)
 	@JoinTable(name = "producto_ingredientes", joinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "ingrediente_id", referencedColumnName = "id"))
@@ -46,13 +44,17 @@ public class Producto {
 		this.iva = iva;
 	}
 
-	public Producto(String nombre, Float precio, Float iva, Set<Pedido> pedidos) {
+	/*public Producto(String nombre, Float precio, Float iva, Set<Pedido> pedidos) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.iva = iva;
-		this.pedidos = pedidos;
-	}
+		//this.pedidos = pedidos;
+	}*/
 
+	public Long getId() {
+		return id;
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -85,13 +87,13 @@ public class Producto {
 		this.foto = foto;
 	}
 	
-	public Set<Pedido> getPedidos() {
+	/*public Set<Pedido> getPedidos() {
 		return pedidos;
 	}
 	   
 	public void setPedidos(Set<Pedido> pedidos) {
 		this.pedidos = pedidos;
-	}
+	}*/
 	
 	@Override
 	public String toString() {

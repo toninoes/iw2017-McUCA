@@ -128,10 +128,11 @@ public class PedidoView extends VerticalLayout implements View {
 	}
 
 	public static void listarPedidos(long id) {
-		if(id == 0)
-			parrilla.setItems((Collection<Pedido>) almacen.findAll());
-		else
-			parrilla.setItems((Collection<Pedido>) almacen.findById(id));
+		if(almacen != null)
+			if(id == 0)
+				parrilla.setItems((Collection<Pedido>) almacen.findAll());
+			else
+				parrilla.setItems((Collection<Pedido>) almacen.findById(id));
 	}
 	
 	public static void listarPedidos(Long id, Tipo tipo) {

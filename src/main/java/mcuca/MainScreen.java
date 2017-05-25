@@ -99,7 +99,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		button.addClickListener(event -> {
 			PedidoView.cliente_id = 0;
 			PedidoView.pedido_id = 0;
-			PedidoView.listarPedidos(0);
+			PedidoView.listarPedidos(0L);
 			getUI().getNavigator().navigateTo(viewName);
 		});
 		return button;

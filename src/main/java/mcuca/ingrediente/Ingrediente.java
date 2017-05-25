@@ -53,8 +53,7 @@ public class Ingrediente {
 
 	@Override
 	public String toString() {
-		return String.format("Ingrediente[id=%d, nombre='%s', precio=%f]", id,
-				nombre, precio);
+		return nombre;
 	}
 
 }
