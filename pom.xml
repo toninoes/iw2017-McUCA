@@ -6,7 +6,9 @@
 
     <groupId>org.springframework</groupId>
     <artifactId>iw2017-McUCA</artifactId>
+    <packaging>war</packaging>
     <version>0.1.0</version>
+
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -38,7 +40,7 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
@@ -65,14 +67,15 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
-        <!--<dependency>
-        	<groupId>org.springframework.security</groupId>
-        	<artifactId>spring-security-core</artifactId>
-        </dependency>-->
-
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
@@ -96,8 +99,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${dir}</outputDirectory>
+                </configuration>
             </plugin>
         </plugins>
+        <finalName>iw2017-McUCA</finalName>
     </build>
 
 </project>

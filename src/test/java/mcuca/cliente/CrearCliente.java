@@ -1,15 +1,12 @@
-package com.example.tests;
+package mcuca.cliente;
 
-import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.Select;
 
-public class ActualizarIngrediente {
+public class CrearCliente {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -18,17 +15,23 @@ public class ActualizarIngrediente {
   @Before
   public void setUp() throws Exception {
     driver = new FirefoxDriver();
-    baseUrl = "http://localhost:8181/ingrediente";
+    baseUrl = "http://localhost:8181/cliente";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
   }
 
   @Test
-  public void testActualizarIngrediente() throws Exception {
-    driver.get(baseUrl + "/ingrediente");
-    driver.findElement(By.xpath("//div[@id='ROOT-2521314']/div/div[2]/div[5]/div/div/div/div[3]/table/tbody/tr/td[2]")).click();
+  public void testCrearCliente() throws Exception {
+    driver.get(baseUrl + "/cliente");
+    driver.findElement(By.cssSelector("div.v-button.v-widget")).click();
+    driver.findElement(By.id("gwt-uid-3")).clear();
+    driver.findElement(By.id("gwt-uid-3")).sendKeys("Antonio");
     driver.findElement(By.id("gwt-uid-5")).clear();
-    driver.findElement(By.id("gwt-uid-5")).sendKeys("2.0");
-    driver.findElement(By.xpath("//div[@id='ROOT-2521314']/div/div[2]/div[5]/div/div[3]/div/div[7]/div/div")).click();
+    driver.findElement(By.id("gwt-uid-5")).sendKeys("Martinez");
+    driver.findElement(By.id("gwt-uid-7")).clear();
+    driver.findElement(By.id("gwt-uid-7")).sendKeys("calle ikea");
+    driver.findElement(By.id("gwt-uid-9")).clear();
+    driver.findElement(By.id("gwt-uid-9")).sendKeys("674567823");
+    driver.findElement(By.xpath("//div[@id='ROOT-2521314']/div/div[2]/div[5]/div/div[3]/div/div[11]/div/div")).click();
   }
 
   @After

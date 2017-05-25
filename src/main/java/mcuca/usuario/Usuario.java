@@ -3,14 +3,11 @@ package mcuca.usuario;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,9 +34,8 @@ public class Usuario implements UserDetails{
 	
 	private Rol rol;
 	
-	@ManyToMany(targetEntity=Establecimiento.class)
-	@JoinTable(name = "establecimiento_usuario", joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "establecimiento_id", referencedColumnName = "id"))
-	private Set<Establecimiento> establecimientos;
+	@ManyToOne
+	private Establecimiento establecimiento;
 
 	protected Usuario() {
 	}
@@ -51,15 +47,6 @@ public class Usuario implements UserDetails{
 		this.username = username;
 		this.rol = rol;
 		this.setPassword(dni);
-	}
-	
-	public Usuario(String dni, String nombre, String apellidos, String username, Rol rol, Set<Establecimiento> establecimientos) {
-		this.dni = dni;
-		this.nombre = nombre;
-		this.apellidos = apellidos;
-		this.username = username;
-		this.rol = rol;
-		this.establecimientos = establecimientos;
 	}
 
 	public Usuario(String nombre, String apellidos, String username) {
@@ -174,12 +161,12 @@ public class Usuario implements UserDetails{
 		this.rol = rol;
 	}
 	
-	public Set<Establecimiento> getEstablecimientos() {
-		return establecimientos;
+	public Establecimiento getEstablecimiento() {
+		return establecimiento;
 	}
 	   
-	public void setEstablecimientos(Set<Establecimiento> establecimientos) {
-		this.establecimientos = establecimientos;
+	public void setEstablecimiento(Establecimiento establecimiento) {
+		this.establecimiento = establecimiento;
 	}
 
 }

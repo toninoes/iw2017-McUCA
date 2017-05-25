@@ -19,6 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
 import mcuca.usuario.Rol;
@@ -27,11 +29,16 @@ import mcuca.usuario.UsuarioService;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @EnableCaching
-public class Application {
+public class Application extends SpringBootServletInitializer {
 
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-	public static void main(String[] args) {
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(Application.class);
+	}
+
+	public static void main(String[] args) throws Exception {
 		SpringApplication.run(Application.class, args);
 	}
 
