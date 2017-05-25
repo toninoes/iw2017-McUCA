@@ -37,9 +37,9 @@ public class MenuEditor  extends VerticalLayout{
 	//TextField esOferta = new TextField("Oferta");
 	
 	/* Action buttons */	
-	Button guardar = new Button(FontAwesome.SAVE);
-	Button cancelar = new Button(FontAwesome.TIMES);
-	Button borrar = new Button(FontAwesome.ERASER);
+	Button guardar = new Button("Guardar");
+	Button cancelar = new Button("Cancelar");
+	Button borrar = new Button("Borrar");
 	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
 	Binder<Menu> binder = new Binder<>(Menu.class);
