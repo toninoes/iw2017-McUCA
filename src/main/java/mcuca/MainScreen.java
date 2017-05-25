@@ -12,6 +12,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
@@ -55,11 +56,13 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		titulo.setStyleName("h1");
 		root.addComponent(titulo);
 		root.setComponentAlignment(titulo, Alignment.MIDDLE_CENTER);
-
 		Button logoutButton = new Button("Salir", event -> logout());
 		//logoutButton.setStyleName(ValoTheme.BUTTON_LINK);
 		logoutButton.setIcon(FontAwesome.POWER_OFF);
-		root.addComponent(logoutButton);
+		
+		Button cerrarCajaButton = new Button("Cerrar caja");
+		HorizontalLayout btn = new HorizontalLayout(logoutButton, cerrarCajaButton);
+		root.addComponent(btn);
 
 		
 		// Creamos la barra de navegación
