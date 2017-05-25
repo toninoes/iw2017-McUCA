@@ -32,9 +32,9 @@ public class ClienteEditor extends VerticalLayout {
 	TextField telefono = new TextField("Telefono");
 
 	/* Action buttons */	
-	Button guardar = new Button(FontAwesome.SAVE);
-	Button cancelar = new Button(FontAwesome.TIMES);
-	Button borrar = new Button(FontAwesome.ERASER);
+	Button guardar = new Button("Guardar");
+	Button cancelar = new Button("Cancelar");
+	Button borrar = new Button("Borrar");
 	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
 	Binder<Cliente> binder = new Binder<>(Cliente.class);

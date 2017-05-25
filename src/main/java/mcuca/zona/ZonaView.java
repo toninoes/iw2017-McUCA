@@ -1,4 +1,4 @@
-package mcuca.menu;
+package mcuca.zona;
 
 import java.util.Collection;
 
@@ -12,7 +12,6 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Responsive;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.spring.annotation.SpringView;
-
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
@@ -20,36 +19,40 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+@SpringView(name = ZonaView.VIEW_NAME)
+public class ZonaView extends VerticalLayout implements View {
+	public static final String VIEW_NAME = "zonaView";
+	private static final long serialVersionUID = 1L;
 
+	private final ZonaRepository almacen;
+	
+	
 
+	private final ZonaEditor editor;
 
+	final Grid<Zona> parrilla;
 
-@SuppressWarnings("serial")
-@SpringView(name = MenuView.VIEW_NAME)
-public class MenuView extends VerticalLayout implements View {
-	public static final String VIEW_NAME = "menuView";
-	private final MenuRepository almacen;
-	private final MenuEditor editor;
-	final Grid<Menu> parrilla;
 	final TextField filtro;
+
 	private final Button agregarNuevoBoton;
 
 	@Autowired
-	public MenuView(MenuRepository almacen, MenuEditor editor) {
+	public ZonaView(ZonaRepository almacen, ZonaEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
-		this.parrilla = new Grid<>(Menu.class);
+		this.parrilla = new Grid<>(Zona.class);
 		this.filtro = new TextField();
-		this.agregarNuevoBoton = new Button("Nuevo Menu");
+		this.agregarNuevoBoton = new Button("Nueva Zona");
 	}
-	
+
 	@PostConstruct
-	void init() {
-		Label titulo = new Label("Menus");
+	protected void init() {
+
+		Label titulo = new Label("Zonas");
 		titulo.setStyleName("h2");
 		addComponent(titulo);		
 		
-		filtro.setPlaceholder("Búsqueda por Nombre");
+		filtro.setPlaceholder("Búsqueda");
 		HorizontalLayout acciones = new HorizontalLayout();	
 		Responsive.makeResponsive(acciones);
 		acciones.setSpacing(false);
@@ -59,13 +62,10 @@ public class MenuView extends VerticalLayout implements View {
 		addComponent(acciones);	
 		
 		parrilla.setWidth("100%");
-		parrilla.setColumns("id", "nombre", "descripcion", "descuento", "precio", "iva", "esOferta");
+		parrilla.setColumns("id", "nombre", "aforo", "establecimiento");
 		parrilla.getColumn("nombre").setCaption("Nombre");
-		parrilla.getColumn("descripcion").setCaption("Descripcion");
-		parrilla.getColumn("descuento").setCaption("Descuento");
-		parrilla.getColumn("precio").setCaption("Precio");
-		parrilla.getColumn("iva").setCaption("IVA");
-		parrilla.getColumn("esOferta").setCaption("Oferta");
+		parrilla.getColumn("aforo").setCaption("Aforo");
+		parrilla.getColumn("establecimiento").setCaption("Establecimiento");
 		
 		editor.setWidth("100%");
 		
@@ -83,29 +83,30 @@ public class MenuView extends VerticalLayout implements View {
 
 		// Replace listing with filtered content when user changes filtro
 		filtro.setValueChangeMode(ValueChangeMode.LAZY);
-		filtro.addValueChangeListener(e -> listarMenus(e.getValue()));
+		filtro.addValueChangeListener(e -> listarZonas(e.getValue()));
 
-		// Connect selected Menu to editor or hide if none is selected
+		// Connect selected Cliente to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
-			editor.editarMenu(e.getValue());
+			editor.editarZona(e.getValue());
 		});
 
-		// Instantiate and edit new Menu the new button is clicked
-		agregarNuevoBoton.addClickListener(e -> editor.editarMenu(new Menu()));
+		// Instantiate and edit new Cliente the new button is clicked
+		agregarNuevoBoton.addClickListener(e -> editor.editarZona(new Zona()));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {
 			editor.setVisible(false);
-			listarMenus(filtro.getValue());
+			listarZonas(filtro.getValue());
 		});
 
 		// Initialize listing
-		listarMenus(null);		
+		listarZonas(null);		
 	}
 
-	void listarMenus(String texto) {
+
+	void listarZonas(String texto) {
 		if (StringUtils.isEmpty(texto)) {
-			parrilla.setItems((Collection<Menu>) almacen.findAll());
+			parrilla.setItems((Collection<Zona>) almacen.findAll());
 		}
 		else {
 			parrilla.setItems(almacen.findByNombreStartsWithIgnoreCase(texto));
@@ -115,17 +116,7 @@ public class MenuView extends VerticalLayout implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// TODO Auto-generated method stub
-
+		
 	}
-
-	public MenuEditor getEditor() {
-		return editor;
-	}
-
-	public MenuRepository getAlmacen() {
-		return almacen;
-	}
-
 
 }
-
