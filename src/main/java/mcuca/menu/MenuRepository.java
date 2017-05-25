@@ -13,3 +13,4 @@ public interface MenuRepository extends CrudRepository<Menu, Long> {
 	List<Menu> findByNombreStartsWithIgnoreCase(String nombre);
 
 }
+
