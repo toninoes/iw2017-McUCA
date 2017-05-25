@@ -1,16 +1,11 @@
 package mcuca.establecimiento;
 
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
 
-import mcuca.usuario.Usuario;
 
 @Entity
 public class Establecimiento {
@@ -22,9 +17,6 @@ public class Establecimiento {
 	
 	private String domicilio;
 	
-	@ManyToMany(targetEntity=Usuario.class)
-	@JoinTable(name = "establecimiento_usuario", joinColumns = @JoinColumn(name = "establecimiento_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"))
-	private Set<Usuario> usuarios;
 	
 	public Establecimiento() {
 	}
@@ -33,10 +25,9 @@ public class Establecimiento {
 		this.nombre = nombre;
 	}
 
-	public Establecimiento(String nombre, String domicilio, Set<Usuario> usuarios) {
+	public Establecimiento(String nombre, String domicilio) {
 		this.nombre = nombre;
 		this.domicilio = domicilio;
-		this.usuarios = usuarios;
 	}
 
 	public Long getId() {
@@ -63,14 +54,6 @@ public class Establecimiento {
 		this.domicilio = domicilio;
 	}
 	
-	
-	public Set<Usuario> getUsuarios() {
-		return usuarios;
-	}
-	   
-	public void setUsuarios(Set<Usuario> usuarios) {
-		this.usuarios = usuarios;
-	}
 	
 	@Override
 	public String toString() {
