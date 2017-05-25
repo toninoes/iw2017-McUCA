@@ -37,7 +37,7 @@ public class Pedido {
 	
 	@ManyToOne
 	private Usuario usuario;
-
+	
 	//@ManyToMany(targetEntity=Producto.class)
 	//@JoinTable(name = "pedido_producto", joinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"))
 	//private Set<Producto> productos;
@@ -113,9 +113,21 @@ public class Pedido {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
+	
+	public Long getClienteId() {
+		return cliente.getId();
+	}
 
 	public Usuario getUsuario() {
 		return usuario;
+	}
+
+	public void setZona(Zona zona) {
+		this.zona = zona;
+	}
+	
+	public Zona getZona() {
+		return zona;
 	}
 
 	public void setUsuario(Usuario usuario) {

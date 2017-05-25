@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.vaadin.ui.Button;
 
 @Entity
 public class Cliente {
@@ -19,10 +20,8 @@ public class Cliente {
 	private String domicilio;
 	
 	private String telefono;
-	
 
-	protected Cliente() {
-	}
+	protected Cliente() {}
 
 	public Cliente(String nombre, String apellidos, String domicilio, String telefono) {
 		this.nombre = nombre;

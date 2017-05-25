@@ -5,7 +5,6 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -30,29 +29,32 @@ public class LineaPedidoView extends VerticalLayout implements View {
 	private Grid<LineaPedido> parrilla;
 	private TextField filtro;
 	private Button agregarNuevoBoton;
-
+	private final Button pedidoBoton;
+	
 	@Autowired
 	public LineaPedidoView(LineaPedidoRepository almacen, LineaPedidoEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
 		this.parrilla = new Grid<LineaPedido>(LineaPedido.class);
 		this.filtro = new TextField();
-		this.agregarNuevoBoton = new Button("Nuevo Pedido");
+		this.agregarNuevoBoton = new Button("Nueva Linea Pedido");
+		this.pedidoBoton = new Button("Volver");
 	}
 	
 	@PostConstruct
 	void init() {
-		Label titulo = new Label("Pedido");
+		Label titulo = new Label("Lineas Pedido");
 		titulo.setStyleName("h2");		
-		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton);
+		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton, pedidoBoton);
 		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
 		VerticalLayout todo = new VerticalLayout(titulo, acciones, contenido);
 
 		editor.setWidth(300, Unit.PIXELS); //
 		parrilla.setHeight(420, Unit.PIXELS);
 		parrilla.setWidth(1100, Unit.PIXELS);
-		parrilla.setColumns("id", "cantidad", "enCocina");
+		parrilla.setColumns("id", "cantidad", "producto", "enCocina");
 		parrilla.getColumn("cantidad").setCaption("Cantidad");
+		parrilla.getColumn("producto").setCaption("Producto");
 		parrilla.getColumn("enCocina").setCaption("En cocina");
 		
 		filtro.setWidth(300, Unit.PIXELS);
@@ -62,7 +64,9 @@ public class LineaPedidoView extends VerticalLayout implements View {
 
 		// Replace listing with filtered content when user changes filtro
 		filtro.setValueChangeMode(ValueChangeMode.LAZY);
-		filtro.addValueChangeListener(e -> listarLineaPedidos(Long.decode(e.getValue())));
+		filtro.addValueChangeListener(e -> {
+			listarLineaPedidos();
+		});
 
 		// Connect selected LineaPedido to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
@@ -72,32 +76,36 @@ public class LineaPedidoView extends VerticalLayout implements View {
 		// Instantiate and edit new LineaPedido the new button is clicked
 		agregarNuevoBoton.addClickListener(e -> editor.editarLineaPedido(new LineaPedido()));
 
+		pedidoBoton.addClickListener(e -> {
+			getUI().getNavigator().navigateTo(PedidoView.VIEW_NAME);
+		});
+		
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {
 			editor.setVisible(false);
-			listarLineaPedidos(Long.decode(filtro.getValue()));
+			listarLineaPedidos();
 		});
 
 		// Initialize listing
-		listarLineaPedidos(null);
+		listarLineaPedidos();
 		
 		addComponent(todo);
 	}
 
 
-	void listarLineaPedidos(Long id) {
-		if (StringUtils.isEmpty(id)) {
-			parrilla.setItems((Collection<LineaPedido>) almacen.findAll());
-		}
-		else {
-			parrilla.setItems(almacen.findById(id));
-		}
+	void listarLineaPedidos() {
+		if (PedidoView.pedido_id == 0)
+			parrilla.setItems((Collection<LineaPedido>) almacen.findById(-1L));
+		else
+			parrilla.setItems((Collection<LineaPedido>) almacen.findByPedidoId(PedidoView.pedido_id));
+	}
+	
+	public Grid<LineaPedido> getParrilla() {
+		return parrilla;
 	}
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// TODO Auto-generated method stub
 	}
-
-
 }

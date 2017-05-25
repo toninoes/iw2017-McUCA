@@ -16,6 +16,11 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+
+import mcuca.pedido.PedidoRepository;
+import mcuca.pedido.PedidoView;
+import mcuca.pedido.Tipo;
+
 import com.vaadin.spring.annotation.SpringView;
 
 
@@ -28,14 +33,21 @@ public class ClienteView extends VerticalLayout implements View {
 	final Grid<Cliente> parrilla;
 	final TextField filtro;
 	private final Button agregarNuevoBoton;
-
+	private final Button btnPedido;
+	
+	@SuppressWarnings("unused")
+	private final PedidoRepository repoPedido;
+	
 	@Autowired
-	public ClienteView(ClienteRepository almacen, ClienteEditor editor) {
+	public ClienteView(ClienteRepository almacen, ClienteEditor editor, PedidoRepository repoPedido) {
 		this.almacen = almacen;
+		this.repoPedido = repoPedido;
 		this.editor = editor;
 		this.parrilla = new Grid<>(Cliente.class);
 		this.filtro = new TextField();
 		this.agregarNuevoBoton = new Button("Nuevo Cliente");
+		this.btnPedido = new Button("Pedido");
+		this.btnPedido.setVisible(false);
 	}
 
 	@PostConstruct
@@ -51,6 +63,7 @@ public class ClienteView extends VerticalLayout implements View {
 		acciones.setMargin(false);
 		acciones.addComponent(filtro);
 		acciones.addComponent(agregarNuevoBoton);
+		acciones.addComponent(btnPedido);
 		addComponent(acciones);	
 		
 		parrilla.setWidth("100%");
@@ -81,11 +94,19 @@ public class ClienteView extends VerticalLayout implements View {
 		// Connect selected Cliente to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
 			editor.editarCliente(e.getValue());
+			btnPedido.setVisible(true);
 		});
 
 		// Instantiate and edit new Cliente the new button is clicked
 		agregarNuevoBoton.addClickListener(e -> editor.editarCliente(new Cliente()));
 
+		
+		btnPedido.addClickListener(e -> {
+			btnPedido.setVisible(false);
+			getUI().getNavigator().navigateTo(PedidoView.VIEW_NAME);
+			PedidoView.listarPedidos(parrilla.asSingleSelect().getValue().getId(), (Tipo) Tipo.DOMICILIO);
+		});
+		
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {
 			editor.setVisible(false);

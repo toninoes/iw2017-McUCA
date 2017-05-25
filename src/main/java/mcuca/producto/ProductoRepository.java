@@ -16,5 +16,5 @@ public interface ProductoRepository extends CrudRepository<Producto, Long> {
 	@Query("Select p from Producto p INNER Join p.ingredientes c  Where c.nombre != :nombre ")
 	List<Producto> findByIngrediente(String nombre);
 
-
+	List<Producto> findById(Long id);
 }

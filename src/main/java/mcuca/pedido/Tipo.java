@@ -1,9 +1,9 @@
 package mcuca.pedido;
 
 public enum Tipo {
-	LLEVAR("Llevar", 1), 
-	DOMICILIO("Domicilio", 2), 
-	ESTABLECIMIENTO("Establecimiento", 3);
+	LLEVAR("Llevar", 0), 
+	DOMICILIO("Domicilio", 1), 
+	ESTABLECIMIENTO("Establecimiento", 2);
 	
 	private final String tipo_pedido;
 	private final int id;

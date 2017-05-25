@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import com.vaadin.spring.access.ViewAccessControl;
 import com.vaadin.ui.UI;
 
+import mcuca.pedido.LineaPedidoView;
+import mcuca.pedido.PedidoView;
+
 @Component
 public class SampleViewAccessControl implements ViewAccessControl {
 
@@ -13,7 +16,9 @@ public class SampleViewAccessControl implements ViewAccessControl {
     	
     	System.out.println("COMPROBANDO " + beanName + " PARA USUARIO CON ROLES: "+SecurityUtils.roles());
 
-    	if(SecurityUtils.hasRole("GERENTE")){
+    	if(beanName.equals(PedidoView.VIEW_NAME) || beanName.equals(LineaPedidoView.VIEW_NAME)) {
+    		return true;
+    	} else if(SecurityUtils.hasRole("GERENTE")){
     		return true;
     	} else if (beanName.equals("clienteView")) {
     		return SecurityUtils.hasRole("CAMARERO") || SecurityUtils.hasRole("ENCARGADO");

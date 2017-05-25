@@ -24,6 +24,7 @@ import mcuca.menu.MenuView;
 import mcuca.mesa.MesaView;
 import mcuca.pedido.PedidoView;
 import mcuca.producto.ProductoView;
+import mcuca.security.SecurityUtils;
 import mcuca.usuario.UsuarioManagementView;
 import mcuca.usuario.UsuarioView;
 
@@ -34,6 +35,8 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 
 	private Panel springViewDisplay;
 
+	public static CssLayout navigationBar;
+	
 	@Override
     public void attach() {
         super.attach();
@@ -60,17 +63,22 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 
 		
 		// Creamos la barra de navegación
-		final CssLayout navigationBar = new CssLayout();
+		navigationBar = new CssLayout();
 		navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-		navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Estb", EstablecimientoView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Ingr", IngredienteView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Menu", MenuView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Mesa", MesaView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Prod", ProductoView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("UsMan", UsuarioManagementView.VIEW_NAME));
+		if(SecurityUtils.hasRole("GERENTE")) {
+			navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("Estb", EstablecimientoView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("Ingr", IngredienteView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("Menu", MenuView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("Mesa", MesaView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("Prod", ProductoView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("UsMan", UsuarioManagementView.VIEW_NAME));
+		} else {
+			navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));
+		}
 		root.addComponent(navigationBar);
 
 		// Creamos el panel
@@ -88,7 +96,12 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		button.addStyleName(ValoTheme.BUTTON_SMALL);
 		// If you didn't choose Java 8 when creating the project, convert this
 		// to an anonymous listener class
-		button.addClickListener(event -> getUI().getNavigator().navigateTo(viewName));
+		button.addClickListener(event -> {
+			PedidoView.cliente_id = 0;
+			PedidoView.pedido_id = 0;
+			PedidoView.listarPedidos(0);
+			getUI().getNavigator().navigateTo(viewName);
+		});
 		return button;
 	}
 

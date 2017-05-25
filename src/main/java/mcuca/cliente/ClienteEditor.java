@@ -41,6 +41,7 @@ public class ClienteEditor extends VerticalLayout {
 
 	@Autowired
 	public ClienteEditor(ClienteRepository almacen) {
+		
 		this.almacen = almacen;
 
 		addComponents(title, nombre, apellidos, domicilio, telefono, acciones);
