@@ -64,7 +64,8 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		Button cerrarCajaButton = new Button("Cerrar caja");
 		HorizontalLayout btn = new HorizontalLayout(logoutButton, cerrarCajaButton);
 		root.addComponent(btn);
-
+		
+	
 		
 		// Creamos la barra de navegación
 		navigationBar = new CssLayout();

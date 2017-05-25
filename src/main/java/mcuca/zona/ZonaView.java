@@ -25,6 +25,8 @@ public class ZonaView extends VerticalLayout implements View {
 	private static final long serialVersionUID = 1L;
 
 	private final ZonaRepository almacen;
+	
+	
 
 	private final ZonaEditor editor;
 
