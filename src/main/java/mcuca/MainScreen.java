@@ -28,6 +28,7 @@ import mcuca.producto.ProductoView;
 import mcuca.security.SecurityUtils;
 import mcuca.usuario.UsuarioManagementView;
 import mcuca.usuario.UsuarioView;
+import mcuca.zona.ZonaView;
 
 
 @SuppressWarnings({ "serial", "deprecation" })
@@ -78,6 +79,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 			navigationBar.addComponent(createNavigationButton("Prod", ProductoView.VIEW_NAME));
 			navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
 			navigationBar.addComponent(createNavigationButton("UsMan", UsuarioManagementView.VIEW_NAME));
+			navigationBar.addComponent(createNavigationButton("Zona", ZonaView.VIEW_NAME));
 		} else {
 			navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
 			navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));
