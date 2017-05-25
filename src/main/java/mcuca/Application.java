@@ -22,16 +22,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
+import mcuca.establecimiento.Establecimiento;
+import mcuca.establecimiento.EstablecimientoRepository;
+import mcuca.mesa.Mesa;
+import mcuca.mesa.MesaRepository;
 import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
 import mcuca.usuario.Rol;
 import mcuca.usuario.Usuario;
 import mcuca.usuario.UsuarioService;
+import mcuca.zona.Zona;
+import mcuca.zona.ZonaRepository;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @EnableCaching
 public class Application extends SpringBootServletInitializer {
 
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
+	
+	@Autowired
+	private EstablecimientoRepository repoEst;
+	
+	@Autowired
+	private ZonaRepository repoZona;
+	
+	@Autowired
+	private MesaRepository repoMesa;
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -47,15 +62,65 @@ public class Application extends SpringBootServletInitializer {
 		return (args) -> {
 
 			if (service.findAll().size() == 0) {
-				// Guardar algunos usuarios de prueba: user: manu; pass:12
-				service.save(new Usuario("12", "Manuel Jesús", "López Jiménez", "manu", Rol.GERENTE));
-				service.save(new Usuario("34", "Antonio", "Ruiz Rondán", "toni", Rol.ENCARGADO));
-				service.save(new Usuario("56", "Andrés", "Martínez Gavira", "andres", Rol.CAMARERO));
-				service.save(new Usuario("78", "Luis Fernando", "Pérez Peregrino", "luisfe", Rol.CAMARERO));
+				//Establecimientos de prueba
+				Establecimiento benalup = new Establecimiento("McUCA - Benalup", "Avenida Bahía Blanca, s/n");
+				Establecimiento vejer = new Establecimiento("McUCA - Vejer", "Plaza de España, s/n");
+				
+				repoEst.save(benalup);
+				repoEst.save(vejer);
+				
+				// Guardar algunos usuarios de prueba:	
+				Usuario manu = new Usuario("11111111", "Manuel Jesús", "López Jiménez", "manu", Rol.GERENTE);
+				manu.setPassword("12");
+				service.save(manu);
+				
+				Usuario toni = new Usuario("22222222", "Antonio", "Ruiz Rondán", "toni", Rol.ENCARGADO);
+				toni.setPassword("34");
+				toni.setEstablecimiento(benalup);
+				service.save(toni);
+				
+				Usuario andres = new Usuario("33333333", "Andrés", "Martínez Gavira", "andres", Rol.CAMARERO);
+				andres.setPassword("56");
+				andres.setEstablecimiento(benalup);
+				service.save(andres);
+				
+				Usuario luisfe = new Usuario("44444444", "Luis Fernando", "Pérez Peregrino", "luisfe", Rol.CAMARERO); 
+				luisfe.setPassword("78");
+				luisfe.setEstablecimiento(vejer);
+				service.save(luisfe);
 
-				//Usuario root = new Usuario("root", "root");
-				//root.setPassword("root");
-				//service.save(root);
+				//Zonas de prueba
+				Zona z1b = new Zona("Terraza", 40); z1b.setEstablecimiento(benalup);
+				Zona z2b = new Zona("Salón", 30); z2b.setEstablecimiento(benalup);
+				
+				Zona z1v = new Zona("Terraza", 20); z1v.setEstablecimiento(vejer);
+				Zona z2v = new Zona("Sala de Fiestas", 40); z2v.setEstablecimiento(vejer);
+				repoZona.save(z1b);
+				repoZona.save(z2b);
+				repoZona.save(z1v);
+				repoZona.save(z2v);
+				
+				//Mesas
+				Mesa m1b = new Mesa("1"); m1b.setZona(z1b);
+				Mesa m2b = new Mesa("2"); m2b.setZona(z1b);
+				Mesa m3b = new Mesa("3"); m3b.setZona(z2b);
+				Mesa m4b = new Mesa("4"); m4b.setZona(z2b);
+				
+				Mesa mAv = new Mesa("A"); mAv.setZona(z1v);
+				Mesa mBv = new Mesa("B"); mBv.setZona(z1v);
+				Mesa mCv = new Mesa("C"); mCv.setZona(z2v);
+				Mesa mDv = new Mesa("D"); mDv.setZona(z2v);
+				
+				repoMesa.save(m1b);
+				repoMesa.save(m2b);
+				repoMesa.save(m3b);
+				repoMesa.save(m4b);
+				
+				repoMesa.save(mAv);
+				repoMesa.save(mBv);
+				repoMesa.save(mCv);
+				repoMesa.save(mDv);
+				
 
 				// fetch all users
 				log.info("Users found with findAll():");
