@@ -38,18 +38,13 @@ public class Producto {
 	protected Producto() {
 	}
 	
-	public Producto(String nombre, Float precio, Float iva) {
+	public Producto(String nombre, Float precio, Float iva, String foto, Set<Ingrediente> ingredientes) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.iva = iva;
+		this.foto = foto;
+		this.ingredientes = ingredientes;
 	}
-
-	/*public Producto(String nombre, Float precio, Float iva, Set<Pedido> pedidos) {
-		this.nombre = nombre;
-		this.precio = precio;
-		this.iva = iva;
-		//this.pedidos = pedidos;
-	}*/
 
 	public Long getId() {
 		return id;
@@ -87,25 +82,16 @@ public class Producto {
 		this.foto = foto;
 	}
 	
-	/*public Set<Pedido> getPedidos() {
-		return pedidos;
+	public Set<Ingrediente> getIngredientes() {
+		return ingredientes;
 	}
 	   
-	public void setPedidos(Set<Pedido> pedidos) {
-		this.pedidos = pedidos;
-	}*/
+	public void setIngredientes(Set<Ingrediente> ingredientes) {
+		this.ingredientes = ingredientes;
+	}
 	
 	@Override
 	public String toString() {
 		return String.format("%s", nombre);
 	}
-
-	public Set<Ingrediente> getIngredientes() {
-		return ingredientes;
-	}
-
-	public void setIngredientes(Set<Ingrediente> ingredientes) {
-		this.ingredientes = ingredientes;
-	}
-	
 }

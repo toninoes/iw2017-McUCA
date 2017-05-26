@@ -19,28 +19,22 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-import mcuca.ingrediente.Ingrediente;
-import mcuca.ingrediente.IngredienteRepository;
-
-
 @SuppressWarnings("serial")
 @SpringView(name = ProductoView.VIEW_NAME)
 public class ProductoView extends VerticalLayout implements View {
 	
 	public static final String VIEW_NAME = "productoView";
+	public static Grid<Producto> parrilla;
 	private final ProductoRepository almacen;
 	private ProductoEditor editor;
-	final Grid<Producto> parrilla;
 	final TextField filtro;
 	private final Button agregarNuevoBoton;
-	private final IngredienteRepository repoIng;
 	
 	@Autowired
-	public ProductoView(ProductoRepository almacen, ProductoEditor editor, IngredienteRepository repoIng) {
+	public ProductoView(ProductoRepository almacen, ProductoEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
-		this.repoIng = repoIng;
-		this.parrilla = new Grid<>(Producto.class);
+		parrilla = new Grid<>(Producto.class);
 		this.filtro = new TextField();
 		this.agregarNuevoBoton = new Button("Nuevo Producto");
 	}
@@ -86,13 +80,12 @@ public class ProductoView extends VerticalLayout implements View {
 		filtro.setValueChangeMode(ValueChangeMode.LAZY);
 		filtro.addValueChangeListener(e -> listarProductos(e.getValue()));
 		
-		// Connect selected Mesa to editor or hide if none is selected
+		// Connect selected Producto to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
-			editor.ingredientes.select();
 			editor.editarProducto(e.getValue());
 		});
 
-		// Instantiate and edit new Mesa the new button is clicked
+		// Instantiate and edit new Producto the new button is clicked
 		agregarNuevoBoton.addClickListener(e -> editor.editarProducto(new Producto()));
 
 		// Listen changes made by the editor, refresh data from backend
@@ -104,7 +97,6 @@ public class ProductoView extends VerticalLayout implements View {
 		// Initialize listing
 		listarProductos(null);
 	}
-
 
 	void listarProductos(String texto) {
 		if (StringUtils.isEmpty(texto)) {

@@ -28,7 +28,7 @@ public class IngredienteEditor extends VerticalLayout {
 	/* Fields to edit properties in Ingrediente entity */
 	Label title = new Label("Nuevo Ingrediente");
 	TextField nombre = new TextField("Nombre");
-	TextField precio = new TextField("precio");
+	TextField precio = new TextField("Precio");
 
 	
 

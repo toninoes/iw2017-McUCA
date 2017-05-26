@@ -1,6 +1,7 @@
 package mcuca.producto;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,9 +29,11 @@ public class ProductoEditor extends VerticalLayout {
 	
 	private final ProductoRepository repoProducto;
 	private final IngredienteRepository repoIngrediente;
-
+	
+	private Set<Ingrediente> sSelected;
+	
 	private Producto producto;
-
+	
 	/* Fields to edit properties in Mesa entity */
 	Label title = new Label("Nuevo Producto");
 	TextField nombre = new TextField("Nombre");
@@ -47,11 +50,11 @@ public class ProductoEditor extends VerticalLayout {
 	CssLayout acciones = new CssLayout(guardar, cancelar, borrar);
 
 	Binder<Producto> binder = new Binder<>(Producto.class);
-
+	
 	@Autowired
 	public ProductoEditor(ProductoRepository repoProducto, IngredienteRepository repoIngrediente) {
 		this.repoProducto = repoProducto;
-		this.repoIngrediente = repoIngrediente;
+		this.repoIngrediente = repoIngrediente; 
 		ingredientes.setItems((Collection<Ingrediente>) repoIngrediente.findAll());
 		addComponents(title, nombre, precio, iva, foto, ingredientes, acciones);
 
@@ -80,17 +83,24 @@ public class ProductoEditor extends VerticalLayout {
 		guardar.addClickListener(this::salvar);
 		borrar.addClickListener(e -> repoProducto.delete(producto));
 		cancelar.addClickListener(e -> editarProducto(producto));
+		
+		ingredientes.addSelectionListener(e -> {
+			sSelected = e.getAddedSelection();
+		});
+		
 		setVisible(false);
 	}
 	
-	public void salvar(ClickEvent e) {
+	public void salvar(ClickEvent event) {
 		binder.setBean(producto);
 		producto.setNombre(nombre.getValue());
-		producto.setPrecio(Float.valueOf(precio.getValue()));
+		producto.setPrecio(Float.valueOf(precio.getValue().replace(',', '.')));
 		producto.setIva(Float.valueOf(iva.getValue()));
 		producto.setFoto(foto.getValue());
-		producto.setIngredientes(ingredientes.getSelectedItems());
+		producto.setIngredientes(null);
+		producto.setIngredientes(sSelected);
 		repoProducto.save(producto);
+		ProductoView.parrilla.asSingleSelect().setValue(producto);
 	}
 
 	public interface ChangeHandler {
@@ -122,8 +132,8 @@ public class ProductoEditor extends VerticalLayout {
 
 		// A hack to ensure the whole form is visible
 		guardar.focus();
-		// Select all text in numero field automatically
-		nombre.selectAll();
+		// Select all text in nombre field automatically
+		//nombre.selectAll();
 	}
 
 	public void setChangeHandler(ChangeHandler h) {
@@ -133,7 +143,7 @@ public class ProductoEditor extends VerticalLayout {
 		borrar.addClickListener(e -> h.onChange());
 	}
 
-	public IngredienteRepository getRepoZona() {
+	public IngredienteRepository getRepoIngrediente() {
 		return repoIngrediente;
 	}
 }

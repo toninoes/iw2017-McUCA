@@ -66,7 +66,8 @@ public class PedidoEditor extends VerticalLayout {
 		
 		tipo.setItems(Tipo.class.getEnumConstants()); 
 		ArrayList<Cliente> ac = (ArrayList<Cliente>) repoCliente.findAll();
-		clientes.setItems(ac.get(0).getId());
+		if(ac.size() > 0)
+			clientes.setItems(ac.get(0).getId());
 		zonas.setItems((Collection<Zona>) repoZona.findAll());
 		
 		addComponents(title, abierto, nombre, tipo, clientes, zonas, acciones);

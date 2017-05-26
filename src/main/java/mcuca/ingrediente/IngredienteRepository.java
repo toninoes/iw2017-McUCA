@@ -11,4 +11,5 @@ public interface IngredienteRepository extends CrudRepository<Ingrediente, Long>
 	@Cacheable("ingredientes")
 	List<Ingrediente> findByNombreStartsWithIgnoreCase(String nombre);
 	
+	List<Ingrediente> findByNombre(String nombre);
 }
