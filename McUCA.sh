@@ -1,5 +1,8 @@
 #!/bin/bash
 
+printf "[INFO] Eliminando batería de tests...\n"
+rm -r src/test
+
 printf "[INFO] Creando base de datos McUCA...\n"
 printf "[MySQL] Introduzca su contraseña de root de MySQL\n"
 
