@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.annotations.Viewport;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
@@ -23,6 +24,7 @@ import mcuca.security.LoginScreen;
 import mcuca.security.SecurityUtils;
 
 @Title("McUCA")
+@Viewport("user-scalable=no,initial-scale=1.0")
 @Theme("material")
 @SuppressWarnings("serial")
 @SpringUI
