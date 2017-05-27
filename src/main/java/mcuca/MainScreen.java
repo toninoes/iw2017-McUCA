@@ -12,6 +12,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
@@ -24,7 +25,6 @@ import mcuca.menu.MenuView;
 import mcuca.mesa.MesaView;
 import mcuca.pedido.PedidoView;
 import mcuca.producto.ProductoView;
-import mcuca.security.SecurityUtils;
 import mcuca.usuario.UsuarioManagementView;
 import mcuca.usuario.UsuarioView;
 import mcuca.zona.ZonaView;
@@ -37,6 +37,8 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	private Panel springViewDisplay;
 
 	public static CssLayout navigationBar;
+	
+	private Button cerrarCaja;
 	
 	@Override
     public void attach() {
@@ -61,6 +63,13 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		//logoutButton.setStyleName(ValoTheme.BUTTON_LINK);
 		logoutButton.setIcon(FontAwesome.POWER_OFF);
 		root.addComponent(logoutButton);
+		
+		cerrarCaja = new Button("Cerrar caja", event -> cerrarCaja());
+		//logoutButton.setStyleName(ValoTheme.BUTTON_LINK);
+		cerrarCaja.setIcon(FontAwesome.CLOCK_O);
+		cerrarCaja.setVisible(false);
+		HorizontalLayout btn = new HorizontalLayout(logoutButton, cerrarCaja);
+		root.addComponent(btn);
 
 		
 		// Creamos la barra de navegación
@@ -104,10 +113,12 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
 		navigationBar.addComponent(createNavigationButton("UsMan", UsuarioManagementView.VIEW_NAME));
 		navigationBar.addComponent(createNavigationButton("Zona", ZonaView.VIEW_NAME));
+
 	}
 	
 	private void addBarraEncargado()
 	{
+		cerrarCaja.setVisible(true);
 		addBarraCamarero();
 	}
 	
@@ -130,6 +141,8 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		});
 		return button;
 	}
+	
+	private void cerrarCaja() {}
 
 
 	@Override
