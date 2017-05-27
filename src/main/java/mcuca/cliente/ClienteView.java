@@ -122,7 +122,7 @@ public class ClienteView extends VerticalLayout implements View {
 			parrilla.setItems((Collection<Cliente>) almacen.findAll());
 		}
 		else {
-			parrilla.setItems(almacen.findByApellidosStartsWithIgnoreCase(texto));
+			parrilla.setItems(almacen.findByTelefono(texto));
 		}
 	}
 
