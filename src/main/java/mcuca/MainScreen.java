@@ -66,21 +66,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		// Creamos la barra de navegación
 		navigationBar = new CssLayout();
 		navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-		if(SecurityUtils.hasRole("GERENTE")) {
-			navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("Estb", EstablecimientoView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("Ingr", IngredienteView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("Menu", MenuView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("Mesa", MesaView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("Prod", ProductoView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("UsMan", UsuarioManagementView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("Zona", ZonaView.VIEW_NAME));
-		} else {
-			navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
-			navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));
-		}
+
 		root.addComponent(navigationBar);
 
 		// Creamos el panel
@@ -91,6 +77,44 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 
 		addComponent(root);
 
+	}
+	
+	public void setAuth(int rol)
+	{
+		switch(rol) {
+		case 0: addBarraGerente();
+				break;
+		case 1: addBarraEncargado();
+				break;
+		case 2: addBarraCamarero();
+				break;
+		default: break;
+		}
+	}
+	
+	private void addBarraGerente() 
+	{
+		navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Estb", EstablecimientoView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Ingr", IngredienteView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Menu", MenuView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Mesa", MesaView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Prod", ProductoView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("UsMan", UsuarioManagementView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Zona", ZonaView.VIEW_NAME));
+	}
+	
+	private void addBarraEncargado()
+	{
+		addBarraCamarero();
+	}
+	
+	private void addBarraCamarero()
+	{
+		navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));
 	}
 
 	private Button createNavigationButton(String caption, final String viewName) {

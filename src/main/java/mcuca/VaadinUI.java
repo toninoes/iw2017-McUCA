@@ -75,7 +75,14 @@ public class VaadinUI extends UI {
 			// attacks. This does not work with websocket communication.
 			VaadinService.reinitializeSession(VaadinService.getCurrentRequest());
 			SecurityContextHolder.getContext().setAuthentication(token);
-
+			int rol = -1;
+			if(SecurityUtils.hasRole("GERENTE"))
+				rol = 0;
+			else if(SecurityUtils.hasRole("ENCARGADO"))
+				rol = 1;
+			else if(SecurityUtils.hasRole("CAMARERO"))
+				rol = 2;
+			mainScreen.setAuth(rol);
 			// Show the main UI
 			showMainScreen();
 			return true;
