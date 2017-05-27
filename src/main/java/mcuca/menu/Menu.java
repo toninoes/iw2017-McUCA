@@ -35,7 +35,7 @@ public class Menu{
 	private String foto;
 	
 	@ManyToMany(targetEntity=Producto.class, fetch=FetchType.EAGER)
-	@JoinTable(name = "menu_producto", joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"))
+	//@JoinTable(name = "menu_producto", joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"))
 	private Set<Producto> productos;	
 	
 	@ManyToMany(targetEntity=Menu.class, fetch=FetchType.EAGER)

@@ -1,5 +1,7 @@
 package mcuca.menu;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
@@ -12,8 +14,12 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+
+import mcuca.producto.Producto;
+import mcuca.producto.ProductoRepository;
 
 
 
@@ -24,6 +30,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class MenuEditor  extends VerticalLayout{
 
 	private final MenuRepository almacen;
+	private final ProductoRepository repoProducto;
 
 	private Menu menu;
 
@@ -33,7 +40,9 @@ public class MenuEditor  extends VerticalLayout{
 	TextField descripcion = new TextField("Descripcion");
 	TextField descuento = new TextField("Descuento");
 	TextField precio = new TextField("Precio");
+	TwinColSelect<Producto> productos = new TwinColSelect<>("Productos");
 	TextField iva = new TextField("IVA");
+
 	//TextField esOferta = new TextField("Oferta");
 	
 	/* Action buttons */	
@@ -45,10 +54,11 @@ public class MenuEditor  extends VerticalLayout{
 	Binder<Menu> binder = new Binder<>(Menu.class);
 	
 	@Autowired
-	public MenuEditor(MenuRepository almacen) {
+	public MenuEditor(MenuRepository almacen, ProductoRepository repoProducto) {
 		this.almacen = almacen;
-
-		addComponents(title, nombre, descripcion, descuento, precio, iva,  acciones);
+		this.repoProducto = repoProducto;
+		productos.setItems((Collection<Producto>) repoProducto.findAll());
+		addComponents(title, nombre, descripcion, descuento, precio, productos, iva,  acciones);
 		
 		binder.forField(descuento)
 		  .withNullRepresentation("")
@@ -96,6 +106,7 @@ public class MenuEditor  extends VerticalLayout{
 	
 	public void guardarMenu(Menu menu){
 		menu.setEsOferta(menu.getDescuento() != 0);
+		menu.setProductos(productos.getSelectedItems());
 		almacen.save(menu);
 	}
 	
@@ -134,7 +145,9 @@ public class MenuEditor  extends VerticalLayout{
 		borrar.addClickListener(e -> h.onChange());
 	}
 
-
+	public ProductoRepository getRepoProducto() {
+		return repoProducto;
+	}
 
 
 }

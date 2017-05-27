@@ -20,6 +20,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import mcuca.ingrediente.IngredienteRepository;
+import mcuca.producto.ProductoRepository;
+
 
 
 
@@ -33,11 +36,14 @@ public class MenuView extends VerticalLayout implements View {
 	final Grid<Menu> parrilla;
 	final TextField filtro;
 	private final Button agregarNuevoBoton;
+	private final ProductoRepository repoProd;
+
 
 	@Autowired
-	public MenuView(MenuRepository almacen, MenuEditor editor) {
+	public MenuView(MenuRepository almacen, MenuEditor editor, ProductoRepository repoProd) {
 		this.almacen = almacen;
 		this.editor = editor;
+		this.repoProd = repoProd;
 		this.parrilla = new Grid<>(Menu.class);
 		this.filtro = new TextField();
 		this.agregarNuevoBoton = new Button("Nuevo Menu");
@@ -59,11 +65,12 @@ public class MenuView extends VerticalLayout implements View {
 		addComponent(acciones);	
 		
 		parrilla.setWidth("100%");
-		parrilla.setColumns("id", "nombre", "descripcion", "descuento", "precio", "iva", "esOferta");
+		parrilla.setColumns("id", "nombre", "descripcion", "descuento", "precio", "productos", "iva", "esOferta");
 		parrilla.getColumn("nombre").setCaption("Nombre");
 		parrilla.getColumn("descripcion").setCaption("Descripcion");
 		parrilla.getColumn("descuento").setCaption("Descuento");
 		parrilla.getColumn("precio").setCaption("Precio");
+		parrilla.getColumn("productos").setCaption("Productos");
 		parrilla.getColumn("iva").setCaption("IVA");
 		parrilla.getColumn("esOferta").setCaption("Oferta");
 		
@@ -87,6 +94,7 @@ public class MenuView extends VerticalLayout implements View {
 
 		// Connect selected Menu to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
+			editor.productos.select();
 			editor.editarMenu(e.getValue());
 		});
 
