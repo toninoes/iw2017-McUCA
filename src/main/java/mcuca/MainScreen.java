@@ -156,7 +156,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	
 	private void cerrarCaja() 
 	{
-		pedidoService = new PedidoService(pedidoRepo);
+		pedidoService = new PedidoService(pedidoRepo, cierresCaja);
 		CierreCaja cierre = new CierreCaja(pedidoService.getRecaudacion());
 		cierresCaja.save(cierre);
 		

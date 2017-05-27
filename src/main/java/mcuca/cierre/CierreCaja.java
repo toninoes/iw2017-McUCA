@@ -23,6 +23,8 @@ public class CierreCaja {
 	
 	private float recaudacion;
 	
+	public CierreCaja() {}
+	
 	public CierreCaja(float recaudacion) {
 		this.recaudacion = recaudacion;
 		this.fechaCierre = new Date();
