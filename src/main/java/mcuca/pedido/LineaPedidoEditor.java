@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.converter.StringToFloatConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -12,6 +13,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
@@ -25,15 +27,17 @@ import mcuca.producto.ProductoRepository;
 public class LineaPedidoEditor extends VerticalLayout {
 	
 	private final LineaPedidoRepository repoLineaPedido;
-	
 	private final PedidoRepository repoPedido;
-	
 	private final ProductoRepository repoProducto;
 	
 	private LineaPedido lineaPedido;
+	
+	private Float Total;
+	
 	/* Fields to edit properties in LineaPedido entity */
 	Label title = new Label("Nueva Linea de Pedido");
 	NativeSelect<Integer> cantidad = new NativeSelect<>("Cantidad");
+	TextField precio = new TextField("Precio");
 	NativeSelect<Producto> producto = new NativeSelect<>("Producto");
 	NativeSelect<Boolean> en_cocina = new NativeSelect<>("EnCocina");
 	
@@ -46,7 +50,8 @@ public class LineaPedidoEditor extends VerticalLayout {
 	Binder<LineaPedido> binder = new Binder<>(LineaPedido.class);
 	
 	@Autowired
-	public LineaPedidoEditor(LineaPedidoRepository repoLineaPedido, PedidoRepository repoPedido, ProductoRepository repoProducto) {
+	public LineaPedidoEditor(LineaPedidoRepository repoLineaPedido, PedidoRepository repoPedido, 
+			                 ProductoRepository repoProducto) {
 		this.repoLineaPedido = repoLineaPedido;
 		this.repoPedido = repoPedido;
 		this.repoProducto = repoProducto;
@@ -54,7 +59,7 @@ public class LineaPedidoEditor extends VerticalLayout {
 		if(this.repoProducto.findAll().iterator().hasNext())	
 			producto.setItems((Collection<Producto>) this.repoProducto.findAll());
 		en_cocina.setItems(true, false);
-		addComponents(title, cantidad, producto, en_cocina, acciones);
+		addComponents(title, cantidad, precio, producto, en_cocina, acciones);
 		
 		//binder.bindInstanceFields(this);
 		/*binder.forField(cantidad)
@@ -65,6 +70,11 @@ public class LineaPedidoEditor extends VerticalLayout {
           .withConverter(new StringToBooleanConverter("Por favor introduce un número"))
           .bind("en_cocina");*/
 		
+		binder.forField(precio)
+		  .withNullRepresentation("")
+          .withConverter(new StringToFloatConverter("Por favor introduce un número"))
+          .bind("precio");
+		
 		binder.bindInstanceFields(this);
 
 		// Configure and style components
@@ -74,20 +84,33 @@ public class LineaPedidoEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		//guardar.addClickListener(e -> repoLineaPedido.save(lineaPedido));
-		guardar.addClickListener(this::salvar);
+		//guardar.addClickListener(e -> repoLineaPedido.save(lineaPedido))
+		guardar.addClickListener(e -> {
+			Total = 0.0f;
+			int longitud = LineaPedidoView.parrilla.getFooterRowCount();
+			int i = 0;
+			while(i < longitud) {
+				Total = Total + (LineaPedidoView.parrilla.asSingleSelect().getValue().getCantidad() * LineaPedidoView.parrilla.asSingleSelect().getValue().getPrecio());
+				i++;
+			}
+			salvar(e);
+		});
 		borrar.addClickListener(e -> repoLineaPedido.delete(lineaPedido));
 		cancelar.addClickListener(e -> editarLineaPedido(lineaPedido));
+		
 		setVisible(false);
 	}
 	
 	public void salvar(ClickEvent e) {
 		binder.setBean(lineaPedido);
-		//pedido.setLineaPedido(linea_pedidos.getValue());
 		lineaPedido.setCantidad(cantidad.getValue());
+		lineaPedido.setPrecio(Float.valueOf(precio.getValue().replace(',', '.')));
 		lineaPedido.setProducto(producto.getValue());
-		lineaPedido.setPedidoId(repoPedido.findOne(PedidoView.pedido_id).getId());
+		lineaPedido.setEnCocina(en_cocina.getValue());
+		//lineaPedido.setPedidoId(repoPedido.findOne(PedidoView.pedido_id).getId());
 		repoLineaPedido.save(lineaPedido);
+		repoPedido.findOne(PedidoView.pedido_id).setPrecio(Total);
+		repoPedido.save(repoPedido.findOne(PedidoView.pedido_id));
 	}
 	
 	public interface ChangeHandler {
@@ -121,6 +144,7 @@ public class LineaPedidoEditor extends VerticalLayout {
 		guardar.focus();
 		// Select all text in numero field automatically
 		//cantidad.selectAll();
+		producto.setSelectedItem(LineaPedidoView.parrilla.asSingleSelect().getValue().getProducto());
 	}
 	
 	public void setChangeHandler(ChangeHandler h) {

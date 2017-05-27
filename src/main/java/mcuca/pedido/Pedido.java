@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import mcuca.cliente.Cliente;
+import mcuca.mesa.Mesa;
 import mcuca.usuario.Usuario;
 import mcuca.zona.Zona;
 
@@ -20,17 +21,16 @@ public class Pedido {
 	private Long id;
 	
 	private String nombre;
-	
 	private Float precio;
-	
 	private Boolean abierto;
-	
 	private Tipo tipo;
-	
 	private Date fecha;
 	
 	@ManyToOne
 	private Zona zona;
+	
+	@ManyToOne
+	private Mesa mesa;
 	
 	@ManyToOne
 	private Cliente cliente;
@@ -98,14 +98,6 @@ public class Pedido {
 		this.fecha = fecha;
 	}
 	
-	/*public Set<Producto> getProductos() {
-		return productos;
-	}
-	   
-	public void setProductos(Set<Producto> productos) {
-		this.productos = productos;
-	}*/
-	
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -118,16 +110,24 @@ public class Pedido {
 		return cliente.getId();
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
 	public void setZona(Zona zona) {
 		this.zona = zona;
 	}
 	
 	public Zona getZona() {
 		return zona;
+	}
+	
+	public void setMesa(Mesa mesa) {
+		this.mesa = mesa;
+	}
+	
+	public Mesa getMesa() {
+		return mesa;
+	}
+	
+	public Usuario getUsuario() {
+		return usuario;
 	}
 
 	public void setUsuario(Usuario usuario) {

@@ -1,6 +1,5 @@
 package mcuca.pedido;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -19,8 +18,9 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
-import mcuca.cliente.Cliente;
 import mcuca.cliente.ClienteRepository;
+import mcuca.mesa.Mesa;
+import mcuca.mesa.MesaRepository;
 import mcuca.usuario.UsuarioRepository;
 import mcuca.zona.Zona;
 import mcuca.zona.ZonaRepository;
@@ -36,15 +36,18 @@ public class PedidoEditor extends VerticalLayout {
 	private final ZonaRepository repoZona;
 	private final ClienteRepository repoCliente;
 	private final PedidoRepository repoPedido;
+	@SuppressWarnings("unused")
+	private final MesaRepository repoMesa;
 	
 	private Pedido pedido;
 	
 	/* Fields to edit properties in Pedido entity */
 	Label title = new Label("Nuevo Pedido");
 	TextField nombre = new TextField("Nombre");
-	NativeSelect<Tipo> tipo = new NativeSelect<>("Tipo");
-	NativeSelect<Long> clientes = new NativeSelect<>("Cliente");
+	Label precio = new Label();
+	NativeSelect<Tipo> tipos = new NativeSelect<>("Tipo");
 	NativeSelect<Zona> zonas = new NativeSelect<>("Zona");
+	NativeSelect<Mesa> mesas = new NativeSelect<>("Mesa");
 	
 	/* Action buttons */
 	Button abierto = new Button("Cerrar Pedido");
@@ -57,20 +60,21 @@ public class PedidoEditor extends VerticalLayout {
 	
 	@Autowired
 	public PedidoEditor(PedidoRepository repoPedido, ClienteRepository repoCliente, UsuarioRepository repoUsuario, 
-			            ZonaRepository repoZona) {
+			            ZonaRepository repoZona, MesaRepository repoMesa) {
 		
 		this.repoPedido = repoPedido;
 		this.repoCliente = repoCliente;
 		this.repoUsuario = repoUsuario;
 		this.repoZona = repoZona;
+		this.repoMesa = repoMesa;
 		
-		tipo.setItems(Tipo.class.getEnumConstants()); 
-		ArrayList<Cliente> ac = (ArrayList<Cliente>) repoCliente.findAll();
-		if(ac.size() > 0)
-			clientes.setItems(ac.get(0).getId());
+		tipos.setItems(Tipo.class.getEnumConstants()); 
+		//ArrayList<Cliente> ac = (ArrayList<Cliente>) repoCliente.findAll();
+		//if(ac.size() > 0)
+			//clientes.setItems(ac.get(0).getId());
 		zonas.setItems((Collection<Zona>) repoZona.findAll());
-		
-		addComponents(title, abierto, nombre, tipo, clientes, zonas, acciones);
+		mesas.setItems((Collection<Mesa>) repoMesa.findAll());
+		addComponents(title, abierto, nombre, precio, tipos, zonas, mesas, acciones);
 		
 		binder.bindInstanceFields(this);
 
@@ -86,18 +90,36 @@ public class PedidoEditor extends VerticalLayout {
 		cancelar.addClickListener(e -> editarPedido(pedido));
 		abierto.addClickListener(this::cerrar);
 		
+		zonas.setVisible(false);
+		mesas.setVisible(false);
+		
+		tipos.addSelectionListener(e -> {
+			zonas.setVisible(false);
+			mesas.setVisible(false);
+			if(tipos.getValue() == Tipo.ESTABLECIMIENTO) {
+				zonas.setVisible(true);
+			}
+		});
+		
+		zonas.addSelectionListener(e -> {
+			mesas.setVisible(true);
+		});
+		
 		setVisible(false);
 	}
 	
 	public void salvar(ClickEvent e) {
 		binder.setBean(pedido);
-		pedido.setAbierto(true);
-		pedido.setFecha(new Date());
-		//if(tipo.getSelectedItem().get().getId() == 2)
-		if(tipo.getValue().getId() == 2)
+		pedido.setNombre(nombre.getValue());
+		pedido.setPrecio(pedido.getPrecio());
+		pedido.setTipo(tipos.getValue());
+		if(tipos.getValue() == Tipo.DOMICILIO)
 			pedido.setCliente(repoCliente.findOne(PedidoView.cliente_id));
-		else if(tipo.getValue().getId() == 3)
+		else if(tipos.getValue() == Tipo.ESTABLECIMIENTO) {
 			pedido.setZona(zonas.getValue());
+			pedido.setMesa(mesas.getValue());
+		}
+		pedido.setFecha(new Date());
 		repoPedido.save(pedido);
 	}
 	
@@ -131,7 +153,9 @@ public class PedidoEditor extends VerticalLayout {
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
 		binder.setBean(pedido);
-
+		
+		tipos.setSelectedItem(pedido.getTipo());
+		
 		setVisible(true);
 
 		// A hack to ensure the whole form is visible
@@ -145,12 +169,8 @@ public class PedidoEditor extends VerticalLayout {
 		borrar.addClickListener(e -> h.onChange());
 		abierto.addClickListener(e -> h.onChange());
 	}
-	/*
-	public LineaPedidoRepository getRepoLineaPedido() {
-		return repoLineaPedido;
-	}
 	
 	public PedidoRepository getRepoPedido() {
 		return repoPedido;
-	}*/
+	}
 }

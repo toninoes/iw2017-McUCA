@@ -42,7 +42,8 @@ public class Mesa {
 
 	@Override
 	public String toString() {
-		return String.format("Mesa[id=%d, numero= %d]", id, numero);
+		//return String.format("Mesa[id=%d, numero= %d]", id, numero);
+		return String.valueOf(numero);
 	}
 	
 	public Zona getZona() {

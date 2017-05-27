@@ -24,9 +24,11 @@ public class LineaPedidoView extends VerticalLayout implements View {
 	
 	public static final String VIEW_NAME = "lineaPedidoView";
 
+	public static Grid<LineaPedido> parrilla;
+	
 	private LineaPedidoRepository almacen;
 	private LineaPedidoEditor editor;
-	private Grid<LineaPedido> parrilla;
+	
 	private TextField filtro;
 	private Button agregarNuevoBoton;
 	private final Button pedidoBoton;
@@ -35,7 +37,7 @@ public class LineaPedidoView extends VerticalLayout implements View {
 	public LineaPedidoView(LineaPedidoRepository almacen, LineaPedidoEditor editor) {
 		this.almacen = almacen;
 		this.editor = editor;
-		this.parrilla = new Grid<LineaPedido>(LineaPedido.class);
+		parrilla = new Grid<LineaPedido>(LineaPedido.class);
 		this.filtro = new TextField();
 		this.agregarNuevoBoton = new Button("Nueva Linea Pedido");
 		this.pedidoBoton = new Button("Volver");
@@ -52,8 +54,9 @@ public class LineaPedidoView extends VerticalLayout implements View {
 		editor.setWidth(300, Unit.PIXELS); //
 		parrilla.setHeight(420, Unit.PIXELS);
 		parrilla.setWidth(1100, Unit.PIXELS);
-		parrilla.setColumns("id", "cantidad", "producto", "enCocina");
+		parrilla.setColumns("id", "cantidad", "precio", "producto", "enCocina");
 		parrilla.getColumn("cantidad").setCaption("Cantidad");
+		parrilla.getColumn("precio").setCaption("Precio");
 		parrilla.getColumn("producto").setCaption("Producto");
 		parrilla.getColumn("enCocina").setCaption("En cocina");
 		
@@ -97,7 +100,8 @@ public class LineaPedidoView extends VerticalLayout implements View {
 		if (PedidoView.pedido_id == 0)
 			parrilla.setItems((Collection<LineaPedido>) almacen.findById(-1L));
 		else
-			parrilla.setItems((Collection<LineaPedido>) almacen.findByPedidoId(PedidoView.pedido_id));
+			parrilla.setItems((Collection<LineaPedido>) almacen.findById(PedidoView.pedido_id));
+			//parrilla.setItems((Collection<LineaPedido>) almacen.findByPedidoId(PedidoView.pedido_id));
 	}
 	
 	public Grid<LineaPedido> getParrilla() {

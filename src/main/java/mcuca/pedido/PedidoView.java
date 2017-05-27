@@ -60,11 +60,12 @@ public class PedidoView extends VerticalLayout implements View {
 		editor.setWidth(300, Unit.PIXELS); //
 		parrilla.setHeight(420, Unit.PIXELS);
 		parrilla.setWidth(1100, Unit.PIXELS);
-		parrilla.setColumns("id", "nombre", "precio", "abierto", "tipo", "fecha");
+		parrilla.setColumns("id", "nombre", "precio", "abierto", "tipo", "cliente", "fecha");
 		parrilla.getColumn("nombre").setCaption("Nombre");
 		parrilla.getColumn("precio").setCaption("Precio");
 		parrilla.getColumn("abierto").setCaption("Abierto");
 		parrilla.getColumn("tipo").setCaption("Tipo");
+		parrilla.getColumn("cliente").setCaption("Cliente");
 		parrilla.getColumn("fecha").setCaption("Fecha");
 				
 		filtro.setWidth(300, Unit.PIXELS);
@@ -87,6 +88,8 @@ public class PedidoView extends VerticalLayout implements View {
 		// Connect selected Pedido to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
 			editor.editarPedido(e.getValue());
+			//if(e.isUserOriginated())
+				//editor.tipos.setSelectedItem(e.getValue().getTipo());
 			editor.setVisible(true);
 			detallePedidoBoton.setVisible(true);
 		});
