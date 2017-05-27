@@ -15,4 +15,7 @@ public interface PedidoRepository extends CrudRepository<Pedido, Long> {
 	//List<Pedido> findByZona(String zona);
 	List<Pedido> findById(Long id);
 	List<Pedido> findByTipo(Tipo tipo);
+	
+	@Query("Select p from Pedido p")
+	List<Pedido> findByCierre();
 }

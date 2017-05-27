@@ -23,7 +23,10 @@ public class CierreCaja {
 	
 	private float recaudacion;
 	
-	public CierreCaja() {}
+	public CierreCaja(float recaudacion) {
+		this.recaudacion = recaudacion;
+		this.fechaCierre = new Date();
+	}
 	
 	public Long getId() { return this.id; }
 	public Establecimiento getEstablecimiento() { return this.establecimiento; }

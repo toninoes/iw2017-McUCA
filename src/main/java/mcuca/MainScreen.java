@@ -2,6 +2,7 @@ package mcuca;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
@@ -14,15 +15,20 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.cierre.CierreCaja;
+import mcuca.cierre.CierreCajaRepository;
 import mcuca.cliente.ClienteView;
 import mcuca.establecimiento.EstablecimientoView;
 import mcuca.ingrediente.IngredienteView;
 import mcuca.menu.MenuView;
 import mcuca.mesa.MesaView;
+import mcuca.pedido.PedidoRepository;
+import mcuca.pedido.PedidoService;
 import mcuca.pedido.PedidoView;
 import mcuca.producto.ProductoView;
 import mcuca.usuario.UsuarioManagementView;
@@ -35,7 +41,13 @@ import mcuca.zona.ZonaView;
 public class MainScreen extends VerticalLayout implements ViewDisplay {
 
 	private Panel springViewDisplay;
-
+	
+	private PedidoService pedidoService;
+	@Autowired
+	private PedidoRepository pedidoRepo;
+	@Autowired
+	private CierreCajaRepository cierresCaja;
+	
 	public static CssLayout navigationBar;
 	
 	private Button cerrarCaja;
@@ -142,7 +154,14 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		return button;
 	}
 	
-	private void cerrarCaja() {}
+	private void cerrarCaja() 
+	{
+		pedidoService = new PedidoService(pedidoRepo);
+		CierreCaja cierre = new CierreCaja(pedidoService.getRecaudacion());
+		cierresCaja.save(cierre);
+		
+		Notification.show("Recaudado: " + cierre.getRecaudacion() + " €");
+	}
 
 
 	@Override
