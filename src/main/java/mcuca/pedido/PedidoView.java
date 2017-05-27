@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Responsive;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
@@ -18,6 +19,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import mcuca.MainScreen;
+import mcuca.cliente.Cliente;
 
 @SpringView(name = PedidoView.VIEW_NAME)
 public class PedidoView extends VerticalLayout implements View {
@@ -49,17 +51,21 @@ public class PedidoView extends VerticalLayout implements View {
 
 	@PostConstruct
 	void init() {
-		
 		Label titulo = new Label("Pedidos");
-		titulo.setStyleName("h2");		
+		titulo.setStyleName("h2");
+		addComponent(titulo);		
 		
-		HorizontalLayout acciones = new HorizontalLayout(filtro, agregarNuevoBoton, detallePedidoBoton);
-		HorizontalLayout contenido = new HorizontalLayout(parrilla, editor);
-		VerticalLayout todo = new VerticalLayout(titulo, acciones, contenido);
-
-		editor.setWidth(300, Unit.PIXELS); //
-		parrilla.setHeight(420, Unit.PIXELS);
-		parrilla.setWidth(1100, Unit.PIXELS);
+		filtro.setPlaceholder("Búsqueda por número");
+		HorizontalLayout acciones = new HorizontalLayout();	
+		Responsive.makeResponsive(acciones);
+		acciones.setSpacing(false);
+		acciones.setMargin(false);
+		acciones.addComponent(filtro);
+		acciones.addComponent(agregarNuevoBoton);
+		acciones.addComponent(detallePedidoBoton);
+		addComponent(acciones);	
+		
+		parrilla.setWidth("100%");
 		parrilla.setColumns("id", "nombre", "precio", "abierto", "tipo", "cliente", "fecha");
 		parrilla.getColumn("nombre").setCaption("Nombre");
 		parrilla.getColumn("precio").setCaption("Precio");
@@ -67,11 +73,21 @@ public class PedidoView extends VerticalLayout implements View {
 		parrilla.getColumn("tipo").setCaption("Tipo");
 		parrilla.getColumn("cliente").setCaption("Cliente");
 		parrilla.getColumn("fecha").setCaption("Fecha");
-				
-		filtro.setWidth(300, Unit.PIXELS);
-		filtro.setPlaceholder("Búsqueda por número");
 		
-		// Hook logic to components
+		editor.setWidth("100%");
+		
+		HorizontalLayout contenido = new HorizontalLayout();
+		Responsive.makeResponsive(contenido);
+		contenido.setSpacing(false);
+		contenido.setMargin(false);
+		contenido.setSizeFull();
+		
+		contenido.addComponent(parrilla);
+		contenido.addComponent(editor);
+		contenido.setExpandRatio(parrilla, 0.7f);
+		contenido.setExpandRatio(editor, 0.3f);
+		addComponent(contenido);
+
 		// Replace listing with filtered content when user changes filtro
 		filtro.setValueChangeMode(ValueChangeMode.LAZY);
 		filtro.addValueChangeListener(e -> {
@@ -84,7 +100,7 @@ public class PedidoView extends VerticalLayout implements View {
 		});
 		
 		detallePedidoBoton.setVisible(false);
-		
+
 		// Connect selected Pedido to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
 			editor.editarPedido(e.getValue());
@@ -94,6 +110,7 @@ public class PedidoView extends VerticalLayout implements View {
 			detallePedidoBoton.setVisible(true);
 		});
 
+		// Instantiate and edit new Cliente the new button is clicked
 		// Instantiate and edit new Pedido the new button is clicked
 		agregarNuevoBoton.addClickListener(e -> editor.editarPedido(new Pedido()));
 		
@@ -126,8 +143,6 @@ public class PedidoView extends VerticalLayout implements View {
 			pedido_id = 0;
 			listarPedidos(0);
 		});
-		
-		addComponent(todo);
 	}
 
 	public static void listarPedidos(long id) {
