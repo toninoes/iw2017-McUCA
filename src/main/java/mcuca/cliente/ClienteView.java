@@ -56,7 +56,7 @@ public class ClienteView extends VerticalLayout implements View {
 		titulo.setStyleName("h2");
 		addComponent(titulo);		
 		
-		filtro.setPlaceholder("Búsqueda por apellidos");
+		filtro.setPlaceholder("Búsqueda por teléfono");
 		HorizontalLayout acciones = new HorizontalLayout();	
 		Responsive.makeResponsive(acciones);
 		acciones.setSpacing(false);
