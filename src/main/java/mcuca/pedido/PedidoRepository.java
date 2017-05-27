@@ -12,8 +12,8 @@ import java.util.List;
 
 public interface PedidoRepository extends CrudRepository<Pedido, Long> {
 	
-	@Query("Select p from Pedido p INNER Join p.zona c  Where c.nombre = :zona ")
-	List<Pedido> findByZona(Zona zona);
+	@Query("Select p from Pedido p where p.zona = :zona ")
+	List<Pedido> findByZona(@Param("zona")Zona zona);
 	//List<Pedido> findByZona(String zona);
 	List<Pedido> findById(Long id);
 	List<Pedido> findByTipo(Tipo tipo);

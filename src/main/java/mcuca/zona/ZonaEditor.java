@@ -1,6 +1,7 @@
 package mcuca.zona;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,8 +19,14 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.cierre.CierreCajaRepository;
 import mcuca.establecimiento.Establecimiento;
 import mcuca.establecimiento.EstablecimientoRepository;
+import mcuca.mesa.Mesa;
+import mcuca.mesa.MesaRepository;
+import mcuca.pedido.LineaPedidoRepository;
+import mcuca.pedido.PedidoRepository;
+import mcuca.pedido.PedidoService;
 
 @SpringComponent
 @UIScope
@@ -28,7 +35,12 @@ public class ZonaEditor extends VerticalLayout {
 	private static final long serialVersionUID = 1L;
 
 	private final ZonaRepository repoZona;
+	private final MesaRepository repoMesa;
+	private final PedidoRepository repoPedido;
+	private final PedidoService pedidoService;
 	private final EstablecimientoRepository repoEstablecimiento;
+	private LineaPedidoRepository lps;
+	private CierreCajaRepository cierresCaja;
 
 	private Zona zona;
 
@@ -47,9 +59,17 @@ public class ZonaEditor extends VerticalLayout {
 	Binder<Zona> binder = new Binder<>(Zona.class);
 
 	@Autowired
-	public ZonaEditor(ZonaRepository repoZona, EstablecimientoRepository repoEstablecimiento) {
+	public ZonaEditor(
+			ZonaRepository repoZona, EstablecimientoRepository repoEstablecimiento,
+			MesaRepository repoMesa, PedidoRepository repoPedido, CierreCajaRepository cierresCaja,
+			LineaPedidoRepository lps) {
+		this.repoPedido = repoPedido;
+		this.repoMesa = repoMesa;
 		this.repoZona = repoZona;
 		this.repoEstablecimiento = repoEstablecimiento;
+		this.cierresCaja = cierresCaja;
+		this.lps = lps;
+		this.pedidoService = new PedidoService(this.repoPedido, this.cierresCaja, this.lps);
 		select.setItems((Collection<Establecimiento>) repoEstablecimiento.findAll());
 		addComponents(title, nombre, aforo, select, acciones);
 
@@ -70,7 +90,8 @@ public class ZonaEditor extends VerticalLayout {
 
 		// wire action buttons to guardar, borrar and reset
 		guardar.addClickListener(this::salvar);
-		borrar.addClickListener(e -> repoZona.delete(zona));
+		//borrar.addClickListener(e -> repoZona.delete(zona));
+		borrar.addClickListener(e -> borrarZona());
 		cancelar.addClickListener(e -> editarZona(zona));
 		setVisible(false);
 	}
@@ -79,6 +100,16 @@ public class ZonaEditor extends VerticalLayout {
 		binder.setBean(zona);
 		zona.setEstablecimiento(select.getValue());
 		repoZona.save(zona);// TODO Auto-generated method stub
+	}
+	
+	private void borrarZona()
+	{
+		List<Mesa> mesas = repoMesa.findByZona(zona);
+		for(Mesa mesa : mesas)
+			repoMesa.delete(mesa);
+		this.pedidoService.deletePedidosbyZona(zona);
+		
+		repoZona.delete(zona);
 	}
 
 	public interface ChangeHandler {

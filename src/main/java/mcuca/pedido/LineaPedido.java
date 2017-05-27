@@ -15,8 +15,8 @@ public class LineaPedido {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	//@ManyToOne
-	//private Pedido pedido;
+	@ManyToOne
+	private Pedido pedido;
 	
 	@ManyToOne
 	private Producto producto;
@@ -31,22 +31,23 @@ public class LineaPedido {
 	
 	protected LineaPedido() {}
 	
-	public LineaPedido(int cantidad, Float precio, Producto producto, boolean enCocina) {
+	public LineaPedido(int cantidad, Float precio, Producto producto, Pedido pedido, boolean enCocina) {
 		this.cantidad = cantidad;
 		this.precio = precio;
 		this.producto = producto;
+		this.pedido = pedido;
 		this.enCocina = enCocina;
 	}
 	
 	public Long getId() { return this.id; }
-	//public Pedido getPedido() { return this.pedido; }
+	public Pedido getPedido() { return this.pedido; }
 	public Producto getProducto() { return this.producto; }
 	public int getCantidad() { return this.cantidad; }
 	public Float getPrecio() { return this.precio; }
 	public boolean isEnCocina() { return this.enCocina; }
 	//public Long getPedidoId() { return this.pedidoId; }
 	
-	//public void setPedido(Pedido pedido) { this.pedido = pedido; }
+	public void setPedido(Pedido pedido) { this.pedido = pedido; }
 	public void setProducto(Producto producto) { this.producto = producto; }
 	public void setCantidad(int cantidad) { this.cantidad = cantidad; }
 	public void setPrecio(Float precio) { this.precio = precio; }

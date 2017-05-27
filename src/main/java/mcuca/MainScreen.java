@@ -1,9 +1,17 @@
 package mcuca;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.FontAwesome;
@@ -27,6 +35,7 @@ import mcuca.establecimiento.EstablecimientoView;
 import mcuca.ingrediente.IngredienteView;
 import mcuca.menu.MenuView;
 import mcuca.mesa.MesaView;
+import mcuca.pedido.LineaPedidoRepository;
 import mcuca.pedido.PedidoRepository;
 import mcuca.pedido.PedidoService;
 import mcuca.pedido.PedidoView;
@@ -47,6 +56,8 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	private PedidoRepository pedidoRepo;
 	@Autowired
 	private CierreCajaRepository cierresCaja;
+	@Autowired
+	private LineaPedidoRepository lps;
 	
 	public static CssLayout navigationBar;
 	
@@ -70,6 +81,19 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		titulo.setStyleName("h1");
 		root.addComponent(titulo);
 		root.setComponentAlignment(titulo, Alignment.MIDDLE_CENTER);
+		
+		Button probar = new Button("PDF", event -> {
+			try {
+				topdf();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		root.addComponent(probar);
 
 		Button logoutButton = new Button("Salir", event -> logout());
 		//logoutButton.setStyleName(ValoTheme.BUTTON_LINK);
@@ -156,7 +180,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	
 	private void cerrarCaja() 
 	{
-		pedidoService = new PedidoService(pedidoRepo, cierresCaja);
+		pedidoService = new PedidoService(pedidoRepo, cierresCaja, lps);
 		CierreCaja cierre = new CierreCaja(pedidoService.getRecaudacion());
 		cierresCaja.save(cierre);
 		
@@ -173,5 +197,28 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	private void logout() {
 		getUI().getPage().reload();
 		getSession().close();
+	}
+	
+	
+	
+	
+	private void topdf() throws DocumentException, FileNotFoundException {
+		Document doc = new Document();
+		FileOutputStream fichero = new FileOutputStream("fichero.pdf");
+		
+		PdfWriter.getInstance(doc, fichero).setInitialLeading(40);
+		doc.open();
+		
+		doc.add(new Paragraph("McUCA - Ticket"));
+		doc.add(new Paragraph(""));
+		PdfPTable tabla = new PdfPTable(3);
+		tabla.addCell("Producto"); tabla.addCell("Cantidad"); tabla.addCell("Precio");
+		tabla.addCell("Hamburguesa de queso"); tabla.addCell("1"); tabla.addCell("4.95 €");
+		tabla.addCell("Patatas"); tabla.addCell("2"); tabla.addCell("3.50 €");
+		tabla.addCell("Coca-Cola"); tabla.addCell("1"); tabla.addCell("1.20 €");
+		tabla.addCell("Total"); tabla.addCell(""); tabla.addCell("9.65 €");
+		doc.add(tabla);
+		doc.close();
+		Notification.show("PDF generado");
 	}
 }

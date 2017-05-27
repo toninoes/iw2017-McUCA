@@ -1,12 +1,14 @@
 package mcuca.pedido;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import mcuca.cliente.Cliente;
 import mcuca.mesa.Mesa;
@@ -38,6 +40,9 @@ public class Pedido {
 	@ManyToOne
 	private Usuario usuario;
 	
+	@OneToMany
+	private Set<LineaPedido> lineasPedido;
+	
 	//@ManyToMany(targetEntity=Producto.class)
 	//@JoinTable(name = "pedido_producto", joinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"))
 	//private Set<Producto> productos;
@@ -61,6 +66,8 @@ public class Pedido {
 	public String getNombre() {
 		return nombre;
 	}
+	
+	public Set<LineaPedido> getLineasPedido() { return this.lineasPedido; }
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
