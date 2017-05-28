@@ -9,6 +9,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
@@ -74,7 +75,7 @@ public class UsuarioEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(e -> servicio.save(usuario));
+		guardar.addClickListener(this::salvar);
 		borrar.addClickListener(e -> servicio.delete(usuario));
 		cancelar.addClickListener(e -> editUser(usuario));
 		setVisible(false);
@@ -86,6 +87,17 @@ public class UsuarioEditor extends VerticalLayout {
 	public interface ChangeHandler {
 
 		void onChange();
+	}
+	
+	public void salvar(ClickEvent e) {
+		binder.setBean(usuario);
+		usuario.setDni(dni.getValue());
+		usuario.setNombre(nombre.getValue());
+		usuario.setApellidos(apellidos.getValue());
+		usuario.setPassword(password.getValue());
+		usuario.setRol(select.getValue());
+		usuario.setEstablecimiento(establecimiento.getValue());
+		servicio.save(usuario);
 	}
 
 	public final void editUser(Usuario c) {
