@@ -10,6 +10,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
@@ -36,7 +37,7 @@ public class MesaEditor extends VerticalLayout {
 	/* Fields to edit properties in Mesa entity */
 	Label title = new Label("Nueva Mesa");
 	TextField numero = new TextField("Número");
-	NativeSelect<Zona> zonas = new NativeSelect<>("Zona");
+	ComboBox<Zona> zonas = new ComboBox<>("Zona");
 	
 	
 	/* Action buttons */
@@ -107,6 +108,7 @@ public class MesaEditor extends VerticalLayout {
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
 		binder.setBean(mesa);
+		zonas.setSelectedItem(mesa.getZona());
 
 		setVisible(true);
 
