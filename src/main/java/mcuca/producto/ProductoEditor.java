@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.converter.StringToDoubleConverter;
 import com.vaadin.data.converter.StringToFloatConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -62,13 +63,13 @@ public class ProductoEditor extends VerticalLayout {
 		binder.forField(precio)
 		  .withNullRepresentation("")
 		  .withConverter(
-		    new StringToFloatConverter("Por favor introduce un número"))
+		    new StringToDoubleConverter("Por favor introduce un número"))
 		  .bind("precio");
 		
 		binder.forField(iva)
 		  .withNullRepresentation("")
 		  .withConverter(
-		    new StringToFloatConverter("Por favor introduce un número"))
+		    new StringToDoubleConverter("Por favor introduce un número"))
 		  .bind("iva");
 		
 		binder.bindInstanceFields(this);
@@ -97,7 +98,7 @@ public class ProductoEditor extends VerticalLayout {
 		producto.setPrecio(Double.valueOf(precio.getValue().replace(',', '.')));
 		producto.setIva(Double.valueOf(iva.getValue()));
 		producto.setFoto(foto.getValue());
-		producto.setIngredientes(sSelected);
+		producto.setIngredientes(ingredientes.getSelectedItems());
 		repoProducto.save(producto);
 		ProductoView.parrilla.asSingleSelect().setValue(producto);
 	}

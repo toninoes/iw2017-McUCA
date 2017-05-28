@@ -93,31 +93,38 @@ public class Application extends SpringBootServletInitializer {
 				repoCliente.save(c5);
 				
 				//Ingredientes de prueba
-				Ingrediente i1 = new Ingrediente("Patatas");
+				Ingrediente i1 = new Ingrediente("Ali-Oli");
 				Ingrediente i2 = new Ingrediente("Cebolla");
 				Ingrediente i3 = new Ingrediente("Pan");
 				Ingrediente i4 = new Ingrediente("Carne de cerdo");
 				Ingrediente i5 = new Ingrediente("Ketchup");
 				Ingrediente i6 = new Ingrediente("Manteca Colorá");
+				Ingrediente i7 = new Ingrediente("Patata");
 				repoIng.save(i1);
 				repoIng.save(i2);
 				repoIng.save(i3);
 				repoIng.save(i4);
 				repoIng.save(i5);
 				repoIng.save(i6);
+				repoIng.save(i7);
 				
 				//Productos de prueba
 				Set<Ingrediente> si1 = new HashSet<Ingrediente>();
+				si1.add(i1);
 				si1.add(i2);
 				si1.add(i3);
 				si1.add(i4);
 				Set<Ingrediente> si2 = new HashSet<Ingrediente>();
 				si1.add(i3);
 				si1.add(i6);
+				Set<Ingrediente> si3 = new HashSet<Ingrediente>();
+				si1.add(i7);
 				Producto p1 = new Producto("Hamburguesa Super IW", 6.8, 21.0, "", si1);
 				Producto p2 = new Producto("Super Bocata Vejer&Benalup Fashion", 15.8, 21.0, "", si2);
+				Producto p3 = new Producto("Patatas Fritas", 2.2, 21.0, "", si3);
 				repoProd.save(p1);
 				repoProd.save(p2);
+				repoProd.save(p3);
 				
 				//Establecimientos de prueba
 				Establecimiento benalup = new Establecimiento("McUCA - Benalup", "Avenida Bahía Blanca, s/n");
