@@ -20,6 +20,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.producto.Producto;
 import mcuca.producto.ProductoRepository;
+import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
 
 @SuppressWarnings("serial")
 @SpringComponent
@@ -39,7 +40,6 @@ public class LineaPedidoEditor extends VerticalLayout {
 	NativeSelect<Integer> cantidad = new NativeSelect<>("Cantidad");
 	TextField precio = new TextField("Precio");
 	NativeSelect<Producto> producto = new NativeSelect<>("Producto");
-	NativeSelect<Boolean> en_cocina = new NativeSelect<>("EnCocina");
 	
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
@@ -55,11 +55,9 @@ public class LineaPedidoEditor extends VerticalLayout {
 		this.repoLineaPedido = repoLineaPedido;
 		this.repoPedido = repoPedido;
 		this.repoProducto = repoProducto;
-		cantidad.setItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-		if(this.repoProducto.findAll().iterator().hasNext())	
-			producto.setItems((Collection<Producto>) this.repoProducto.findAll());
-		en_cocina.setItems(true, false);
-		addComponents(title, cantidad, precio, producto, en_cocina, acciones);
+		cantidad.setItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);	
+		producto.setItems((Collection<Producto>) this.repoProducto.findAll());
+		addComponents(title, cantidad, precio, producto, acciones);
 		
 		//binder.bindInstanceFields(this);
 		/*binder.forField(cantidad)
@@ -87,10 +85,10 @@ public class LineaPedidoEditor extends VerticalLayout {
 		//guardar.addClickListener(e -> repoLineaPedido.save(lineaPedido))
 		guardar.addClickListener(e -> {
 			Total = 0.0f;
-			int longitud = LineaPedidoView.parrilla.getFooterRowCount();
+			int longitud = PedidoView.parrillaLineas.getFooterRowCount();
 			int i = 0;
 			while(i < longitud) {
-				Total = Total + (LineaPedidoView.parrilla.asSingleSelect().getValue().getCantidad() * LineaPedidoView.parrilla.asSingleSelect().getValue().getPrecio());
+				Total = Total + (PedidoView.parrillaLineas.asSingleSelect().getValue().getCantidad() * PedidoView.parrillaLineas.asSingleSelect().getValue().getPrecio());
 				i++;
 			}
 			salvar(e);
@@ -103,14 +101,18 @@ public class LineaPedidoEditor extends VerticalLayout {
 	
 	public void salvar(ClickEvent e) {
 		binder.setBean(lineaPedido);
+		Pedido pedido = repoPedido.findOne(
+				(Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("pedido_id"));
+		pedido.setPrecio(Total);
 		lineaPedido.setCantidad(cantidad.getValue());
 		lineaPedido.setPrecio(Float.valueOf(precio.getValue().replace(',', '.')));
 		lineaPedido.setProducto(producto.getValue());
-		lineaPedido.setEnCocina(en_cocina.getValue());
-		//lineaPedido.setPedidoId(repoPedido.findOne(PedidoView.pedido_id).getId());
+		lineaPedido.setEnCocina(false);
+		lineaPedido.setPedido(pedido);
 		repoLineaPedido.save(lineaPedido);
-		repoPedido.findOne(PedidoView.pedido_id).setPrecio(Total);
-		repoPedido.save(repoPedido.findOne(PedidoView.pedido_id));
+		
+		
+		repoPedido.save(pedido);
 	}
 	
 	public interface ChangeHandler {
@@ -144,7 +146,8 @@ public class LineaPedidoEditor extends VerticalLayout {
 		guardar.focus();
 		// Select all text in numero field automatically
 		//cantidad.selectAll();
-		producto.setSelectedItem(LineaPedidoView.parrilla.asSingleSelect().getValue().getProducto());
+		if(persisted)
+			producto.setSelectedItem(lineaPedido.getProducto());
 	}
 	
 	public void setChangeHandler(ChangeHandler h) {

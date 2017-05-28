@@ -119,7 +119,7 @@ public class PedidoEditor extends VerticalLayout {
 				this.repoUsuario.findByUsername(
 						(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")));
 		if(tipos.getValue() == Tipo.DOMICILIO)
-			pedido.setCliente(repoCliente.findOne(PedidoView.cliente_id));
+			pedido.setCliente(repoCliente.findOne((Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id")));
 		else if(tipos.getValue() == Tipo.ESTABLECIMIENTO) {
 			pedido.setZona(zonas.getValue());
 			pedido.setMesa(mesas.getValue());

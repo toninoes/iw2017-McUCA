@@ -81,7 +81,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		titulo.setStyleName("h1");
 		root.addComponent(titulo);
 		root.setComponentAlignment(titulo, Alignment.MIDDLE_CENTER);
-		
+		/*
 		Button probar = new Button("PDF", event -> {
 			try {
 				topdf();
@@ -94,7 +94,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 			}
 		});
 		root.addComponent(probar);
-
+*/
 		Button logoutButton = new Button("Salir", event -> logout());
 		//logoutButton.setStyleName(ValoTheme.BUTTON_LINK);
 		logoutButton.setIcon(FontAwesome.POWER_OFF);
@@ -170,8 +170,8 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		// If you didn't choose Java 8 when creating the project, convert this
 		// to an anonymous listener class
 		button.addClickListener(event -> {
-			PedidoView.cliente_id = 0;
-			PedidoView.pedido_id = 0;
+			//PedidoView.cliente_id = 0;
+			//PedidoView.pedido_id = 0;
 			PedidoView.listarPedidos(0L);
 			getUI().getNavigator().navigateTo(viewName);
 		});
@@ -201,7 +201,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	
 	
 	
-	
+	/*
 	private void topdf() throws DocumentException, FileNotFoundException {
 		Document doc = new Document();
 		FileOutputStream fichero = new FileOutputStream("fichero.pdf");
@@ -220,5 +220,5 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		doc.add(tabla);
 		doc.close();
 		Notification.show("PDF generado");
-	}
+	}*/
 }

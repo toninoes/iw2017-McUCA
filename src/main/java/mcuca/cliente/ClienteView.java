@@ -20,6 +20,7 @@ import com.vaadin.ui.VerticalLayout;
 import mcuca.pedido.PedidoRepository;
 import mcuca.pedido.PedidoView;
 import mcuca.pedido.Tipo;
+import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
 
 import com.vaadin.spring.annotation.SpringView;
 
@@ -93,6 +94,7 @@ public class ClienteView extends VerticalLayout implements View {
 
 		// Connect selected Cliente to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
+			VaadinSessionSecurityContextHolderStrategy.getSession().setAttribute("cliente_id", e.getValue().getId());
 			editor.editarCliente(e.getValue());
 			btnPedido.setVisible(true);
 		});
@@ -104,7 +106,9 @@ public class ClienteView extends VerticalLayout implements View {
 		btnPedido.addClickListener(e -> {
 			btnPedido.setVisible(false);
 			getUI().getNavigator().navigateTo(PedidoView.VIEW_NAME);
-			PedidoView.listarPedidos(parrilla.asSingleSelect().getValue().getId(), (Tipo) Tipo.DOMICILIO);
+			PedidoView.listarPedidos(
+					(Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id"), 
+					(Tipo) Tipo.DOMICILIO);
 		});
 		
 		// Listen changes made by the editor, refresh data from backend

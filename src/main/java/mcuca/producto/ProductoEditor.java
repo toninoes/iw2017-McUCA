@@ -97,7 +97,6 @@ public class ProductoEditor extends VerticalLayout {
 		producto.setPrecio(Float.valueOf(precio.getValue().replace(',', '.')));
 		producto.setIva(Float.valueOf(iva.getValue()));
 		producto.setFoto(foto.getValue());
-		producto.setIngredientes(null);
 		producto.setIngredientes(sSelected);
 		repoProducto.save(producto);
 		ProductoView.parrilla.asSingleSelect().setValue(producto);
