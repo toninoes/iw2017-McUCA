@@ -8,6 +8,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -32,6 +33,8 @@ public class UsuarioEditor extends VerticalLayout {
 	TextField apellidos = new TextField("Apellidos");
 	TextField username = new TextField("Username");
 	TextField password = new TextField("Password");
+	NativeSelect<Rol> select = new NativeSelect<>("Rol");
+
 
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
@@ -45,8 +48,10 @@ public class UsuarioEditor extends VerticalLayout {
 	@Autowired
 	public UsuarioEditor(UsuarioService servicio) {
 		this.servicio = servicio;
+		select.setItems(Rol.class.getEnumConstants()); 
 
-		addComponents(dni, nombre, apellidos, username, password, acciones);
+
+		addComponents(dni, nombre, apellidos, username, password, select, acciones);
 
 		// bind using naming convention
 		binder.bindInstanceFields(this);
@@ -65,7 +70,7 @@ public class UsuarioEditor extends VerticalLayout {
 		setVisible(false);
 
 		// Solo borra el admin
-		borrar.setEnabled(SecurityUtils.hasRole("ADMIN"));
+		borrar.setEnabled(SecurityUtils.hasRole("GERENTE"));
 	}
 
 	public interface ChangeHandler {

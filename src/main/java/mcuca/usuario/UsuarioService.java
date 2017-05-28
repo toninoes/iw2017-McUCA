@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.vaadin.ui.Notification;
+
 
 @Service
 public class UsuarioService implements UserDetailsService {
@@ -28,8 +30,14 @@ public class UsuarioService implements UserDetailsService {
 	}
 
 	public Usuario save(Usuario user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword() != null ? user.getPassword() : "default"));
-		return repo.save(user);
+		try{
+			user.setPassword(passwordEncoder.encode(user.getPassword() != null ? user.getPassword() : "default"));
+			return repo.save(user);}
+			catch(Exception e){
+				Notification.show("Se ha producido un error");
+				return null;
+			}
+			
 	}
 
 	public List<Usuario> findByApellidosStartsWithIgnoreCase(String lastName) {
