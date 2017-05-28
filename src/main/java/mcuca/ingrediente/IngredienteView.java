@@ -55,9 +55,7 @@ public class IngredienteView extends VerticalLayout implements View {
 		addComponent(acciones);	
 		
 		parrilla.setWidth("100%");
-		parrilla.setColumns("id", "nombre", "precio");
 		parrilla.getColumn("nombre").setCaption("Nombre");
-		parrilla.getColumn("precio").setCaption("Precio");
 		
 		editor.setWidth("100%");
 		
