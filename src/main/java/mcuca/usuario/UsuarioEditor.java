@@ -1,5 +1,7 @@
 package mcuca.usuario;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
@@ -13,6 +15,9 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.establecimiento.Establecimiento;
+import mcuca.establecimiento.EstablecimientoRepository;
+import mcuca.mesa.Mesa;
 import mcuca.security.SecurityUtils;
 
 @SuppressWarnings("serial")
@@ -23,7 +28,7 @@ public class UsuarioEditor extends VerticalLayout {
 	private final UsuarioService servicio;
 
 	private Usuario usuario;
-
+	private final EstablecimientoRepository repoEst;
 	private Binder<Usuario> binder = new Binder<>(Usuario.class);
 
 
@@ -34,6 +39,8 @@ public class UsuarioEditor extends VerticalLayout {
 	TextField username = new TextField("Username");
 	TextField password = new TextField("Password");
 	NativeSelect<Rol> select = new NativeSelect<>("Rol");
+	NativeSelect<Establecimiento> establecimiento = new NativeSelect<>("Establecimiento");
+
 
 
 	/* Action buttons */
@@ -46,12 +53,15 @@ public class UsuarioEditor extends VerticalLayout {
 
 
 	@Autowired
-	public UsuarioEditor(UsuarioService servicio) {
+	public UsuarioEditor(UsuarioService servicio, EstablecimientoRepository repoEst) {
 		this.servicio = servicio;
-		select.setItems(Rol.class.getEnumConstants()); 
+		this.repoEst = repoEst;
+		select.setItems(Rol.class.getEnumConstants());
+		establecimiento.setItems((Collection<Establecimiento>) repoEst.findAll());
 
 
-		addComponents(dni, nombre, apellidos, username, password, select, acciones);
+
+		addComponents(dni, nombre, apellidos, username, password, select, establecimiento, acciones);
 
 		// bind using naming convention
 		binder.bindInstanceFields(this);
