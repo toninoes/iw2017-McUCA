@@ -21,7 +21,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import mcuca.cliente.ClienteRepository;
 import mcuca.mesa.Mesa;
 import mcuca.mesa.MesaRepository;
-import mcuca.security.SecurityUtils;
 import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
 import mcuca.usuario.UsuarioRepository;
 import mcuca.zona.Zona;
@@ -32,7 +31,6 @@ import mcuca.zona.ZonaRepository;
 @UIScope
 public class PedidoEditor extends VerticalLayout {
 	
-	@SuppressWarnings("unused")
 	private final UsuarioRepository repoUsuario;
 	@SuppressWarnings("unused")
 	private final ZonaRepository repoZona;

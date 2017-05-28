@@ -12,9 +12,9 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -48,7 +48,7 @@ public class ZonaEditor extends VerticalLayout {
 	Label title = new Label("Nueva Zona");
 	TextField nombre = new TextField("Nombre");
 	TextField aforo = new TextField("Aforo");
-	NativeSelect<Establecimiento> select = new NativeSelect<>("Establecimiento");
+	ComboBox<Establecimiento> select = new ComboBox<>("Establecimiento");
 
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
@@ -135,8 +135,9 @@ public class ZonaEditor extends VerticalLayout {
 		// Bind mcuca properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
+		
 		binder.setBean(zona);
-
+		select.setSelectedItem(zona.getEstablecimiento());
 		setVisible(true);
 
 		// A hack to ensure the whole form is visible

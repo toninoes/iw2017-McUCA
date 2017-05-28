@@ -10,6 +10,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
@@ -18,7 +19,6 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.establecimiento.Establecimiento;
 import mcuca.establecimiento.EstablecimientoRepository;
-import mcuca.mesa.Mesa;
 import mcuca.security.SecurityUtils;
 
 @SuppressWarnings("serial")
@@ -29,7 +29,10 @@ public class UsuarioEditor extends VerticalLayout {
 	private final UsuarioService servicio;
 
 	private Usuario usuario;
+	
+	@Autowired
 	private final EstablecimientoRepository repoEst;
+	
 	private Binder<Usuario> binder = new Binder<>(Usuario.class);
 
 
@@ -40,7 +43,7 @@ public class UsuarioEditor extends VerticalLayout {
 	TextField username = new TextField("Username");
 	TextField password = new TextField("Password");
 	NativeSelect<Rol> select = new NativeSelect<>("Rol");
-	NativeSelect<Establecimiento> establecimiento = new NativeSelect<>("Establecimiento");
+	ComboBox<Establecimiento> establecimiento = new ComboBox<>("Establecimiento");
 
 
 
@@ -60,8 +63,6 @@ public class UsuarioEditor extends VerticalLayout {
 		select.setItems(Rol.class.getEnumConstants());
 		establecimiento.setItems((Collection<Establecimiento>) repoEst.findAll());
 
-
-
 		addComponents(dni, nombre, apellidos, username, password, select, establecimiento, acciones);
 
 		// bind using naming convention
@@ -78,6 +79,8 @@ public class UsuarioEditor extends VerticalLayout {
 		guardar.addClickListener(this::salvar);
 		borrar.addClickListener(e -> servicio.delete(usuario));
 		cancelar.addClickListener(e -> editUser(usuario));
+		
+	
 		setVisible(false);
 
 		// Solo borra el admin
@@ -120,6 +123,8 @@ public class UsuarioEditor extends VerticalLayout {
 		// moving values from fields to entities before saving
 		binder.setBean(usuario);
 
+		select.setSelectedItem(usuario.getRol());
+				
 		setVisible(true);
 
 		// A hack to ensure the whole form is visible
@@ -133,6 +138,10 @@ public class UsuarioEditor extends VerticalLayout {
 		// is clicked
 		guardar.addClickListener(e -> h.onChange());
 		borrar.addClickListener(e -> h.onChange());
+	}
+
+	public EstablecimientoRepository getRepoEst() {
+		return repoEst;
 	}
 
 }

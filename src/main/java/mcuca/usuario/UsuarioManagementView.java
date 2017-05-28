@@ -7,13 +7,16 @@ import org.springframework.util.StringUtils;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Responsive;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+
 
 
 @SuppressWarnings("serial")
@@ -21,9 +24,9 @@ import com.vaadin.ui.VerticalLayout;
 public class UsuarioManagementView extends VerticalLayout implements View {
 	public static final String VIEW_NAME = "usuarioManagementView";
 
-	private Grid<Usuario> grid;
-	private TextField filter;
-	private Button addNewBtn;
+	private Grid<Usuario> parrilla;
+	private TextField filtro;
+	private Button agregarNuevoBoton;
 
 	private UsuarioEditor editor;
 
@@ -34,44 +37,63 @@ public class UsuarioManagementView extends VerticalLayout implements View {
 	public UsuarioManagementView(UsuarioService service, UsuarioEditor editor) {
 		this.service = service;
 		this.editor = editor;
-		this.grid = new Grid<>(Usuario.class);
-		this.filter = new TextField();
-		this.addNewBtn = new Button("Nuevo Usuario");
+		this.parrilla = new Grid<>(Usuario.class);
+		this.filtro = new TextField();
+		this.agregarNuevoBoton = new Button("Nuevo Usuario");
 
 	}
 
 
 	@PostConstruct
 	void init() {
+		Label titulo = new Label("Usuarios");
+		titulo.setStyleName("h2");
+		addComponent(titulo);
 
-		// build layout
-		HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
+		filtro.setPlaceholder("Búsqueda por apellidos");
+		HorizontalLayout acciones = new HorizontalLayout();
+		Responsive.makeResponsive(acciones);
+		acciones.setSpacing(false);
+		acciones.setMargin(false);
+		acciones.addComponent(filtro);
+		acciones.addComponent(agregarNuevoBoton);
 
-		addComponents(actions, grid, editor);
+		addComponent(acciones);
 
-		grid.setHeight(300, Unit.PIXELS);
-		grid.setColumns("id", "nombre", "apellidos");
+		parrilla.setWidth("100%");
+		parrilla.setColumns("id", "nombre", "apellidos");
+		parrilla.getColumn("apellidos").setCaption("Apellidos");
 
-		filter.setPlaceholder("Filtrar por apellidos");
+		editor.setWidth("100%");
 
-		// Hook logic to components
+		HorizontalLayout contenido = new HorizontalLayout();
+		Responsive.makeResponsive(contenido);
+		contenido.setSpacing(false);
+		contenido.setMargin(false);
+		contenido.setSizeFull();
 
-		// Replace listing with filtered content when user changes filter
-		filter.setValueChangeMode(ValueChangeMode.LAZY);
-		filter.addValueChangeListener(e -> listUsers(e.getValue()));
+		contenido.addComponent(parrilla);
+		contenido.addComponent(editor);
+		contenido.setExpandRatio(parrilla, 0.7f);
+		contenido.setExpandRatio(editor, 0.3f);
+		addComponent(contenido);
+
+		// Replace listing with filtered content when user changes filtro
+		filtro.setValueChangeMode(ValueChangeMode.LAZY);
+		filtro.addValueChangeListener(e -> listUsers(e.getValue()));
 
 		// Connect selected Usuario to editor or hide if none is selected
-		grid.asSingleSelect().addValueChangeListener(e -> {
+		parrilla.asSingleSelect().addValueChangeListener(e -> {
 			editor.editUser(e.getValue());
 		});
 
-		// Instantiate and edit new Usuario the new button is clicked
-		addNewBtn.addClickListener(e -> editor.editUser(new Usuario("", "")));
+		// Instantiate and edit new Cliente the new button is clicked
+		agregarNuevoBoton.addClickListener(e -> editor.editUser(new Usuario("", "")));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {
 			editor.setVisible(false);
-			listUsers(filter.getValue());
+			listUsers(filtro.getValue());
 		});
 
 		// Initialize listing
@@ -81,9 +103,9 @@ public class UsuarioManagementView extends VerticalLayout implements View {
 
 	private void listUsers(String filterText) {
 		if (StringUtils.isEmpty(filterText)) {
-			grid.setItems(service.findAll());
+			parrilla.setItems(service.findAll());
 		} else {
-			grid.setItems(service.findByApellidosStartsWithIgnoreCase(filterText));
+			parrilla.setItems(service.findByApellidosStartsWithIgnoreCase(filterText));
 		}
 	}
 
