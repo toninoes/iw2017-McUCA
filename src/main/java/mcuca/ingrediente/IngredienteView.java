@@ -83,7 +83,7 @@ public class IngredienteView extends VerticalLayout implements View {
 		});
 
 		// Instantiate and edit new Ingrediente the new button is clicked
-		agregarNuevoBoton.addClickListener(e -> editor.editarIngrediente(new Ingrediente("", "")));
+		agregarNuevoBoton.addClickListener(e -> editor.editarIngrediente(new Ingrediente("")));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {

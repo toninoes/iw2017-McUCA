@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
+import mcuca.cliente.Cliente;
+import mcuca.cliente.ClienteRepository;
 import mcuca.establecimiento.Establecimiento;
 import mcuca.establecimiento.EstablecimientoRepository;
 import mcuca.mesa.Mesa;
@@ -47,6 +49,9 @@ public class Application extends SpringBootServletInitializer {
 	
 	@Autowired
 	private MesaRepository repoMesa;
+	
+	@Autowired
+	private ClienteRepository repoCliente;
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -62,6 +67,19 @@ public class Application extends SpringBootServletInitializer {
 		return (args) -> {
 
 			if (service.findAll().size() == 0) {
+				//Clientes de prueba
+				Cliente c1 = new Cliente("Iván", "Ruiz Rube", "Su domicilio 1", "+34 956 111 111");
+				Cliente c2 = new Cliente("José María", "Rodriguez Corral", "Su domicilio 2", "+34 956 222 222");
+				Cliente c3 = new Cliente("Juan", "Boubeta Puig", "Su domicilio 3", "+34 956 333 333");
+				Cliente c4 = new Cliente("Daniel", "Molina Cabrera", "Su domicilio 4", "+34 956 444 444");
+				Cliente c5 = new Cliente("Ignacio Javier", "Pérez Gálvez", "Su domicilio 5", "+34 956 555 555");
+				repoCliente.save(c1);
+				repoCliente.save(c2);
+				repoCliente.save(c3);
+				repoCliente.save(c4);
+				repoCliente.save(c5);
+				
+				
 				//Establecimientos de prueba
 				Establecimiento benalup = new Establecimiento("McUCA - Benalup", "Avenida Bahía Blanca, s/n");
 				Establecimiento vejer = new Establecimiento("McUCA - Vejer", "Plaza de España, s/n");

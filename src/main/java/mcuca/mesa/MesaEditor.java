@@ -13,7 +13,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;

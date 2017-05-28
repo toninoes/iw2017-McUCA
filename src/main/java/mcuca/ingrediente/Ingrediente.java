@@ -14,22 +14,13 @@ public class Ingrediente {
 
 	private String nombre;
 	
-	private Double precio;
-
 	protected Ingrediente() {
 	}
 	
-	public Ingrediente(String nombre, String precio) {
+	public Ingrediente(String nombre) {
 		this.nombre = nombre;
-		
-		if (precio == "")
-			this.precio = null;
 	}
 
-	public Ingrediente(String nombre, Double precio) {
-		this.nombre = nombre;
-		this.precio = precio;
-	}
 
 	public Long getId() {
 		return id;
@@ -43,13 +34,6 @@ public class Ingrediente {
 		this.nombre = nombre;
 	}
 
-	public Double getPrecio() {
-		return precio;
-	}
-	
-	public void setPrecio(Double precio) {
-		this.precio = precio;
-	}
 
 	@Override
 	public String toString() {

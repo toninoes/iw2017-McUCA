@@ -3,7 +3,6 @@ package mcuca.ingrediente;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.converter.StringToDoubleConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -27,10 +26,7 @@ public class IngredienteEditor extends VerticalLayout {
 	
 	/* Fields to edit properties in Ingrediente entity */
 	Label title = new Label("Nuevo Ingrediente");
-	TextField nombre = new TextField("Nombre");
-	TextField precio = new TextField("Precio");
-
-	
+	TextField nombre = new TextField("Nombre");	
 
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
@@ -45,16 +41,11 @@ public class IngredienteEditor extends VerticalLayout {
 	public IngredienteEditor(IngredienteRepository almacen) {
 		this.almacen = almacen;
 
-		addComponents(title, nombre, precio, acciones);
+		addComponents(title, nombre, acciones);
 
 		// bind using naming convention
-		//binder.bindInstanceFields(this);
-		binder.bind(nombre, "nombre");
-		binder.forField(precio)
-		  .withNullRepresentation("")
-		  .withConverter(
-		    new StringToDoubleConverter("Por favor introduce un número"))
-		  .bind("precio");
+		binder.bindInstanceFields(this);
+
 
 		// Configure and style components
 		setSpacing(true);
