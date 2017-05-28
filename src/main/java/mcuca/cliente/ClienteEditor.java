@@ -14,6 +14,11 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.cierre.CierreCajaRepository;
+import mcuca.pedido.LineaPedidoRepository;
+import mcuca.pedido.PedidoRepository;
+import mcuca.pedido.PedidoService;
+
 @SuppressWarnings({ "deprecation", "serial" })
 @SpringComponent
 @UIScope
@@ -21,6 +26,8 @@ public class ClienteEditor extends VerticalLayout {
 	
 
 	private final ClienteRepository almacen;
+	
+	private PedidoService pedService;
 
 	private Cliente cliente;
 
@@ -40,8 +47,11 @@ public class ClienteEditor extends VerticalLayout {
 	Binder<Cliente> binder = new Binder<>(Cliente.class);
 
 	@Autowired
-	public ClienteEditor(ClienteRepository almacen) {
+	public ClienteEditor(ClienteRepository almacen, PedidoRepository ped, 
+			CierreCajaRepository cierre,
+			LineaPedidoRepository lp) {
 		
+		pedService = new PedidoService(ped, cierre, lp);
 		this.almacen = almacen;
 
 		addComponents(title, nombre, apellidos, domicilio, telefono, acciones);
@@ -64,7 +74,8 @@ public class ClienteEditor extends VerticalLayout {
 
 		// wire action buttons to guardar, borrar and reset
 		guardar.addClickListener(e -> almacen.save(cliente));
-		borrar.addClickListener(e -> almacen.delete(cliente));
+		//borrar.addClickListener(e -> almacen.delete(cliente));
+		borrar.addClickListener(e -> borrarCliente());
 		cancelar.addClickListener(e -> editarCliente(cliente));
 		setVisible(false);
 	}
@@ -72,6 +83,11 @@ public class ClienteEditor extends VerticalLayout {
 	public interface ChangeHandler {
 
 		void onChange();
+	}
+	
+	public void borrarCliente() {
+		pedService.deletePedidosByCliente(cliente);
+		almacen.delete(cliente);
 	}
 
 	public final void editarCliente(Cliente c) {

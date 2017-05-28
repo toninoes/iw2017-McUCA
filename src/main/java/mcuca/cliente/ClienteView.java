@@ -94,9 +94,11 @@ public class ClienteView extends VerticalLayout implements View {
 
 		// Connect selected Cliente to editor or hide if none is selected
 		parrilla.asSingleSelect().addValueChangeListener(e -> {
-			VaadinSessionSecurityContextHolderStrategy.getSession().setAttribute("cliente_id", e.getValue().getId());
-			editor.editarCliente(e.getValue());
-			btnPedido.setVisible(true);
+			if(e.getValue() != null) {
+				VaadinSessionSecurityContextHolderStrategy.getSession().setAttribute("cliente_id", e.getValue().getId());
+				editor.editarCliente(e.getValue());
+				btnPedido.setVisible(true);
+			}
 		});
 
 		// Instantiate and edit new Cliente the new button is clicked

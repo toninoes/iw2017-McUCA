@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import mcuca.cierre.CierreCaja;
 import mcuca.cierre.CierreCajaRepository;
+import mcuca.cliente.Cliente;
 import mcuca.zona.Zona;
 
 public class PedidoService {
@@ -47,6 +48,23 @@ public class PedidoService {
 			for(LineaPedido lp : lineasPedido)
 				lps.delete(lp);
 			pedidos.delete(pedido);
+		}
+	}
+	
+	public void deletePedidosByCliente(Cliente cliente)
+	{
+		List<Pedido> pedidosZona = pedidos.findByCliente(cliente);
+		if(pedidosZona != null)
+		{
+			for(Pedido pedido : pedidosZona)
+			{
+				Set<LineaPedido> lineasPedido = pedido.getLineasPedido();
+				if(lineasPedido != null) {
+					for(LineaPedido lp : lineasPedido)
+						lps.delete(lp);
+				}
+				pedidos.delete(pedido);
+			}
 		}
 	}
 }
