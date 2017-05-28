@@ -37,7 +37,7 @@ public class VaadinSessionSecurityContextHolderStrategy implements SecurityConte
         return new SecurityContextImpl();
     }
 
-    private static VaadinSession getSession() {
+    public static VaadinSession getSession() {
         VaadinSession session = VaadinSession.getCurrent();
         if (session == null) {
             throw new IllegalStateException("No VaadinSession bound to current thread");

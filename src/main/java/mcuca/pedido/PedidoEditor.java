@@ -21,6 +21,8 @@ import com.vaadin.ui.themes.ValoTheme;
 import mcuca.cliente.ClienteRepository;
 import mcuca.mesa.Mesa;
 import mcuca.mesa.MesaRepository;
+import mcuca.security.SecurityUtils;
+import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
 import mcuca.usuario.UsuarioRepository;
 import mcuca.zona.Zona;
 import mcuca.zona.ZonaRepository;
@@ -113,6 +115,9 @@ public class PedidoEditor extends VerticalLayout {
 		pedido.setNombre(nombre.getValue());
 		pedido.setPrecio(pedido.getPrecio());
 		pedido.setTipo(tipos.getValue());
+		pedido.setUsuario(
+				this.repoUsuario.findByUsername(
+						(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")));
 		if(tipos.getValue() == Tipo.DOMICILIO)
 			pedido.setCliente(repoCliente.findOne(PedidoView.cliente_id));
 		else if(tipos.getValue() == Tipo.ESTABLECIMIENTO) {

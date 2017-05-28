@@ -22,6 +22,7 @@ import mcuca.security.AccessDeniedView;
 import mcuca.security.ErrorView;
 import mcuca.security.LoginScreen;
 import mcuca.security.SecurityUtils;
+import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
 
 @Title("McUCA")
 @Viewport("user-scalable=no,initial-scale=1.0")
@@ -63,6 +64,14 @@ public class VaadinUI extends UI {
 	}
 
 	private void showMainScreen() {
+		int rol = -1;
+		if(SecurityUtils.hasRole("GERENTE"))
+			rol = 0;
+		else if(SecurityUtils.hasRole("ENCARGADO"))
+			rol = 1;
+		else if(SecurityUtils.hasRole("CAMARERO"))
+			rol = 2;
+		mainScreen.setAuth(rol);
 		setContent(mainScreen);
 	}
 
@@ -75,14 +84,7 @@ public class VaadinUI extends UI {
 			// attacks. This does not work with websocket communication.
 			VaadinService.reinitializeSession(VaadinService.getCurrentRequest());
 			SecurityContextHolder.getContext().setAuthentication(token);
-			int rol = -1;
-			if(SecurityUtils.hasRole("GERENTE"))
-				rol = 0;
-			else if(SecurityUtils.hasRole("ENCARGADO"))
-				rol = 1;
-			else if(SecurityUtils.hasRole("CAMARERO"))
-				rol = 2;
-			mainScreen.setAuth(rol);
+			VaadinSessionSecurityContextHolderStrategy.getSession().setAttribute("username", username);
 			// Show the main UI
 			showMainScreen();
 			return true;
