@@ -94,8 +94,8 @@ public class ProductoEditor extends VerticalLayout {
 	public void salvar(ClickEvent event) {
 		binder.setBean(producto);
 		producto.setNombre(nombre.getValue());
-		producto.setPrecio(Float.valueOf(precio.getValue().replace(',', '.')));
-		producto.setIva(Float.valueOf(iva.getValue()));
+		producto.setPrecio(Double.valueOf(precio.getValue().replace(',', '.')));
+		producto.setIva(Double.valueOf(iva.getValue()));
 		producto.setFoto(foto.getValue());
 		producto.setIngredientes(sSelected);
 		repoProducto.save(producto);

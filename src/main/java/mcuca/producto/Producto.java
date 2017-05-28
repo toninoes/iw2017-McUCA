@@ -21,9 +21,9 @@ public class Producto {
 	
 	private String nombre;
 	
-	private Float precio;
+	private Double precio;
 	
-	private Float iva;
+	private Double iva;
 	
 	private String foto; //la url
 	
@@ -38,7 +38,7 @@ public class Producto {
 	protected Producto() {
 	}
 	
-	public Producto(String nombre, Float precio, Float iva, String foto, Set<Ingrediente> ingredientes) {
+	public Producto(String nombre, Double precio, Double iva, String foto, Set<Ingrediente> ingredientes) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.iva = iva;
@@ -58,19 +58,19 @@ public class Producto {
 		this.nombre = nombre;
 	}
 
-	public Float getPrecio() {
+	public Double getPrecio() {
 		return precio;
 	}
 
-	public void setPrecio(Float precio) {
+	public void setPrecio(Double precio) {
 		this.precio = precio;
 	}
 
-	public Float getIva() {
+	public Double getIva() {
 		return iva;
 	}
 
-	public void setIva(Float iva) {
+	public void setIva(Double iva) {
 		this.iva = iva;
 	}
 

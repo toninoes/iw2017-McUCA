@@ -1,5 +1,8 @@
 package mcuca;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +29,12 @@ import mcuca.cliente.Cliente;
 import mcuca.cliente.ClienteRepository;
 import mcuca.establecimiento.Establecimiento;
 import mcuca.establecimiento.EstablecimientoRepository;
+import mcuca.ingrediente.Ingrediente;
+import mcuca.ingrediente.IngredienteRepository;
 import mcuca.mesa.Mesa;
 import mcuca.mesa.MesaRepository;
+import mcuca.producto.Producto;
+import mcuca.producto.ProductoRepository;
 import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
 import mcuca.usuario.Rol;
 import mcuca.usuario.Usuario;
@@ -52,6 +59,12 @@ public class Application extends SpringBootServletInitializer {
 	
 	@Autowired
 	private ClienteRepository repoCliente;
+	
+	@Autowired
+	private IngredienteRepository repoIng;
+	
+	@Autowired
+	private ProductoRepository repoProd;
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -79,6 +92,32 @@ public class Application extends SpringBootServletInitializer {
 				repoCliente.save(c4);
 				repoCliente.save(c5);
 				
+				//Ingredientes de prueba
+				Ingrediente i1 = new Ingrediente("Patatas");
+				Ingrediente i2 = new Ingrediente("Cebolla");
+				Ingrediente i3 = new Ingrediente("Pan");
+				Ingrediente i4 = new Ingrediente("Carne de cerdo");
+				Ingrediente i5 = new Ingrediente("Ketchup");
+				Ingrediente i6 = new Ingrediente("Manteca Colorá");
+				repoIng.save(i1);
+				repoIng.save(i2);
+				repoIng.save(i3);
+				repoIng.save(i4);
+				repoIng.save(i5);
+				repoIng.save(i6);
+				
+				//Productos de prueba
+				Set<Ingrediente> si1 = new HashSet<Ingrediente>();
+				si1.add(i2);
+				si1.add(i3);
+				si1.add(i4);
+				Set<Ingrediente> si2 = new HashSet<Ingrediente>();
+				si1.add(i3);
+				si1.add(i6);
+				Producto p1 = new Producto("Hamburguesa Super IW", 6.8, 21.0, "", si1);
+				Producto p2 = new Producto("Super Bocata Vejer&Benalup Fashion", 15.8, 21.0, "", si2);
+				repoProd.save(p1);
+				repoProd.save(p2);
 				
 				//Establecimientos de prueba
 				Establecimiento benalup = new Establecimiento("McUCA - Benalup", "Avenida Bahía Blanca, s/n");
