@@ -101,7 +101,6 @@ public class PedidoService {
 			doc.add(new Paragraph("McUCA - Comanda"));
 			doc.add(new Paragraph("Tipo de pedido: " + p.getTipo().toString()));
 			
-			Notification.show("Comanda enviada a cocina.");
 			if(p.getTipo().toString() == "ESTABLECIMIENTO")
 			{
 				doc.add(new Paragraph("Zona: " + p.getZona().toString()));
@@ -119,6 +118,7 @@ public class PedidoService {
 			}
 			doc.add(tabla);
 			doc.close();
+			Notification.show("Comanda enviada a cocina.");
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -129,9 +129,45 @@ public class PedidoService {
 			e.printStackTrace();
 			Notification.show("Se produjo un error enviando la comanda.");
 		}
-		
-		
-		
-		
+	}
+	
+	public void cerrarPedido(Pedido p, List<LineaPedido> lp)
+	{	
+		try {
+			Document doc = new Document();
+			FileOutputStream fichero = new FileOutputStream("ticket.pdf");
+			
+			PdfWriter.getInstance(doc, fichero).setInitialLeading(40);
+			doc.open();
+			doc.add(new Paragraph("McUCA - Cuenta"));
+			doc.add(new Paragraph("Le atendió: " + p.getUsuario().getNombre()));
+			doc.add(new Paragraph("Tipo de pedido: " + p.getTipo().toString()));
+			
+			if(p.getTipo().toString() == "ESTABLECIMIENTO")
+			{
+				doc.add(new Paragraph("Zona: " + p.getZona().toString()));
+				doc.add(new Paragraph("Mesa: " + p.getMesa().toString()));
+			}
+				
+			PdfPTable tabla = new PdfPTable(2);
+			tabla.addCell("Producto"); tabla.addCell("Cantidad");
+			for(LineaPedido l : lp)
+			{
+				tabla.addCell(l.getProducto().toString()); tabla.addCell("" + l.getCantidad());
+			}
+			tabla.addCell("TOTAL A PAGAR:"); tabla.addCell("" + p.getPrecio());
+			doc.add(tabla);
+			doc.close();
+			Notification.show("Ticket generado.");
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Notification.show("Se produjo un error enviando la comanda.");
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Notification.show("Se produjo un error enviando la comanda.");
+		}
 	}
 }

@@ -157,9 +157,18 @@ public class PedidoEditor extends VerticalLayout {
 	}
 	
 	public void cerrar(ClickEvent e) {
-		binder.setBean(pedido);
-		pedido.setAbierto(true);
+		pedido.setAbierto(false);
 		repoPedido.save(pedido);
+		List<LineaPedido> lineas = repoLinea.findByPedido(pedido);
+		pedService.cerrarPedido(pedido, lineas);
+		for(LineaPedido lp : lineas)
+		{
+			if(!lp.isEnCocina())
+			{
+				lp.setEnCocina(true);
+				repoLinea.save(lp);
+			}			
+		}
 	}
 	
 	public interface ChangeHandler {
@@ -188,7 +197,7 @@ public class PedidoEditor extends VerticalLayout {
 			
 		}
 		pdf.setVisible(persisted && lineas != null && lineaAbierta);
-		abierto.setVisible(persisted && lineas != null && lineas.size() != 0);
+		abierto.setVisible(persisted && lineas != null && lineas.size() != 0 && !lineaAbierta);
 		cancelar.setVisible(persisted);
 
 		// Bind mcuca properties to similarly named fields
