@@ -113,7 +113,11 @@ public class PedidoService {
 			{
 				if(!l.isEnCocina())
 				{
-					tabla.addCell(l.getProducto().toString()); tabla.addCell("" + l.getCantidad());
+					if(l.getProducto() != null){
+						tabla.addCell(l.getProducto().toString()); tabla.addCell("" + l.getCantidad());}
+						else {
+							tabla.addCell(l.getMenu().toString()); tabla.addCell("" + l.getCantidad());}
+
 				}
 			}
 			doc.add(tabla);
@@ -153,7 +157,10 @@ public class PedidoService {
 			tabla.addCell("Producto"); tabla.addCell("Cantidad");
 			for(LineaPedido l : lp)
 			{
-				tabla.addCell(l.getProducto().toString()); tabla.addCell("" + l.getCantidad());
+				if(l.getProducto() != null){
+					tabla.addCell(l.getProducto().toString()); tabla.addCell("" + l.getCantidad());}
+					else {
+						tabla.addCell(l.getMenu().toString()); tabla.addCell("" + l.getCantidad());}
 			}
 			tabla.addCell("TOTAL A PAGAR:"); tabla.addCell("" + p.getPrecio());
 			doc.add(tabla);
