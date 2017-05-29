@@ -23,7 +23,6 @@ public class LineaPedido {
 	
 	private int cantidad;
 	
-	private Float precio;
 	
 	private boolean enCocina;
 	
@@ -31,9 +30,8 @@ public class LineaPedido {
 	
 	protected LineaPedido() {}
 	
-	public LineaPedido(int cantidad, Float precio, Producto producto, Pedido pedido, boolean enCocina) {
+	public LineaPedido(int cantidad, Producto producto, Pedido pedido, boolean enCocina) {
 		this.cantidad = cantidad;
-		this.precio = precio;
 		this.producto = producto;
 		this.pedido = pedido;
 		this.enCocina = enCocina;
@@ -43,14 +41,12 @@ public class LineaPedido {
 	public Pedido getPedido() { return this.pedido; }
 	public Producto getProducto() { return this.producto; }
 	public int getCantidad() { return this.cantidad; }
-	public Float getPrecio() { return this.precio; }
 	public boolean isEnCocina() { return this.enCocina; }
 	//public Long getPedidoId() { return this.pedidoId; }
 	
 	public void setPedido(Pedido pedido) { this.pedido = pedido; }
 	public void setProducto(Producto producto) { this.producto = producto; }
 	public void setCantidad(int cantidad) { this.cantidad = cantidad; }
-	public void setPrecio(Float precio) { this.precio = precio; }
 	public void setEnCocina(boolean enCocina) { this.enCocina = enCocina; }
 	//public void setPedidoId(Long pedidoId) { this.pedidoId = pedidoId; }
 	
