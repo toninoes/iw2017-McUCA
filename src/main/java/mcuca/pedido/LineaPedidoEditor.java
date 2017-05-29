@@ -19,6 +19,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.menu.Menu;
+import mcuca.menu.MenuRepository;
 import mcuca.producto.Producto;
 import mcuca.producto.ProductoRepository;
 import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
@@ -31,7 +33,8 @@ public class LineaPedidoEditor extends VerticalLayout {
 	private final LineaPedidoRepository repoLineaPedido;
 	private final PedidoRepository repoPedido;
 	private final ProductoRepository repoProducto;
-	
+	private final MenuRepository repoMenu;
+
 	private LineaPedido lineaPedido;
 	
 	private double Total;
@@ -40,6 +43,8 @@ public class LineaPedidoEditor extends VerticalLayout {
 	Label title = new Label("Nueva Linea de Pedido");
 	NativeSelect<Integer> cantidad = new NativeSelect<>("Cantidad");
 	NativeSelect<Producto> producto = new NativeSelect<>("Producto");
+	NativeSelect<Menu> menu = new NativeSelect<>("Menu");
+
 	
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
@@ -51,13 +56,15 @@ public class LineaPedidoEditor extends VerticalLayout {
 	
 	@Autowired
 	public LineaPedidoEditor(LineaPedidoRepository repoLineaPedido, PedidoRepository repoPedido, 
-			                 ProductoRepository repoProducto) {
+			                 ProductoRepository repoProducto, MenuRepository repoMenu) {
 		this.repoLineaPedido = repoLineaPedido;
 		this.repoPedido = repoPedido;
 		this.repoProducto = repoProducto;
+		this.repoMenu = repoMenu;
 		cantidad.setItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);	
 		producto.setItems((Collection<Producto>) this.repoProducto.findAll());
-		addComponents(title, cantidad, producto, acciones);
+		menu.setItems((Collection<Menu>) this.repoMenu.findAll());
+		addComponents(title, cantidad, producto, menu, acciones);
 		
 		//binder.bindInstanceFields(this);
 		/*binder.forField(cantidad)

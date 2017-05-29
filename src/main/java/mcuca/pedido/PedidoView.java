@@ -106,10 +106,12 @@ public class PedidoView extends VerticalLayout implements View {
 		contenidoLineas.setSizeFull();
 		
 		parrillaLineas.setWidth("100%");
-		parrillaLineas.setColumns("id", "producto", "cantidad", "enCocina");
+		parrillaLineas.setColumns("id", "producto", "cantidad", "enCocina", "menu");
 		parrillaLineas.getColumn("producto").setCaption("Producto");
 		parrillaLineas.getColumn("cantidad").setCaption("Cantidad");
 		parrillaLineas.getColumn("enCocina").setCaption("En cocina");
+		parrillaLineas.getColumn("menu").setCaption("Menu");
+
 		
 		contenidoLineas.addComponent(parrillaLineas);
 		contenidoLineas.addComponent(editorLineas);
