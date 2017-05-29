@@ -2,6 +2,8 @@ package mcuca.pedido;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +13,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
@@ -18,6 +21,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.cierre.CierreCajaRepository;
 import mcuca.cliente.ClienteRepository;
 import mcuca.mesa.Mesa;
 import mcuca.mesa.MesaRepository;
@@ -36,6 +40,8 @@ public class PedidoEditor extends VerticalLayout {
 	private final ZonaRepository repoZona;
 	private final ClienteRepository repoCliente;
 	private final PedidoRepository repoPedido;
+	private final LineaPedidoRepository repoLinea;
+	private PedidoService pedService;
 	@SuppressWarnings("unused")
 	private final MesaRepository repoMesa;
 	
@@ -50,6 +56,7 @@ public class PedidoEditor extends VerticalLayout {
 	NativeSelect<Mesa> mesas = new NativeSelect<>("Mesa");
 	
 	/* Action buttons */
+	Button pdf = new Button("Mandar a cocina");
 	Button abierto = new Button("Cerrar Pedido");
 	Button guardar = new Button("Guardar");
 	Button cancelar = new Button("Cancelar");
@@ -60,8 +67,10 @@ public class PedidoEditor extends VerticalLayout {
 	
 	@Autowired
 	public PedidoEditor(PedidoRepository repoPedido, ClienteRepository repoCliente, UsuarioRepository repoUsuario, 
-			            ZonaRepository repoZona, MesaRepository repoMesa) {
-		
+			            ZonaRepository repoZona, MesaRepository repoMesa, LineaPedidoRepository linea,
+			            CierreCajaRepository cierr) {
+		pedService = new PedidoService(repoPedido, cierr, linea);
+		this.repoLinea = linea;
 		this.repoPedido = repoPedido;
 		this.repoCliente = repoCliente;
 		this.repoUsuario = repoUsuario;
@@ -74,7 +83,8 @@ public class PedidoEditor extends VerticalLayout {
 			//clientes.setItems(ac.get(0).getId());
 		zonas.setItems((Collection<Zona>) repoZona.findAll());
 		mesas.setItems((Collection<Mesa>) repoMesa.findAll());
-		addComponents(title, abierto, nombre, precio, tipos, zonas, mesas, acciones);
+		HorizontalLayout layout = new HorizontalLayout(pdf, abierto);
+		addComponents(title, layout, nombre, precio, tipos, zonas, mesas, acciones);
 		
 		binder.bindInstanceFields(this);
 
@@ -86,9 +96,10 @@ public class PedidoEditor extends VerticalLayout {
 
 		// wire action buttons to guardar, borrar and reset
 		guardar.addClickListener(this::salvar);
-		borrar.addClickListener(e -> repoPedido.delete(pedido));
+		borrar.addClickListener(this::borrar);
 		cancelar.addClickListener(e -> editarPedido(pedido));
 		abierto.addClickListener(this::cerrar);
+		pdf.addClickListener(this::mandarComanda);
 		
 		zonas.setVisible(false);
 		mesas.setVisible(false);
@@ -108,11 +119,30 @@ public class PedidoEditor extends VerticalLayout {
 		setVisible(false);
 	}
 	
+	public void borrar(ClickEvent e) {
+		pedService.deletePedido(pedido);
+	}
+	
+	public void mandarComanda(ClickEvent e) {
+		List<LineaPedido> lineas = repoLinea.findByPedido(pedido);
+		pedService.mandarComanda(pedido, lineas);
+		for(LineaPedido lp : lineas)
+		{
+			if(!lp.isEnCocina())
+			{
+				lp.setEnCocina(true);
+				repoLinea.save(lp);
+			}			
+		}
+		
+	}
+	
 	public void salvar(ClickEvent e) {
 		binder.setBean(pedido);
 		pedido.setNombre(nombre.getValue());
 		pedido.setPrecio(pedido.getPrecio());
 		pedido.setTipo(tipos.getValue());
+		pedido.setAbierto(true);
 		pedido.setUsuario(
 				this.repoUsuario.findByUsername(
 						(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")));
@@ -128,7 +158,7 @@ public class PedidoEditor extends VerticalLayout {
 	
 	public void cerrar(ClickEvent e) {
 		binder.setBean(pedido);
-		pedido.setAbierto(false);
+		pedido.setAbierto(true);
 		repoPedido.save(pedido);
 	}
 	
@@ -138,6 +168,8 @@ public class PedidoEditor extends VerticalLayout {
 	}
 	
 	public final void editarPedido(Pedido c) {
+		List<LineaPedido> lineas = null;
+		boolean lineaAbierta = false;
 		if (c == null) {
 			setVisible(false);
 			return;
@@ -146,10 +178,17 @@ public class PedidoEditor extends VerticalLayout {
 		if (persisted) {
 			// Find fresh entity for editing
 			pedido = repoPedido.findOne(c.getId());
+			lineas = repoLinea.findByPedido(pedido);
+			for(LineaPedido lp : lineas)
+				lineaAbierta = !lp.isEnCocina();
+			
 		}
 		else {
 			pedido = c;
+			
 		}
+		pdf.setVisible(persisted && lineas != null && lineaAbierta);
+		abierto.setVisible(persisted && lineas != null && lineas.size() != 0);
 		cancelar.setVisible(persisted);
 
 		// Bind mcuca properties to similarly named fields

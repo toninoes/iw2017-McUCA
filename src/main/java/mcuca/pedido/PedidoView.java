@@ -148,11 +148,13 @@ public class PedidoView extends VerticalLayout implements View {
 		});
 		
 		parrillaLineas.asSingleSelect().addValueChangeListener(e -> {
-			VaadinSessionSecurityContextHolderStrategy.getSession().setAttribute("pedido_id", e.getValue().getId());
-			editorLineas.editarLineaPedido(e.getValue());
-			//if(e.isUserOriginated())
-				//editor.tipos.setSelectedItem(e.getValue().getTipo());
-			editorLineas.setVisible(true);
+			if(e.getValue() != null) {
+				VaadinSessionSecurityContextHolderStrategy.getSession().setAttribute("pedido_id", e.getValue().getId());
+				editorLineas.editarLineaPedido(e.getValue());
+				//if(e.isUserOriginated())
+					//editor.tipos.setSelectedItem(e.getValue().getTipo());
+				editorLineas.setVisible(true);
+			}
 		});
 
 		// Instantiate and edit new Cliente the new button is clicked
