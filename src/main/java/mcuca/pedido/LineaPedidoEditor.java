@@ -93,15 +93,12 @@ public class LineaPedidoEditor extends VerticalLayout {
 		binder.setBean(lineaPedido);
 		Pedido pedido = repoPedido.findOne(
 				(Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("pedido_id"));
-		Set<LineaPedido> lp = pedido.getLineasPedido();
-		for(LineaPedido linea : lp)
-			Total += linea.getProducto().getPrecio() * linea.getCantidad();
+		
 		//pedido.setPrecio(Total);
 		lineaPedido.setCantidad(cantidad.getValue());
 		lineaPedido.setProducto(producto.getValue());
 		lineaPedido.setEnCocina(false);
-		Total += lineaPedido.getProducto().getPrecio() * lineaPedido.getCantidad();
-		pedido.setPrecio((float)Total);
+		pedido.setPrecio((float)(pedido.getPrecio() + (lineaPedido.getProducto().getPrecio() * lineaPedido.getCantidad())));
 		lineaPedido.setPedido(pedido);
 		repoLineaPedido.save(lineaPedido);
 		
