@@ -106,7 +106,7 @@ public class LineaPedidoEditor extends VerticalLayout {
 		lineaPedido.setProducto(producto.getValue());
 		lineaPedido.setEnCocina(false);
 		if(lineaPedido.getProducto() == null){
-			pedido.setPrecio((float)0);
+			//pedido.setPrecio((float)0);
 			pedido.setPrecio((float)(pedido.getPrecio() + (lineaPedido.getMenu().getPrecio() * lineaPedido.getCantidad())));
 			lineaPedido.setPedido(pedido);
 }
