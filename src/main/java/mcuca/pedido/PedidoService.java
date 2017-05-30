@@ -153,16 +153,18 @@ public class PedidoService {
 				doc.add(new Paragraph("Mesa: " + p.getMesa().toString()));
 			}
 				
-			PdfPTable tabla = new PdfPTable(2);
-			tabla.addCell("Producto"); tabla.addCell("Cantidad");
+			PdfPTable tabla = new PdfPTable(3);
+			tabla.addCell("Producto"); tabla.addCell("Cantidad"); tabla.addCell("Precio");
 			for(LineaPedido l : lp)
 			{
 				if(l.getProducto() != null){
-					tabla.addCell(l.getProducto().toString()); tabla.addCell("" + l.getCantidad());}
-					else {
-						tabla.addCell(l.getMenu().toString()); tabla.addCell("" + l.getCantidad());}
+					tabla.addCell(l.getProducto().toString()); tabla.addCell("" + l.getCantidad()); tabla.addCell("" + l.getProducto().getPrecio());
+				}
+				else {
+					tabla.addCell(l.getMenu().toString()); tabla.addCell("" + l.getCantidad()); tabla.addCell("" + l.getMenu().getPrecio());
+				}
 			}
-			tabla.addCell("TOTAL A PAGAR:"); tabla.addCell("" + p.getPrecio());
+			tabla.addCell("TOTAL A PAGAR:"); tabla.addCell(""); tabla.addCell("" + p.getPrecio());
 			doc.add(tabla);
 			doc.close();
 			Notification.show("Ticket generado.");
