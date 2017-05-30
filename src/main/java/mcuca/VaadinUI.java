@@ -87,6 +87,10 @@ public class VaadinUI extends UI {
         
         addWindow(subwindow);
         subwindow.setVisible(false);
+        subwindow.addCloseListener(e -> {
+        	getUI().addWindow(subwindow);
+        	subwindow.setVisible(false);
+        });
 	}
 
 

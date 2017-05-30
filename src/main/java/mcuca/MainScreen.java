@@ -40,7 +40,10 @@ import mcuca.pedido.PedidoRepository;
 import mcuca.pedido.PedidoService;
 import mcuca.pedido.PedidoView;
 import mcuca.producto.ProductoView;
+import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
+import mcuca.usuario.Usuario;
 import mcuca.usuario.UsuarioManagementView;
+import mcuca.usuario.UsuarioRepository;
 import mcuca.usuario.UsuarioView;
 import mcuca.zona.ZonaView;
 
@@ -58,6 +61,8 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	private CierreCajaRepository cierresCaja;
 	@Autowired
 	private LineaPedidoRepository lps;
+	@Autowired
+	private UsuarioRepository userRepo;
 	
 	public static CssLayout navigationBar;
 	
@@ -179,11 +184,16 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	
 	private void cerrarCaja() 
 	{
-		pedidoService = new PedidoService(pedidoRepo, cierresCaja, lps);
-		CierreCaja cierre = new CierreCaja(pedidoService.getRecaudacion());
-		cierresCaja.save(cierre);
-		
-		Notification.show("Recaudado: " + cierre.getRecaudacion() + " €");
+		Usuario u = userRepo.findByUsername(
+				(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username"));
+		if(u != null)
+		{
+			pedidoService = new PedidoService(pedidoRepo, cierresCaja, lps, userRepo);
+			CierreCaja cierre = new CierreCaja(pedidoService.getRecaudacion());
+			cierre.setEstablecimiento(u.getEstablecimiento());
+			cierresCaja.save(cierre);
+			Notification.show("Recaudado: " + cierre.getRecaudacion() + " €");
+		}
 	}
 
 

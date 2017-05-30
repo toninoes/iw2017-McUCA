@@ -17,6 +17,9 @@ import com.vaadin.ui.Notification;
 import mcuca.cierre.CierreCaja;
 import mcuca.cierre.CierreCajaRepository;
 import mcuca.cliente.Cliente;
+import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
+import mcuca.usuario.Usuario;
+import mcuca.usuario.UsuarioRepository;
 import mcuca.zona.Zona;
 
 public class PedidoService {
@@ -25,9 +28,12 @@ public class PedidoService {
 	private final CierreCajaRepository cierres;
 	private final LineaPedidoRepository lps;
 	private final PedidoRepository pedidos;
+	private final UsuarioRepository usuarios;
 	@Autowired
-	public PedidoService(PedidoRepository ped, CierreCajaRepository cierresCaja, LineaPedidoRepository lp) 
+	public PedidoService(PedidoRepository ped, CierreCajaRepository cierresCaja, LineaPedidoRepository lp,
+			UsuarioRepository u) 
 	{ 
+		this.usuarios = u;
 		this.lps = lp;
 		this.pedidos = ped; 
 		this.cierres = cierresCaja;
@@ -35,17 +41,18 @@ public class PedidoService {
 	
 	public float getRecaudacion()
 	{
-		if(cierres.findLast().isEmpty())
-			return 0.0f;
-		else
+		Usuario u = usuarios.findByUsername(
+				(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username"));
+		CierreCaja cierre = cierres.findLast().get(0);
+		System.out.println("Cierre fecha" + cierre.getFechaCierre());
+		List<Pedido> recaudacion = pedidos.findByEstablecimiento(u.getEstablecimiento(), cierre.getFechaCierre());
+		float cantidad = 0;
+		for(Pedido pedido : recaudacion)
 		{
-			CierreCaja cierre = cierres.findLast().get(0);
-			List<Pedido> recaudacion = pedidos.findByCierre(cierre.getFechaCierre());
-			float cantidad = 0;
-			for(Pedido pedido : recaudacion)
+			if(!pedido.getAbierto())
 				cantidad += pedido.getPrecio();
-			return cantidad;
 		}
+		return cantidad;
 	}
 	
 	public void deletePedidosbyZona(Zona zona)

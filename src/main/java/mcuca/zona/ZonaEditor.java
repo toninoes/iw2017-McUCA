@@ -27,6 +27,7 @@ import mcuca.mesa.MesaRepository;
 import mcuca.pedido.LineaPedidoRepository;
 import mcuca.pedido.PedidoRepository;
 import mcuca.pedido.PedidoService;
+import mcuca.usuario.UsuarioRepository;
 
 @SpringComponent
 @UIScope
@@ -62,14 +63,14 @@ public class ZonaEditor extends VerticalLayout {
 	public ZonaEditor(
 			ZonaRepository repoZona, EstablecimientoRepository repoEstablecimiento,
 			MesaRepository repoMesa, PedidoRepository repoPedido, CierreCajaRepository cierresCaja,
-			LineaPedidoRepository lps) {
+			LineaPedidoRepository lps, UsuarioRepository u) {
 		this.repoPedido = repoPedido;
 		this.repoMesa = repoMesa;
 		this.repoZona = repoZona;
 		this.repoEstablecimiento = repoEstablecimiento;
 		this.cierresCaja = cierresCaja;
 		this.lps = lps;
-		this.pedidoService = new PedidoService(this.repoPedido, this.cierresCaja, this.lps);
+		this.pedidoService = new PedidoService(this.repoPedido, this.cierresCaja, this.lps, u);
 		select.setItems((Collection<Establecimiento>) repoEstablecimiento.findAll());
 		addComponents(title, nombre, aforo, select, acciones);
 

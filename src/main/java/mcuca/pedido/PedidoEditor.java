@@ -76,7 +76,7 @@ public class PedidoEditor extends VerticalLayout {
 			            ZonaRepository repoZona, MesaRepository repoMesa, LineaPedidoRepository linea,
 			            CierreCajaRepository cierr, VaadinUI ui) {
 		this.ui = ui;
-		pedService = new PedidoService(repoPedido, cierr, linea);
+		pedService = new PedidoService(repoPedido, cierr, linea, repoUsuario);
 		this.repoLinea = linea;
 		this.repoPedido = repoPedido;
 		this.repoCliente = repoCliente;

@@ -17,6 +17,7 @@ import mcuca.cierre.CierreCajaRepository;
 import mcuca.pedido.LineaPedidoRepository;
 import mcuca.pedido.PedidoRepository;
 import mcuca.pedido.PedidoService;
+import mcuca.usuario.UsuarioRepository;
 
 @SuppressWarnings({"serial" })
 @SpringComponent
@@ -27,6 +28,8 @@ public class ClienteEditor extends VerticalLayout {
 	private final ClienteRepository almacen;
 	
 	private PedidoService pedService;
+	
+	private UsuarioRepository repoUser;
 
 	private Cliente cliente;
 
@@ -48,9 +51,9 @@ public class ClienteEditor extends VerticalLayout {
 	@Autowired
 	public ClienteEditor(ClienteRepository almacen, PedidoRepository ped, 
 			CierreCajaRepository cierre,
-			LineaPedidoRepository lp) {
+			LineaPedidoRepository lp, UsuarioRepository userRepo) {
 		
-		pedService = new PedidoService(ped, cierre, lp);
+		pedService = new PedidoService(ped, cierre, lp, userRepo);
 		this.almacen = almacen;
 
 		addComponents(title, nombre, apellidos, domicilio, telefono, acciones);
