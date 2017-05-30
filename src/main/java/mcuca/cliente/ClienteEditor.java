@@ -68,8 +68,11 @@ public class ClienteEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(e -> almacen.save(cliente));
-		//borrar.addClickListener(e -> almacen.delete(cliente));
+		guardar.addClickListener(e -> {
+			cliente.setTelefono(cliente.getTelefono().replaceAll("\\s+",""));
+			almacen.save(cliente);
+		});
+		
 		borrar.addClickListener(e -> borrarCliente());
 		cancelar.addClickListener(e -> editarCliente(cliente));
 		setVisible(false);
