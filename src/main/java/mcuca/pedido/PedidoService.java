@@ -135,7 +135,7 @@ public class PedidoService {
 		}
 	}
 	
-	public void cerrarPedido(Pedido p, List<LineaPedido> lp)
+	public void cerrarPedido(Pedido p, List<LineaPedido> lp, String pago)
 	{	
 		try {
 			Document doc = new Document();
@@ -145,6 +145,7 @@ public class PedidoService {
 			doc.open();
 			doc.add(new Paragraph("McUCA - Cuenta"));
 			doc.add(new Paragraph("Le atendió: " + p.getUsuario().getNombre()));
+			doc.add(new Paragraph("Tipo de pago: " + pago));
 			doc.add(new Paragraph("Tipo de pedido: " + p.getTipo().toString()));
 			
 			if(p.getTipo().toString() == "ESTABLECIMIENTO")
@@ -167,7 +168,12 @@ public class PedidoService {
 			tabla.addCell("TOTAL A PAGAR:"); tabla.addCell(""); tabla.addCell("" + p.getPrecio());
 			doc.add(tabla);
 			doc.close();
-			Notification.show("Ticket generado.");
+			String mensaje = "Ticket generado.\n";
+			if(pago == "Tarjeta de crédito")
+				mensaje = mensaje + "Conectando con entidad bancaria. . .";
+			else
+				mensaje = mensaje + "Abriendo caja registradora. . . ";
+			Notification.show(mensaje);
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

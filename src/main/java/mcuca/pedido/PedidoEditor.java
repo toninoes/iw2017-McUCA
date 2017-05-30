@@ -17,10 +17,12 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.VaadinUI;
 import mcuca.cierre.CierreCajaRepository;
 import mcuca.cliente.ClienteRepository;
 import mcuca.establecimiento.Establecimiento;
@@ -46,7 +48,8 @@ public class PedidoEditor extends VerticalLayout {
 	private PedidoService pedService;
 	@SuppressWarnings("unused")
 	private final MesaRepository repoMesa;
-
+	
+	VaadinUI ui;
 	
 	private Pedido pedido;
 	
@@ -71,7 +74,8 @@ public class PedidoEditor extends VerticalLayout {
 	@Autowired
 	public PedidoEditor(PedidoRepository repoPedido, ClienteRepository repoCliente, UsuarioRepository repoUsuario, 
 			            ZonaRepository repoZona, MesaRepository repoMesa, LineaPedidoRepository linea,
-			            CierreCajaRepository cierr) {
+			            CierreCajaRepository cierr, VaadinUI ui) {
+		this.ui = ui;
 		pedService = new PedidoService(repoPedido, cierr, linea);
 		this.repoLinea = linea;
 		this.repoPedido = repoPedido;
@@ -171,10 +175,28 @@ public class PedidoEditor extends VerticalLayout {
 	}
 	
 	public void cerrar(ClickEvent e) {
+		
+		VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSpacing(true);
+        ui.subwindow.setContent(layout);
+        
+        Label lab = new Label("Elija el método de pago que el cliente desea usar.");
+        layout.addComponent(lab);
+        NativeSelect<String> pagos = new NativeSelect<>("Tipo de pago");
+        pagos.setItems("En efectivo", "Tarjeta de crédito");
+        layout.addComponent(pagos);
+        Button but = new Button("Realizar pago", f -> cerrarPedido(pagos.getSelectedItem().get()));
+        layout.addComponent(but);
+        ui.subwindow.setVisible(true);
+	}
+	
+	private void cerrarPedido(String pago)
+	{
 		pedido.setAbierto(false);
 		repoPedido.save(pedido);
 		List<LineaPedido> lineas = repoLinea.findByPedido(pedido);
-		pedService.cerrarPedido(pedido, lineas);
+		pedService.cerrarPedido(pedido, lineas, pago);
 		for(LineaPedido lp : lineas)
 		{
 			if(!lp.isEnCocina())

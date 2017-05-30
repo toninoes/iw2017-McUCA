@@ -15,7 +15,12 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.security.AccessDeniedView;
@@ -39,6 +44,8 @@ public class VaadinUI extends UI {
 
 	@Autowired
 	MainScreen mainScreen;
+	
+	public Window subwindow;
 
 
 	@Override
@@ -73,6 +80,13 @@ public class VaadinUI extends UI {
 			rol = 2;
 		mainScreen.setAuth(rol);
 		setContent(mainScreen);
+		subwindow = new Window("Método de pago");
+		subwindow.setModal(true);
+        
+        subwindow.center();
+        
+        addWindow(subwindow);
+        subwindow.setVisible(false);
 	}
 
 
@@ -92,6 +106,6 @@ public class VaadinUI extends UI {
 			return false;
 		}
 	}
-
-
 }
+
+
