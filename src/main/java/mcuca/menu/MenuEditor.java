@@ -13,6 +13,7 @@ import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
@@ -31,6 +32,7 @@ public class MenuEditor  extends VerticalLayout{
 
 	private final MenuRepository almacen;
 	private final ProductoRepository repoProducto;
+	private final MenuRepository repoMenu;
 
 	private Menu menu;
 
@@ -41,6 +43,7 @@ public class MenuEditor  extends VerticalLayout{
 	TextField descuento = new TextField("Descuento");
 	TextField precio = new TextField("Precio");
 	TwinColSelect<Producto> productos = new TwinColSelect<>("Productos");
+	TwinColSelect<Menu> menus = new TwinColSelect<>("Menus");
 	TextField iva = new TextField("IVA");
 
 	//TextField esOferta = new TextField("Oferta");
@@ -54,11 +57,13 @@ public class MenuEditor  extends VerticalLayout{
 	Binder<Menu> binder = new Binder<>(Menu.class);
 	
 	@Autowired
-	public MenuEditor(MenuRepository almacen, ProductoRepository repoProducto) {
+	public MenuEditor(MenuRepository almacen, ProductoRepository repoProducto, MenuRepository repoMenu) {
 		this.almacen = almacen;
 		this.repoProducto = repoProducto;
+		this.repoMenu = repoMenu;
 		productos.setItems((Collection<Producto>) repoProducto.findAll());
-		addComponents(title, nombre, descripcion, descuento, precio, productos, iva,  acciones);
+		menus.setItems((Collection<Menu>) repoMenu.findAll());
+		addComponents(title, nombre, descripcion, descuento, precio, productos, iva, menus,  acciones);
 		
 		binder.forField(descuento)
 		  .withNullRepresentation("")
@@ -107,6 +112,7 @@ public class MenuEditor  extends VerticalLayout{
 	public void guardarMenu(Menu menu){
 		menu.setEsOferta(menu.getDescuento() != 0);
 		menu.setProductos(productos.getSelectedItems());
+		menu.setMenus(menus.getSelectedItems());
 		almacen.save(menu);
 	}
 	

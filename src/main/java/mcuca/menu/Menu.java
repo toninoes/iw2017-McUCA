@@ -34,6 +34,8 @@ public class Menu{
 	
 	private String foto;
 	
+	
+	
 	@ManyToMany(targetEntity=Producto.class, fetch=FetchType.EAGER)
 	//@JoinTable(name = "menu_producto", joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"))
 	private Set<Producto> productos;	
@@ -110,6 +112,14 @@ public class Menu{
 	}
 	public void setProductos(Set<Producto> productos) {
 		this.productos = productos;
+	}
+	
+	
+	public Set<Menu> getMenus() {
+		return menus;
+	}
+	public void setMenus(Set<Menu> menus) {
+		this.menus = menus;
 	}
 	
 	public Long getId() {

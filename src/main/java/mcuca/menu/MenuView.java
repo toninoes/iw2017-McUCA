@@ -65,7 +65,7 @@ public class MenuView extends VerticalLayout implements View {
 		addComponent(acciones);	
 		
 		parrilla.setWidth("100%");
-		parrilla.setColumns("id", "nombre", "descripcion", "descuento", "precio", "productos", "iva", "esOferta");
+		parrilla.setColumns("id", "nombre", "descripcion", "descuento", "precio", "productos", "iva", "esOferta", "menus");
 		parrilla.getColumn("nombre").setCaption("Nombre");
 		parrilla.getColumn("descripcion").setCaption("Descripcion");
 		parrilla.getColumn("descuento").setCaption("Descuento");
@@ -73,7 +73,8 @@ public class MenuView extends VerticalLayout implements View {
 		parrilla.getColumn("productos").setCaption("Productos");
 		parrilla.getColumn("iva").setCaption("IVA");
 		parrilla.getColumn("esOferta").setCaption("Oferta");
-		
+		parrilla.getColumn("menus").setCaption("Menu en oferta");
+
 		editor.setWidth("100%");
 		
 		HorizontalLayout contenido = new HorizontalLayout();
