@@ -111,12 +111,13 @@ public class LineaPedidoEditor extends VerticalLayout {
 			lineaPedido.setPedido(pedido);
 }
 		else{
-		pedido.setPrecio((float)(pedido.getPrecio() + (lineaPedido.getProducto().getPrecio() * lineaPedido.getCantidad())));
-		lineaPedido.setPedido(pedido);}
-		repoLineaPedido.save(lineaPedido);
+			pedido.setPrecio((float)(pedido.getPrecio() + (lineaPedido.getProducto().getPrecio() * lineaPedido.getCantidad())));
+			lineaPedido.setPedido(pedido);
+		}
 		
-		
+		repoLineaPedido.save(lineaPedido);		
 		repoPedido.save(pedido);
+		
 	}
 	
 	public interface ChangeHandler {

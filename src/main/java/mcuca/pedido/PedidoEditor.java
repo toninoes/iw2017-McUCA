@@ -18,6 +18,7 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.cierre.CierreCajaRepository;
@@ -54,8 +55,8 @@ public class PedidoEditor extends VerticalLayout {
 	TextField nombre = new TextField("Nombre");
 	Label precio = new Label();
 	NativeSelect<Tipo> tipos = new NativeSelect<>("Tipo");
-	NativeSelect<Zona> zonas = new NativeSelect<>("Zona");
-	NativeSelect<Mesa> mesas = new NativeSelect<>("Mesa");
+	ComboBox<Zona> zonas = new ComboBox<>("Zona");
+	ComboBox<Mesa> mesas = new ComboBox<>("Mesa");
 	
 	/* Action buttons */
 	Button pdf = new Button("Mandar a cocina");
@@ -151,7 +152,9 @@ public class PedidoEditor extends VerticalLayout {
 	public void salvar(ClickEvent e) {
 		binder.setBean(pedido);
 		pedido.setNombre(nombre.getValue());
-		pedido.setPrecio(0.0f);
+		if(pedido.getPrecio() == null)
+			pedido.setPrecio(0.0f);
+		
 		pedido.setTipo(tipos.getValue());
 		pedido.setAbierto(true);
 		pedido.setUsuario(
@@ -210,11 +213,14 @@ public class PedidoEditor extends VerticalLayout {
 		pdf.setVisible(persisted && lineas != null && lineaAbierta);
 		abierto.setVisible(persisted && lineas != null && lineas.size() != 0 && !lineaAbierta);
 		cancelar.setVisible(persisted);
-
+		
 		// Bind mcuca properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
 		binder.setBean(pedido);
+		zonas.setSelectedItem(pedido.getZona());
+		if(pedido.getMesa() != null)
+			mesas.setSelectedItem(pedido.getMesa());
 		
 		tipos.setSelectedItem(pedido.getTipo());
 		

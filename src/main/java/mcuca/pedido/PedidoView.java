@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Responsive;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
@@ -79,6 +80,7 @@ public class PedidoView extends VerticalLayout implements View {
 		parrilla.getColumn("tipo").setCaption("Tipo");
 		parrilla.getColumn("cliente").setCaption("Cliente");
 		parrilla.getColumn("fecha").setCaption("Fecha");
+		parrilla.sort("fecha", SortDirection.DESCENDING);
 		
 		editor.setWidth("100%");
 		
@@ -112,6 +114,7 @@ public class PedidoView extends VerticalLayout implements View {
 		parrillaLineas.getColumn("cantidad").setCaption("Cantidad");
 		parrillaLineas.getColumn("enCocina").setCaption("En cocina");
 		parrillaLineas.getColumn("menu").setCaption("Menu");
+		parrillaLineas.sort("enCocina", SortDirection.ASCENDING);
 
 		
 		contenidoLineas.addComponent(parrillaLineas);
@@ -162,9 +165,16 @@ public class PedidoView extends VerticalLayout implements View {
 
 		// Instantiate and edit new Cliente the new button is clicked
 		// Instantiate and edit new Pedido the new button is clicked
-		agregarNuevoBoton.addClickListener(e -> editor.editarPedido(new Pedido()));
+		agregarNuevoBoton.addClickListener(e -> {
+			parrillaLineas.setVisible(false);
+			editorLineas.setVisible(false);
+			editor.editarPedido(new Pedido());	
+		});
 		
-		agregarLineas.addClickListener(e -> editorLineas.editarLineaPedido(new LineaPedido()));
+		agregarLineas.addClickListener(e -> { 
+			parrillaLineas.setVisible(true);
+			editorLineas.editarLineaPedido(new LineaPedido());
+		});
 		
 		
 		// Listen changes made by the editor, refresh data from backend
@@ -182,6 +192,14 @@ public class PedidoView extends VerticalLayout implements View {
 		editorLineas.setChangeHandler(() -> {
 			editorLineas.setVisible(false);
 			listarLineasPedidos();
+			
+			Long cliente_id = (Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id");
+			if(cliente_id == null && filtro.getValue().equals(""))
+				listarPedidos(0);
+			else if(cliente_id != null)
+				listarPedidos(cliente_id, Tipo.DOMICILIO);
+			else
+				listarPedidos(Long.decode(filtro.getValue()).longValue());
 		});
 		
 		// Initialize listing
