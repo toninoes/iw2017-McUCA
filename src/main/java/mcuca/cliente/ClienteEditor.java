@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
@@ -19,7 +18,7 @@ import mcuca.pedido.LineaPedidoRepository;
 import mcuca.pedido.PedidoRepository;
 import mcuca.pedido.PedidoService;
 
-@SuppressWarnings({ "deprecation", "serial" })
+@SuppressWarnings({"serial" })
 @SpringComponent
 @UIScope
 public class ClienteEditor extends VerticalLayout {
@@ -58,13 +57,6 @@ public class ClienteEditor extends VerticalLayout {
 
 		// bind using naming convention
 		binder.bindInstanceFields(this);
-		/*binder.bind(nombre, "nombre");
-		binder.bind(apellidos, "apellidos");
-		binder.bind(domicilio, "domicilio");
-		binder.forField(telefono)
-		  .withConverter(
-		    new StringToIntegerConverter("Por favor introduce un número"))
-		  .bind("telefono");*/
 
 		// Configure and style components
 		setSpacing(true);

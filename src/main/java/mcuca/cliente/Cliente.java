@@ -67,8 +67,7 @@ public class Cliente {
 
 	@Override
 	public String toString() {
-		return String.format("Cliente[id=%d, nombre='%s', apellidos='%s', domicilio='%s', telefono='%s']", id,
-				nombre, apellidos, domicilio, telefono);
+		return String.format("%s, %s - %s - %s", apellidos, nombre, domicilio, telefono);
 	}
 	
 
