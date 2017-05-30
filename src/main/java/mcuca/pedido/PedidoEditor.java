@@ -2,7 +2,6 @@ package mcuca.pedido;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,11 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.cierre.CierreCajaRepository;
 import mcuca.cliente.ClienteRepository;
+import mcuca.establecimiento.Establecimiento;
 import mcuca.mesa.Mesa;
 import mcuca.mesa.MesaRepository;
 import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
+import mcuca.usuario.Usuario;
 import mcuca.usuario.UsuarioRepository;
 import mcuca.zona.Zona;
 import mcuca.zona.ZonaRepository;
@@ -44,6 +45,7 @@ public class PedidoEditor extends VerticalLayout {
 	private PedidoService pedService;
 	@SuppressWarnings("unused")
 	private final MesaRepository repoMesa;
+
 	
 	private Pedido pedido;
 	
@@ -78,11 +80,7 @@ public class PedidoEditor extends VerticalLayout {
 		this.repoMesa = repoMesa;
 		
 		tipos.setItems(Tipo.class.getEnumConstants()); 
-		//ArrayList<Cliente> ac = (ArrayList<Cliente>) repoCliente.findAll();
-		//if(ac.size() > 0)
-			//clientes.setItems(ac.get(0).getId());
-		zonas.setItems((Collection<Zona>) repoZona.findAll());
-		mesas.setItems((Collection<Mesa>) repoMesa.findAll());
+
 		HorizontalLayout layout = new HorizontalLayout(pdf, abierto);
 		addComponents(title, layout, nombre, precio, tipos, zonas, mesas, acciones);
 		
@@ -113,10 +111,23 @@ public class PedidoEditor extends VerticalLayout {
 		});
 		
 		zonas.addSelectionListener(e -> {
+			mesas.setItems((Collection<Mesa>) repoMesa.findByZona(e.getValue()));
 			mesas.setVisible(true);
 		});
 		
 		setVisible(false);
+	}
+	
+	
+	public void cargarZonas() {
+		Usuario u = repoUsuario.findByUsername(
+				(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username"));
+		
+		if (u != null){
+			Establecimiento est = u.getEstablecimiento();
+			zonas.setItems((Collection<Zona>) repoZona.findByEstablecimiento(est));
+		}
+		
 	}
 	
 	public void borrar(ClickEvent e) {

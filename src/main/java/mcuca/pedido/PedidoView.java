@@ -48,6 +48,7 @@ public class PedidoView extends VerticalLayout implements View {
 		clientes = cl;
 		almacen2 = alm2;
 		this.editor = editor;
+		this.editor.cargarZonas();
 		this.editorLineas = editor2;
 		parrilla = new Grid<>(Pedido.class);
 		parrillaLineas = new Grid<>(LineaPedido.class);
