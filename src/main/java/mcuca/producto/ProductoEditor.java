@@ -15,12 +15,41 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.ingrediente.Ingrediente;
 import mcuca.ingrediente.IngredienteRepository;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+import com.vaadin.data.Binder;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FileResource;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Image;
+import com.vaadin.ui.JavaScript;
+import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.ui.Upload.SucceededEvent;
+import com.vaadin.ui.Upload.SucceededListener;
+import com.vaadin.ui.themes.ValoTheme;
 
 @SpringComponent
 @UIScope
@@ -56,7 +85,38 @@ public class ProductoEditor extends VerticalLayout {
 		this.repoProducto = repoProducto;
 		this.repoIngrediente = repoIngrediente; 
 		ingredientes.setItems((Collection<Ingrediente>) repoIngrediente.findAll());
-		addComponents(title, nombre, precio, iva, foto, ingredientes, acciones);
+		
+		final Image imagen = new Image();
+		class ImageUploader implements Receiver, SucceededListener {
+			public File file;
+			public OutputStream receiveUpload(String filename, String mimeType){
+				FileOutputStream fos = null;
+				try{
+					file = new File("src/main/webapp/VAADIN/img/"+filename);
+					fos = new FileOutputStream(file);
+				}catch(final java.io.FileNotFoundException e){
+					JOptionPane.showMessageDialog(null, "Error al subir el fichero");
+					return null;
+				}
+				return fos;
+			}
+	
+			public void uploadSucceeded(SucceededEvent event) {
+				imagen.setVisible(true);
+				imagen.setSource(new FileResource(file));
+				imagen.setWidth(200, Unit.PIXELS);
+				imagen.setHeight(200, Unit.PIXELS);
+				foto.setValue(file.toString());
+			}
+		};
+		
+		ImageUploader receiver = new ImageUploader();
+		Upload upload = new Upload("Subir fichero", receiver);
+		upload.setImmediateMode(true);
+		upload.addSucceededListener(receiver);
+		foto.setVisible(false);
+				
+		addComponents(title, nombre, precio, iva, upload, imagen, ingredientes, acciones, foto);
 
 		// bind using naming convention
 		binder.forField(precio)
