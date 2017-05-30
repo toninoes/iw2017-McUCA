@@ -168,6 +168,7 @@ public class PedidoView extends VerticalLayout implements View {
 		agregarNuevoBoton.addClickListener(e -> {
 			parrillaLineas.setVisible(false);
 			editorLineas.setVisible(false);
+			agregarLineas.setVisible(false);
 			editor.editarPedido(new Pedido());	
 		});
 		
@@ -190,6 +191,7 @@ public class PedidoView extends VerticalLayout implements View {
 		});
 		
 		editorLineas.setChangeHandler(() -> {
+			editor.setVisible(false);
 			editorLineas.setVisible(false);
 			listarLineasPedidos();
 			

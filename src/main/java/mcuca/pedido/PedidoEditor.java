@@ -152,7 +152,7 @@ public class PedidoEditor extends VerticalLayout {
 	public void salvar(ClickEvent e) {
 		binder.setBean(pedido);
 		pedido.setNombre(nombre.getValue());
-		if(pedido.getPrecio() == null)
+		if(pedido.getId() == null)
 			pedido.setPrecio(0.0f);
 		
 		pedido.setTipo(tipos.getValue());
