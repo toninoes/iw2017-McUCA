@@ -133,7 +133,7 @@ public class ProductoEditor extends VerticalLayout {
 		
 		binder.bindInstanceFields(this);
 
-		// Configure and style components
+		
 		setSpacing(true);
 		acciones.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 		guardar.setStyleName(ValoTheme.BUTTON_PRIMARY);
