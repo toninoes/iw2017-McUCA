@@ -28,7 +28,7 @@ import mcuca.usuario.UsuarioRepository;
 public class ClienteEditor extends VerticalLayout {
 	
 
-	private final ClienteRepository almacen;
+	private final ClienteRepository repoCliente;
 	
 	private PedidoService pedService;
 
@@ -55,7 +55,7 @@ public class ClienteEditor extends VerticalLayout {
 			LineaPedidoRepository lp, UsuarioRepository userRepo) {
 		
 		pedService = new PedidoService(ped, cierre, lp, userRepo);
-		this.almacen = almacen;
+		repoCliente = almacen;
 
 		nombre.setMaxLength(32);
 		apellidos.setMaxLength(64);
@@ -86,7 +86,6 @@ public class ClienteEditor extends VerticalLayout {
 		.withValidator(new StringLengthValidator("Este campo debe ser una cadena entre 9 y 13 caracteres", 9, 13))
 		.bind(Cliente::getTelefono, Cliente::setTelefono);
 		
-		
 		// Configure and style components
 		setSpacing(true);
 		acciones.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
@@ -97,7 +96,7 @@ public class ClienteEditor extends VerticalLayout {
 		guardar.addClickListener(e -> {
 			if(binder.isValid()){
 				cliente.setTelefono(cliente.getTelefono().replaceAll("\\s+",""));
-				almacen.save(cliente);
+				repoCliente.save(cliente);
 			}else
 				mostrarNotificacion(new Notification("Algunos campos del formulario deben corregirse"));
 		});
@@ -113,13 +112,12 @@ public class ClienteEditor extends VerticalLayout {
     }
 	
 	public interface ChangeHandler {
-
 		void onChange();
 	}
 	
 	public void borrarCliente() {
 		pedService.deletePedidosByCliente(cliente);
-		almacen.delete(cliente);
+		repoCliente.delete(cliente);
 	}
 
 	public final void editarCliente(Cliente c) {
@@ -127,14 +125,14 @@ public class ClienteEditor extends VerticalLayout {
 			setVisible(false);
 			return;
 		}
+		
 		final boolean persisted = c.getId() != null;
-		if (persisted) {
-			// Find fresh entity for editing
-			cliente = almacen.findOne(c.getId());
-		}
-		else {
+		
+		if (persisted)
+			cliente = repoCliente.findOne(c.getId());
+		else
 			cliente = c;
-		}
+		
 		cancelar.setVisible(persisted);
 
 		// Bind mcuca properties to similarly named fields
@@ -151,13 +149,13 @@ public class ClienteEditor extends VerticalLayout {
 	}
 
 	public void setChangeHandler(ChangeHandler h) {
-		// ChangeHandler is notified when either guardar or borrar
-		// is clicked
+		// ChangeHandler is notified when either guardar or borrar is clicked
 		//guardar.addClickListener(e -> h.onChange());
 		guardar.addClickListener(e -> {
 			if(binder.isValid())
 				h.onChange();
 		});
+		
 		borrar.addClickListener(e -> h.onChange());
 	}
 
