@@ -67,7 +67,7 @@ public class Cliente {
 
 	@Override
 	public String toString() {
-		return String.format("%s, %s - %s - %s", apellidos, nombre, domicilio, telefono);
+		return String.format("%s %s (%s)", nombre, apellidos, telefono);
 	}
 	
 

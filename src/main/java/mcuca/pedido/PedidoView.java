@@ -10,7 +10,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Responsive;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.shared.ui.ValueChangeMode;
+
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -19,40 +19,50 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-import mcuca.MainScreen;
 import mcuca.cliente.Cliente;
 import mcuca.cliente.ClienteRepository;
+import mcuca.establecimiento.Establecimiento;
 import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
+import mcuca.usuario.Usuario;
+import mcuca.usuario.UsuarioRepository;
 
+
+@SuppressWarnings("serial")
 @SpringView(name = PedidoView.VIEW_NAME)
 public class PedidoView extends VerticalLayout implements View {
 	
-	private static final long serialVersionUID = 1L;
-	
 	public static final String VIEW_NAME = "pedidoView";
 	
-	public static Grid<Pedido> parrilla;
-	public static Grid<LineaPedido> parrillaLineas;
+	public static Grid<Pedido> parrillaPedido;
+	public static Grid<LineaPedido> parrillaLineasPedido;
 	
-	private static ClienteRepository clientes;
-	private static PedidoRepository almacen;
-	private static LineaPedidoRepository almacen2;
-	private final PedidoEditor editor;
-	private final LineaPedidoEditor editorLineas;
+	private static UsuarioRepository repoUsuario;
+	private static ClienteRepository repoClientes;
+	private static PedidoRepository repoPedido;
+	private static LineaPedidoRepository repoLineaPedido;
+	
+	private final PedidoEditor editorPedido;
+	private final LineaPedidoEditor editorLineasPedido;
+	
 	final TextField filtro;
 	private final Button agregarNuevoBoton;
 	
 	@Autowired
-	public PedidoView(PedidoRepository alm, ClienteRepository cl, PedidoEditor editor, LineaPedidoRepository alm2, 
-			          LineaPedidoEditor editor2) {
-		almacen = alm;
-		clientes = cl;
-		almacen2 = alm2;
-		this.editor = editor;
-		this.editor.cargarZonas();
-		this.editorLineas = editor2;
-		parrilla = new Grid<>(Pedido.class);
-		parrillaLineas = new Grid<>(LineaPedido.class);
+	public PedidoView(PedidoRepository rP, ClienteRepository rC, PedidoEditor eP, LineaPedidoRepository rLP, 
+			LineaPedidoEditor eLP, UsuarioRepository rU) {
+		
+		repoPedido = rP;
+		repoClientes = rC;
+		repoLineaPedido = rLP;
+		repoUsuario = rU; 
+		
+		this.editorPedido = eP;
+		this.editorPedido.cargarZonas();
+		this.editorLineasPedido = eLP;
+		
+		parrillaPedido = new Grid<>(Pedido.class);
+		parrillaLineasPedido = new Grid<>(LineaPedido.class);
+		
 		this.filtro = new TextField();
 		this.agregarNuevoBoton = new Button("Nuevo Pedido");
 	}
@@ -63,40 +73,40 @@ public class PedidoView extends VerticalLayout implements View {
 		titulo.setStyleName("h2");
 		addComponent(titulo);		
 		
-		filtro.setPlaceholder("Búsqueda por número");
 		HorizontalLayout acciones = new HorizontalLayout();	
 		Responsive.makeResponsive(acciones);
 		acciones.setSpacing(false);
 		acciones.setMargin(false);
-		acciones.addComponent(filtro);
 		acciones.addComponent(agregarNuevoBoton);
 		addComponent(acciones);	
 		
-		parrilla.setWidth("100%");
-		parrilla.setColumns("id", "nombre", "precio", "abierto", "tipo", "cliente", "fecha");
-		parrilla.getColumn("nombre").setCaption("Nombre");
-		parrilla.getColumn("precio").setCaption("Precio");
-		parrilla.getColumn("abierto").setCaption("Abierto");
-		parrilla.getColumn("tipo").setCaption("Tipo");
-		parrilla.getColumn("cliente").setCaption("Cliente");
-		parrilla.getColumn("fecha").setCaption("Fecha");
-		parrilla.sort("fecha", SortDirection.DESCENDING);
+		parrillaPedido.setWidth("100%");
+		parrillaPedido.setColumns("id", "usuario", "precio", "abierto", "tipo", "cliente", "fecha", "mesa", "zona");
+		parrillaPedido.getColumn("usuario").setCaption("Atiende");
+		parrillaPedido.getColumn("precio").setCaption("Precio");
+		parrillaPedido.getColumn("abierto").setCaption("Abierto");
+		parrillaPedido.getColumn("tipo").setCaption("Tipo");
+		parrillaPedido.getColumn("cliente").setCaption("Cliente");
+		parrillaPedido.getColumn("fecha").setCaption("Fecha");
+		parrillaPedido.getColumn("mesa").setCaption("Mesa");
+		parrillaPedido.getColumn("zona").setCaption("Zona");
+		parrillaPedido.sort("fecha", SortDirection.DESCENDING);
 		
-		editor.setWidth("100%");
+		editorPedido.setWidth("100%");
 		
 		HorizontalLayout contenido = new HorizontalLayout();
 		Responsive.makeResponsive(contenido);
+		
 		contenido.setSpacing(false);
 		contenido.setMargin(false);
 		contenido.setSizeFull();
-		
-		contenido.addComponent(parrilla);
-		contenido.addComponent(editor);
-		contenido.setExpandRatio(parrilla, 0.7f);
-		contenido.setExpandRatio(editor, 0.3f);
+		contenido.addComponent(parrillaPedido);
+		contenido.addComponent(editorPedido);
+		contenido.setExpandRatio(parrillaPedido, 0.7f);
+		contenido.setExpandRatio(editorPedido, 0.3f);
 		addComponent(contenido);
 		
-		editorLineas.setWidth("100%");
+		editorLineasPedido.setWidth("100%");
 		
 		Button agregarLineas = new Button("Nueva línea de pedido");
 		addComponent(agregarLineas);
@@ -108,144 +118,110 @@ public class PedidoView extends VerticalLayout implements View {
 		contenidoLineas.setMargin(false);
 		contenidoLineas.setSizeFull();
 		
-		parrillaLineas.setWidth("100%");
-		parrillaLineas.setColumns("id", "producto", "cantidad", "enCocina", "menu");
-		parrillaLineas.getColumn("producto").setCaption("Producto");
-		parrillaLineas.getColumn("cantidad").setCaption("Cantidad");
-		parrillaLineas.getColumn("enCocina").setCaption("En cocina");
-		parrillaLineas.getColumn("menu").setCaption("Menu");
-		parrillaLineas.sort("enCocina", SortDirection.ASCENDING);
-
+		parrillaLineasPedido.setWidth("100%");
+		parrillaLineasPedido.setColumns("id", "producto", "cantidad", "enCocina", "menu");
+		parrillaLineasPedido.getColumn("producto").setCaption("Producto");
+		parrillaLineasPedido.getColumn("cantidad").setCaption("Cantidad");
+		parrillaLineasPedido.getColumn("enCocina").setCaption("En cocina");
+		parrillaLineasPedido.getColumn("menu").setCaption("Menu");
+		parrillaLineasPedido.sort("enCocina", SortDirection.ASCENDING);
 		
-		contenidoLineas.addComponent(parrillaLineas);
-		contenidoLineas.addComponent(editorLineas);
-		contenidoLineas.setExpandRatio(parrillaLineas, 0.7f);
-		contenidoLineas.setExpandRatio(editorLineas, 0.3f);
+		contenidoLineas.addComponent(parrillaLineasPedido);
+		contenidoLineas.addComponent(editorLineasPedido);
+		contenidoLineas.setExpandRatio(parrillaLineasPedido, 0.7f);
+		contenidoLineas.setExpandRatio(editorLineasPedido, 0.3f);
 		contenidoLineas.setVisible(false);
 		addComponent(contenidoLineas);
 
-		// Replace listing with filtered content when user changes filtro
-		filtro.setValueChangeMode(ValueChangeMode.LAZY);
-		filtro.addValueChangeListener(e -> {
-			Long cliente_id = (Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id");
-			if(cliente_id == null && filtro.getValue().equals(""))
-				listarPedidos(0);
-			else if(cliente_id != null)
-				listarPedidos(cliente_id, Tipo.DOMICILIO);
-			else
-				listarPedidos(Long.decode(filtro.getValue()).longValue());
-		});
-		
-
-		// Connect selected Pedido to editor or hide if none is selected
-		parrilla.asSingleSelect().addValueChangeListener(e -> {
+		// Connect selected Pedido to editorPedido or hide if none is selected
+		parrillaPedido.asSingleSelect().addValueChangeListener(e -> {
 			if(e.getValue() != null) {
 				
 				VaadinSessionSecurityContextHolderStrategy.getSession().setAttribute("pedido_id", e.getValue().getId());
 				
-				editor.editarPedido(e.getValue());
-				//if(e.isUserOriginated())
-					//editor.tipos.setSelectedItem(e.getValue().getTipo());
-				editor.setVisible(true);
+				editorPedido.editarPedido(e.getValue());
+				editorPedido.setVisible(true);
 				contenidoLineas.setVisible(true);
 				agregarLineas.setVisible(true);
 				listarLineasPedidos();
 			}
 		});
 		
-		parrillaLineas.asSingleSelect().addValueChangeListener(e -> {
+		parrillaLineasPedido.asSingleSelect().addValueChangeListener(e -> {
 			if(e.getValue() != null) {
 				VaadinSessionSecurityContextHolderStrategy.getSession().setAttribute("pedido_id", e.getValue().getId());
-				editorLineas.editarLineaPedido(e.getValue());
-				//if(e.isUserOriginated())
-					//editor.tipos.setSelectedItem(e.getValue().getTipo());
-				editorLineas.setVisible(true);
+				editorLineasPedido.editarLineaPedido(e.getValue());
+				editorLineasPedido.setVisible(true);
 			}
 		});
 
-		// Instantiate and edit new Cliente the new button is clicked
 		// Instantiate and edit new Pedido the new button is clicked
 		agregarNuevoBoton.addClickListener(e -> {
-			parrillaLineas.setVisible(false);
-			editorLineas.setVisible(false);
+			parrillaLineasPedido.setVisible(false);
+			editorLineasPedido.setVisible(false);
 			agregarLineas.setVisible(false);
-			editor.editarPedido(new Pedido());	
+			editorPedido.editarPedido(new Pedido());	
 		});
 		
 		agregarLineas.addClickListener(e -> { 
-			parrillaLineas.setVisible(true);
-			editorLineas.editarLineaPedido(new LineaPedido());
+			parrillaLineasPedido.setVisible(true);
+			editorLineasPedido.editarLineaPedido(new LineaPedido());
 		});
 		
 		
-		// Listen changes made by the editor, refresh data from backend
-		editor.setChangeHandler(() -> {
-			editor.setVisible(false);
-			Long cliente_id = (Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id");
-			if(cliente_id == null && filtro.getValue().equals(""))
-				listarPedidos(0);
-			else if(cliente_id != null)
-				listarPedidos(cliente_id, Tipo.DOMICILIO);
-			else
-				listarPedidos(Long.decode(filtro.getValue()).longValue());
+		// Listen changes made by the editorPedido, refresh data from backend
+		editorPedido.setChangeHandler(() -> {
+			editorPedido.setVisible(false);
+			Usuario u = repoUsuario.findByUsername(
+				(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")
+			);
+			listarPedidos(u);	
 		});
 		
-		editorLineas.setChangeHandler(() -> {
-			editor.setVisible(false);
-			editorLineas.setVisible(false);
-			listarLineasPedidos();
+		editorLineasPedido.setChangeHandler(() -> {
+			editorPedido.setVisible(false);
+			editorLineasPedido.setVisible(false);
+			listarLineasPedidos();	
 			
-			Long cliente_id = (Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id");
-			if(cliente_id == null && filtro.getValue().equals(""))
-				listarPedidos(0);
-			else if(cliente_id != null)
-				listarPedidos(cliente_id, Tipo.DOMICILIO);
-			else
-				listarPedidos(Long.decode(filtro.getValue()).longValue());
+			Usuario u = repoUsuario.findByUsername(
+				(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")
+			);
+			listarPedidos(u);
 		});
 		
-		// Initialize listing
-		if((Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id") == null)
-			listarPedidos(0);
-		else
-			listarPedidos((Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id"), Tipo.DOMICILIO);
-		
-		// Pedido reset view
-		//MainScreen.navigationBar.addAttachListener(e -> {
-		//	cliente_id = 0;
-		//	pedido_id = 0;
-		//	listarPedidos(0);
-		//});
+		// Listado de pedidos al iniciar la vista (los pedidos del establecimiento
+		// al cual pertenece el usuario actual).
+		Usuario u = repoUsuario.findByUsername(
+			(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")
+		);
+		listarPedidos(u);		
 	}
 
-	public static void listarPedidos(long id) {
-		if(almacen != null)
-			if(id == 0)
-				parrilla.setItems((Collection<Pedido>) almacen.findAll());
-			else
-			{
-				Cliente cliente = clientes.findOne(id);
-				parrilla.setItems((Collection<Pedido>) almacen.findByCliente(cliente));
-			}
+	public static void listarPedidos(Usuario u) {
+		if (u != null){
+			Establecimiento est = u.getEstablecimiento();
+			parrillaPedido.setItems((Collection<Pedido>) repoPedido.findByMiEstablecimiento(est));
+		}else
+			parrillaPedido.setItems((Collection<Pedido>) repoPedido.findAll());
 	}
 	
 	public static void listarLineasPedidos() {
-		if(almacen2 != null)
+		if(repoLineaPedido != null)
 			if((Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("pedido_id") != null)
 			{
 				Long id = (Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("pedido_id");
-				Pedido ped = almacen.findOne(id);
-				parrillaLineas.setItems((Collection<LineaPedido>) almacen2.findByPedido(ped));
+				Pedido ped = repoPedido.findOne(id);
+				parrillaLineasPedido.setItems((Collection<LineaPedido>) repoLineaPedido.findByPedido(ped));
 			}		
 	}
 	
 	public static void listarPedidos(Long id, Tipo tipo) {
-		Cliente cliente = clientes.findOne(id);
-		parrilla.setItems((Collection<Pedido>) almacen.findByCliente(cliente));
+		Cliente cliente = repoClientes.findOne(id);
+		parrillaPedido.setItems((Collection<Pedido>) repoPedido.findByCliente(cliente));
 	}
 	
-	public Grid<Pedido> getParrilla() {
-		return parrilla;
+	public Grid<Pedido> getParrillaPedido() {
+		return parrillaPedido;
 	}
 	
 	@Override

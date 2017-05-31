@@ -16,12 +16,15 @@ public interface PedidoRepository extends CrudRepository<Pedido, Long> {
 	
 	@Query("Select p from Pedido p where p.zona = :zona ")
 	List<Pedido> findByZona(@Param("zona")Zona zona);
-	//List<Pedido> findByZona(String zona);
+	
 	List<Pedido> findByTipo(Tipo tipo);
 	
 	@Query("SELECT p from Pedido p where p.cliente = :cliente")
 	List<Pedido> findByCliente(@Param("cliente") Cliente cliente);
 	
 	@Query("Select p from Pedido p where p.fecha > :fecha and p.usuario in (Select u from Usuario u where u.establecimiento = :establecimiento)")
-	List<Pedido> findByEstablecimiento(@Param("establecimiento")Establecimiento establecimiento, @Param("fecha") Date date);
+	List<Pedido> findByEstablecimiento(@Param("establecimiento") Establecimiento establecimiento, @Param("fecha") Date date);
+	
+	@Query("Select p from Pedido p where p.usuario in (Select u from Usuario u where u.establecimiento = :establecimiento)")
+	List<Pedido> findByMiEstablecimiento(@Param("establecimiento") Establecimiento establecimiento);
 }

@@ -1,17 +1,9 @@
 package mcuca;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.FontAwesome;
@@ -44,7 +36,6 @@ import mcuca.security.VaadinSessionSecurityContextHolderStrategy;
 import mcuca.usuario.Usuario;
 import mcuca.usuario.UsuarioManagementView;
 import mcuca.usuario.UsuarioRepository;
-import mcuca.usuario.UsuarioView;
 import mcuca.zona.ZonaView;
 
 
@@ -55,12 +46,16 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	private Panel springViewDisplay;
 	
 	private PedidoService pedidoService;
+	
 	@Autowired
 	private PedidoRepository pedidoRepo;
+	
 	@Autowired
 	private CierreCajaRepository cierresCaja;
+	
 	@Autowired
 	private LineaPedidoRepository lps;
+	
 	@Autowired
 	private UsuarioRepository userRepo;
 	
@@ -101,17 +96,14 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		root.addComponent(probar);
 */
 		Button logoutButton = new Button("Salir", event -> logout());
-		//logoutButton.setStyleName(ValoTheme.BUTTON_LINK);
 		logoutButton.setIcon(FontAwesome.POWER_OFF);
 		root.addComponent(logoutButton);
 		
 		cerrarCaja = new Button("Cerrar caja", event -> cerrarCaja());
-		//logoutButton.setStyleName(ValoTheme.BUTTON_LINK);
 		cerrarCaja.setIcon(FontAwesome.CLOCK_O);
 		cerrarCaja.setVisible(false);
 		HorizontalLayout btn = new HorizontalLayout(logoutButton, cerrarCaja);
 		root.addComponent(btn);
-
 		
 		// Creamos la barra de navegación
 		navigationBar = new CssLayout();
@@ -126,7 +118,6 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		root.setExpandRatio(springViewDisplay, 1.0f);
 
 		addComponent(root);
-
 	}
 	
 	public void setAuth(int rol)
@@ -144,15 +135,12 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	
 	private void addBarraGerente() 
 	{
-		//navigationBar.addComponent(createNavigationButton("Clte", ClienteView.VIEW_NAME));
 		navigationBar.addComponent(createNavigationButton("Estb", EstablecimientoView.VIEW_NAME));
 		navigationBar.addComponent(createNavigationButton("Zona", ZonaView.VIEW_NAME));
 		navigationBar.addComponent(createNavigationButton("Mesa", MesaView.VIEW_NAME));
 		navigationBar.addComponent(createNavigationButton("Ingr", IngredienteView.VIEW_NAME));
 		navigationBar.addComponent(createNavigationButton("Prod", ProductoView.VIEW_NAME));
-		navigationBar.addComponent(createNavigationButton("Menu", MenuView.VIEW_NAME));		
-		//navigationBar.addComponent(createNavigationButton("Pedi", PedidoView.VIEW_NAME));		
-		//navigationBar.addComponent(createNavigationButton("Users", UsuarioView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Menu", MenuView.VIEW_NAME));
 		navigationBar.addComponent(createNavigationButton("UsMan", UsuarioManagementView.VIEW_NAME));
 	}
 	
@@ -171,12 +159,11 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	private Button createNavigationButton(String caption, final String viewName) {
 		Button button = new Button(caption);
 		button.addStyleName(ValoTheme.BUTTON_SMALL);
-		// If you didn't choose Java 8 when creating the project, convert this
-		// to an anonymous listener class
+
 		button.addClickListener(event -> {
 			//PedidoView.cliente_id = 0;
 			//PedidoView.pedido_id = 0;
-			PedidoView.listarPedidos(0L);
+			//PedidoView.listarPedidos(0L);
 			getUI().getNavigator().navigateTo(viewName);
 		});
 		return button;
@@ -185,9 +172,10 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	private void cerrarCaja() 
 	{
 		Usuario u = userRepo.findByUsername(
-				(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username"));
-		if(u != null)
-		{
+			(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")
+		);
+		
+		if(u != null) {
 			pedidoService = new PedidoService(pedidoRepo, cierresCaja, lps, userRepo);
 			CierreCaja cierre = new CierreCaja(pedidoService.getRecaudacion());
 			cierre.setEstablecimiento(u.getEstablecimiento());

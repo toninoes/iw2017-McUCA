@@ -17,7 +17,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.themes.ValoTheme;
@@ -40,11 +39,11 @@ import mcuca.zona.ZonaRepository;
 public class PedidoEditor extends VerticalLayout {
 	
 	private final UsuarioRepository repoUsuario;
-	@SuppressWarnings("unused")
 	private final ZonaRepository repoZona;
 	private final ClienteRepository repoCliente;
 	private final PedidoRepository repoPedido;
 	private final LineaPedidoRepository repoLinea;
+	
 	private PedidoService pedService;
 	@SuppressWarnings("unused")
 	private final MesaRepository repoMesa;
@@ -131,8 +130,7 @@ public class PedidoEditor extends VerticalLayout {
 		if (u != null){
 			Establecimiento est = u.getEstablecimiento();
 			zonas.setItems((Collection<Zona>) repoZona.findByEstablecimiento(est));
-		}
-		
+		}		
 	}
 	
 	public void borrar(ClickEvent e) {
@@ -151,6 +149,8 @@ public class PedidoEditor extends VerticalLayout {
 			}			
 		}
 		
+		PedidoView.listarLineasPedidos();
+		getUI().getNavigator().navigateTo(PedidoView.VIEW_NAME);
 	}
 	
 	public void salvar(ClickEvent e) {
@@ -174,8 +174,7 @@ public class PedidoEditor extends VerticalLayout {
 		repoPedido.save(pedido);
 	}
 	
-	public void cerrar(ClickEvent e) {
-		
+	public void cerrar(ClickEvent e) {		
 		VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
@@ -205,6 +204,7 @@ public class PedidoEditor extends VerticalLayout {
 				repoLinea.save(lp);
 			}			
 		}
+		getUI().getNavigator().navigateTo(PedidoView.VIEW_NAME);
 	}
 	
 	public interface ChangeHandler {

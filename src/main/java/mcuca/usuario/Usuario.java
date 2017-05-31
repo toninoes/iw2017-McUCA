@@ -92,8 +92,7 @@ public class Usuario implements UserDetails{
 
 	@Override
 	public String toString() {
-		return String.format("Usuario[id=%d, nombre='%s', apellidos='%s', username='%s', password='%s']", id,
-				nombre, apellidos, username, password);
+		return String.format("%s", username);
 	}
 
 	@Override
