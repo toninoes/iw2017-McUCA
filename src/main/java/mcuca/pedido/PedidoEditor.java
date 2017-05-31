@@ -85,7 +85,10 @@ public class PedidoEditor extends VerticalLayout {
 		
 		tipos.setItems(Tipo.class.getEnumConstants()); 
 
+		
+		
 		HorizontalLayout layout = new HorizontalLayout(pdf, abierto);
+		
 		addComponents(title, layout, nombre, precio, tipos, zonas, mesas, acciones);
 		
 		binder.bindInstanceFields(this);
@@ -223,17 +226,21 @@ public class PedidoEditor extends VerticalLayout {
 		if (persisted) {
 			// Find fresh entity for editing
 			pedido = repoPedido.findOne(c.getId());
+			
 			lineas = repoLinea.findByPedido(pedido);
 			for(LineaPedido lp : lineas)
 				lineaAbierta = !lp.isEnCocina();
 			
 		}
 		else {
-			pedido = c;
-			
+			pedido = c;		
 		}
+		
 		pdf.setVisible(persisted && lineas != null && lineaAbierta);
 		abierto.setVisible(persisted && lineas != null && lineas.size() != 0 && !lineaAbierta);
+		if(persisted && pedido.getAbierto() == false) //Cerrar pedido sólo si éste está abierto.
+			abierto.setVisible(false);
+		
 		cancelar.setVisible(persisted);
 		
 		// Bind mcuca properties to similarly named fields
