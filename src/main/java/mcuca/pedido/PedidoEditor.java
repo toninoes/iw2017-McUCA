@@ -85,8 +85,6 @@ public class PedidoEditor extends VerticalLayout {
 		
 		tipos.setItems(Tipo.class.getEnumConstants()); 
 
-		
-		
 		HorizontalLayout layout = new HorizontalLayout(pdf, abierto);
 		
 		addComponents(title, layout, nombre, precio, tipos, zonas, mesas, acciones);

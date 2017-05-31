@@ -79,22 +79,10 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		// Creamos la cabecera
 		Label titulo = new Label("McUCA");
 		titulo.setStyleName("h1");
+		
 		root.addComponent(titulo);
 		root.setComponentAlignment(titulo, Alignment.MIDDLE_CENTER);
-		/*
-		Button probar = new Button("PDF", event -> {
-			try {
-				topdf();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (DocumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-		root.addComponent(probar);
-*/
+		
 		Button logoutButton = new Button("Salir", event -> logout());
 		logoutButton.setIcon(FontAwesome.POWER_OFF);
 		root.addComponent(logoutButton);
@@ -114,6 +102,7 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		// Creamos el panel
 		springViewDisplay = new Panel();
 		springViewDisplay.setSizeFull();
+		
 		root.addComponent(springViewDisplay);
 		root.setExpandRatio(springViewDisplay, 1.0f);
 
@@ -123,14 +112,25 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 	public void setAuth(int rol)
 	{
 		switch(rol) {
-		case 0: addBarraGerente();
-				break;
-		case 1: addBarraEncargado();
-				break;
-		case 2: addBarraCamarero();
-				break;
-		default: break;
+			case 0: addBarraGerente();
+					break;
+			case 1: addBarraEncargado();
+					break;
+			case 2: addBarraCamarero();
+					break;
+			default:break;
 		}
+		holaUser(); 
+	}
+	
+	private void holaUser() 
+	{
+		Usuario u = userRepo.findByUsername(
+			(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")
+		);
+		
+		if(u != null) 
+			Notification.show("Hola " + u.getNombre());
 	}
 	
 	private void addBarraGerente() 
@@ -161,9 +161,6 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		button.addStyleName(ValoTheme.BUTTON_SMALL);
 
 		button.addClickListener(event -> {
-			//PedidoView.cliente_id = 0;
-			//PedidoView.pedido_id = 0;
-			//PedidoView.listarPedidos(0L);
 			getUI().getNavigator().navigateTo(viewName);
 		});
 		return button;
@@ -184,38 +181,14 @@ public class MainScreen extends VerticalLayout implements ViewDisplay {
 		}
 	}
 
-
 	@Override
 	public void showView(View view) {
 		springViewDisplay.setContent((Component) view);
 	}
 
-
 	private void logout() {
 		getUI().getPage().reload();
 		getSession().close();
 	}
-	
-	
-	
-	/*
-	private void topdf() throws DocumentException, FileNotFoundException {
-		Document doc = new Document();
-		FileOutputStream fichero = new FileOutputStream("fichero.pdf");
-		
-		PdfWriter.getInstance(doc, fichero).setInitialLeading(40);
-		doc.open();
-		
-		doc.add(new Paragraph("McUCA - Ticket"));
-		doc.add(new Paragraph(""));
-		PdfPTable tabla = new PdfPTable(3);
-		tabla.addCell("Producto"); tabla.addCell("Cantidad"); tabla.addCell("Precio");
-		tabla.addCell("Hamburguesa de queso"); tabla.addCell("1"); tabla.addCell("4.95 €");
-		tabla.addCell("Patatas"); tabla.addCell("2"); tabla.addCell("3.50 €");
-		tabla.addCell("Coca-Cola"); tabla.addCell("1"); tabla.addCell("1.20 €");
-		tabla.addCell("Total"); tabla.addCell(""); tabla.addCell("9.65 €");
-		doc.add(tabla);
-		doc.close();
-		Notification.show("PDF generado");
-	}*/
+
 }
