@@ -40,14 +40,7 @@ public class Pedido {
 	
 	@ManyToOne
 	private Usuario usuario;
-	
-	@OneToMany(fetch = FetchType.EAGER)
-	private Set<LineaPedido> lineasPedido;
-	
-	//@ManyToMany(targetEntity=Producto.class)
-	//@JoinTable(name = "pedido_producto", joinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"))
-	//private Set<Producto> productos;
-	
+		
 	protected Pedido() {
 	}
 
@@ -57,7 +50,6 @@ public class Pedido {
 		this.abierto = abierto;
 		this.tipo = tipo;
 		this.fecha = fecha;
-		//this.productos = productos;
 	}
 	
 	public Long getId() {
@@ -67,8 +59,6 @@ public class Pedido {
 	public String getNombre() {
 		return nombre;
 	}
-	
-	public Set<LineaPedido> getLineasPedido() { return this.lineasPedido; }
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;

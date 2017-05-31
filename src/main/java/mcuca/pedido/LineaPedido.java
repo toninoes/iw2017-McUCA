@@ -29,8 +29,6 @@ public class LineaPedido {
 	
 	private boolean enCocina;
 	
-	//private Long pedidoId;
-	
 	protected LineaPedido() {}
 	
 	public LineaPedido(int cantidad, Producto producto, Pedido pedido, boolean enCocina, Menu menu) {
@@ -46,24 +44,19 @@ public class LineaPedido {
 	public Producto getProducto() { return this.producto; }
 	public int getCantidad() { return this.cantidad; }
 	public boolean isEnCocina() { return this.enCocina; }
-	public Menu getMenu(){return this.menu;}
-
-	//public Long getPedidoId() { return this.pedidoId; }
-	
+	public Menu getMenu(){return this.menu;}	
 	public void setPedido(Pedido pedido) { this.pedido = pedido; }
 	public void setProducto(Producto producto) { this.producto = producto; }
 	public void setCantidad(int cantidad) { this.cantidad = cantidad; }
 	public void setEnCocina(boolean enCocina) { this.enCocina = enCocina; }
 	public void setMenu(Menu menu){this.menu = menu;}
-
-	//public void setPedidoId(Long pedidoId) { this.pedidoId = pedidoId; }
 	
 	@Override
 	public String toString() 
 	{ 
 		return String.format(
 				"Pedido %d, Producto %s, Cantidad %d, en cocina: %b, Menu %s",
-				/*this.pedido.getId(),*/ this.producto.getNombre(), this.cantidad, this.enCocina, this.menu.getNombre()
+				this.producto.getNombre(), this.cantidad, this.enCocina, this.menu.getNombre()
 		); 
 	}
 
