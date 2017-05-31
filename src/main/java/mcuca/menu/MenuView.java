@@ -20,11 +20,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-import mcuca.ingrediente.IngredienteRepository;
 import mcuca.producto.ProductoRepository;
-
-
-
 
 
 @SuppressWarnings("serial")
@@ -37,7 +33,6 @@ public class MenuView extends VerticalLayout implements View {
 	final TextField filtro;
 	private final Button agregarNuevoBoton;
 	private final ProductoRepository repoProd;
-
 
 	@Autowired
 	public MenuView(MenuRepository almacen, MenuEditor editor, ProductoRepository repoProd) {
@@ -133,6 +128,10 @@ public class MenuView extends VerticalLayout implements View {
 
 	public MenuRepository getAlmacen() {
 		return almacen;
+	}
+
+	public ProductoRepository getRepoProd() {
+		return repoProd;
 	}
 
 

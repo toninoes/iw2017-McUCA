@@ -7,13 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.data.Binder;
 import com.vaadin.data.converter.StringToFloatConverter;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
@@ -22,9 +20,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import mcuca.producto.Producto;
 import mcuca.producto.ProductoRepository;
 
-
-
-@SuppressWarnings({ "deprecation", "serial" })
+@SuppressWarnings({ "serial" })
 @SpringComponent
 @UIScope
 
@@ -82,12 +78,6 @@ public class MenuEditor  extends VerticalLayout{
 		  .withConverter(
 		    new StringToFloatConverter("Por favor introduce el precio"))
 		  .bind("precio");
-		
-		/*binder.forField(esOferta)
-		  .withNullRepresentation("")
-		  .withConverter(
-		    new StringToFloatConverter("Por favor introduce si es oferta"))
-		  .bind("esOferta");*/
 		
 		binder.bindInstanceFields(this);
 		
@@ -153,6 +143,10 @@ public class MenuEditor  extends VerticalLayout{
 
 	public ProductoRepository getRepoProducto() {
 		return repoProducto;
+	}
+
+	public MenuRepository getRepoMenu() {
+		return repoMenu;
 	}
 
 

@@ -1,12 +1,10 @@
 package mcuca.pedido;
 
 import java.util.Collection;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.converter.StringToFloatConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -14,7 +12,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
@@ -45,7 +42,6 @@ public class LineaPedidoEditor extends VerticalLayout {
 	NativeSelect<Producto> producto = new NativeSelect<>("Producto");
 	NativeSelect<Menu> menu = new NativeSelect<>("Menu");
 
-	
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
 	Button cancelar = new Button("Cancelar");
@@ -64,17 +60,7 @@ public class LineaPedidoEditor extends VerticalLayout {
 		cantidad.setItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);	
 		producto.setItems((Collection<Producto>) this.repoProducto.findAll());
 		menu.setItems((Collection<Menu>) this.repoMenu.findAll());
-		addComponents(title, cantidad, producto, menu, acciones);
-		
-		//binder.bindInstanceFields(this);
-		/*binder.forField(cantidad)
-          .withConverter(new StringToIntegerConverter("Por favor introduce un número"))
-          .bind("cantidad");
-		
-		binder.forField(en_cocina)
-          .withConverter(new StringToBooleanConverter("Por favor introduce un número"))
-          .bind("en_cocina");*/
-		
+		addComponents(title, cantidad, producto, menu, acciones);		
 		
 		binder.bindInstanceFields(this);
 
@@ -87,7 +73,7 @@ public class LineaPedidoEditor extends VerticalLayout {
 		// wire action buttons to guardar, borrar and reset
 		//guardar.addClickListener(e -> repoLineaPedido.save(lineaPedido))
 		guardar.addClickListener(e -> {
-			Total = 0.0f;
+			setTotal(0.0f);
 			salvar(e);
 		});
 		borrar.addClickListener(e -> repoLineaPedido.delete(lineaPedido));
@@ -164,5 +150,13 @@ public class LineaPedidoEditor extends VerticalLayout {
 	
 	public LineaPedidoRepository getRepoProducto() {
 		return repoLineaPedido;
+	}
+
+	public double getTotal() {
+		return Total;
+	}
+
+	public void setTotal(double total) {
+		Total = total;
 	}
 }
