@@ -1,5 +1,6 @@
 package mcuca.cliente;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,12 +13,16 @@ public class Cliente {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
+	@Column(length = 32)
 	private String nombre;
 
+	@Column(length = 64)
 	private String apellidos;
 	
+	@Column(length = 128)
 	private String domicilio;
 	
+	@Column(length = 13)
 	private String telefono;
 
 	protected Cliente() {}

@@ -3,12 +3,15 @@ package mcuca.cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -28,8 +31,6 @@ public class ClienteEditor extends VerticalLayout {
 	private final ClienteRepository almacen;
 	
 	private PedidoService pedService;
-	
-	private UsuarioRepository repoUser;
 
 	private Cliente cliente;
 
@@ -56,11 +57,36 @@ public class ClienteEditor extends VerticalLayout {
 		pedService = new PedidoService(ped, cierre, lp, userRepo);
 		this.almacen = almacen;
 
+		nombre.setMaxLength(32);
+		apellidos.setMaxLength(64);
+		domicilio.setMaxLength(128);
+		telefono.setMaxLength(13);
+		
 		addComponents(title, nombre, apellidos, domicilio, telefono, acciones);
 
 		// bind using naming convention
-		binder.bindInstanceFields(this);
+		//binder.bindInstanceFields(this);
+		binder.forField(nombre)
+			.asRequired("No puede estar vacío")
+			.withValidator(new StringLengthValidator("Este campo debe ser una cadena entre 4 y 32 caracteres", 4, 32))
+			.bind(Cliente::getNombre, Cliente::setNombre);
 
+		binder.forField(apellidos)
+		.asRequired("No puede estar vacío")
+		.withValidator(new StringLengthValidator("Este campo debe ser una cadena entre 4 y 64 caracteres", 4, 64))
+		.bind(Cliente::getApellidos, Cliente::setApellidos);
+
+		binder.forField(domicilio)
+		.asRequired("No puede estar vacío")
+		.withValidator(new StringLengthValidator("Este campo debe ser una cadena entre 4 y 128 caracteres", 4, 128))
+		.bind(Cliente::getDomicilio, Cliente::setDomicilio);
+
+		binder.forField(telefono)
+		.asRequired("No puede estar vacío")
+		.withValidator(new StringLengthValidator("Este campo debe ser una cadena entre 9 y 13 caracteres", 9, 13))
+		.bind(Cliente::getTelefono, Cliente::setTelefono);
+		
+		
 		// Configure and style components
 		setSpacing(true);
 		acciones.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
@@ -69,8 +95,11 @@ public class ClienteEditor extends VerticalLayout {
 
 		// wire action buttons to guardar, borrar and reset
 		guardar.addClickListener(e -> {
-			cliente.setTelefono(cliente.getTelefono().replaceAll("\\s+",""));
-			almacen.save(cliente);
+			if(binder.isValid()){
+				cliente.setTelefono(cliente.getTelefono().replaceAll("\\s+",""));
+				almacen.save(cliente);
+			}else
+				mostrarNotificacion(new Notification("Algunos campos del formulario deben corregirse"));
 		});
 		
 		borrar.addClickListener(e -> borrarCliente());
@@ -78,6 +107,11 @@ public class ClienteEditor extends VerticalLayout {
 		setVisible(false);
 	}
 
+	private void mostrarNotificacion(Notification notification) {
+        notification.setDelayMsec(1500);
+        notification.show(Page.getCurrent());
+    }
+	
 	public interface ChangeHandler {
 
 		void onChange();
@@ -119,7 +153,11 @@ public class ClienteEditor extends VerticalLayout {
 	public void setChangeHandler(ChangeHandler h) {
 		// ChangeHandler is notified when either guardar or borrar
 		// is clicked
-		guardar.addClickListener(e -> h.onChange());
+		//guardar.addClickListener(e -> h.onChange());
+		guardar.addClickListener(e -> {
+			if(binder.isValid())
+				h.onChange();
+		});
 		borrar.addClickListener(e -> h.onChange());
 	}
 
