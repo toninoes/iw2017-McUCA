@@ -23,7 +23,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.cierre.CierreCajaRepository;
-import mcuca.cliente.Cliente;
 import mcuca.establecimiento.Establecimiento;
 import mcuca.establecimiento.EstablecimientoRepository;
 import mcuca.mesa.Mesa;
@@ -79,7 +78,6 @@ public class ZonaEditor extends VerticalLayout {
 		select.setItems((Collection<Establecimiento>) repoEstablecimiento.findAll());
 		select.setEmptySelectionAllowed(false);
 		select.setRequiredIndicatorVisible(true);
-		select.setEmptySelectionCaption("Pon algo");
 	
 		nombre.setMaxLength(32);
 		addComponents(title, nombre, aforo, select, acciones);
