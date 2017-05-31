@@ -23,15 +23,19 @@ public class Usuario implements UserDetails{
 	@GeneratedValue
 	private Long id;
 	
-	@Column(unique = true)
+	@Column(unique = true, length = 9)
 	private String dni;
 
+	@Column(length = 32)
 	private String nombre;
 
+	@Column(length = 64)
 	private String apellidos;
 
+	@Column(length = 32, unique = true)
 	private String username;
 
+	@Column(length = 255)
 	private String password;
 	
 	private Rol rol;
