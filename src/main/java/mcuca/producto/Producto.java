@@ -20,7 +20,7 @@ public class Producto {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(length = 32)
+	@Column(length = 64)
 	private String nombre;
 	
 	@Column(length = 5)
