@@ -1,6 +1,7 @@
 package mcuca.mesa;
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,7 @@ public class Mesa {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
+	@Column(length = 2)
 	private String numero;
 	
 	@ManyToOne

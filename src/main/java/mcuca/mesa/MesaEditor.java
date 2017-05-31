@@ -5,7 +5,9 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
@@ -13,6 +15,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -53,16 +56,14 @@ public class MesaEditor extends VerticalLayout {
 		this.repoZona = repoZona;
 		this.repoEst = repoEst;
 		zonas.setItems((Collection<Zona>) repoZona.findAll());
+		numero.setMaxLength(2);
 		addComponents(title, numero, zonas, acciones);
-
-		// bind using naming convention
-		/*binder.forField(numero)
-		  .withNullRepresentation("")
-		  .withConverter(
-		    new StringToIntegerConverter("Por favor introduce un número"))
-		  .bind("numero");*/
 		
-		binder.bindInstanceFields(this);
+		//binder.bindInstanceFields(this);
+		binder.forField(numero)
+		.asRequired("No puede estar vacío")
+		.withValidator(new StringLengthValidator("Este campo debe ser una cadena entre 1 y 2 caracteres", 1, 2))
+		.bind(Mesa::getNumero, Mesa::setNumero);
 
 		// Configure and style components
 		setSpacing(true);
@@ -71,11 +72,22 @@ public class MesaEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(this::salvar);
+		//guardar.addClickListener(this::salvar);
+		guardar.addClickListener(e -> {
+			if(binder.isValid())
+				repoMesa.save(mesa);
+			else
+				mostrarNotificacion(new Notification("Algunos campos del formulario deben corregirse"));
+		});
 		borrar.addClickListener(e -> repoMesa.delete(mesa));
 		cancelar.addClickListener(e -> editarMesa(mesa));
 		setVisible(false);
 	}
+	
+	private void mostrarNotificacion(Notification notification) {
+        notification.setDelayMsec(1500);
+        notification.show(Page.getCurrent());
+    }
 	
 	public void salvar(ClickEvent e) {
 		binder.setBean(mesa);
@@ -84,7 +96,6 @@ public class MesaEditor extends VerticalLayout {
 	}
 
 	public interface ChangeHandler {
-
 		void onChange();
 	}
 
@@ -118,9 +129,12 @@ public class MesaEditor extends VerticalLayout {
 	}
 
 	public void setChangeHandler(ChangeHandler h) {
-		// ChangeHandler is notified when either guardar or borrar
-		// is clicked
-		guardar.addClickListener(e -> h.onChange());
+		// ChangeHandler is notified when either guardar or borrar is clicked
+		//guardar.addClickListener(e -> h.onChange());
+		guardar.addClickListener(e -> {
+			if(binder.isValid())
+				h.onChange();
+		});
 		borrar.addClickListener(e -> h.onChange());
 	}
 
