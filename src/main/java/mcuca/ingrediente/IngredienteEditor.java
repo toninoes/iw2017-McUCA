@@ -16,8 +16,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import mcuca.cliente.Cliente;
-
 @SpringComponent
 @UIScope
 public class IngredienteEditor extends VerticalLayout {

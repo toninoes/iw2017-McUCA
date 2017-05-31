@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.converter.StringToIntegerConverter;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
@@ -15,11 +17,13 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.cierre.CierreCajaRepository;
+import mcuca.cliente.Cliente;
 import mcuca.establecimiento.Establecimiento;
 import mcuca.establecimiento.EstablecimientoRepository;
 import mcuca.mesa.Mesa;
@@ -71,17 +75,31 @@ public class ZonaEditor extends VerticalLayout {
 		this.cierresCaja = cierresCaja;
 		this.lps = lps;
 		this.pedidoService = new PedidoService(this.repoPedido, this.cierresCaja, this.lps, u);
+		
 		select.setItems((Collection<Establecimiento>) repoEstablecimiento.findAll());
+		select.setEmptySelectionAllowed(false);
+		select.setRequiredIndicatorVisible(true);
+		select.setEmptySelectionCaption("Pon algo");
+	
+		nombre.setMaxLength(32);
 		addComponents(title, nombre, aforo, select, acciones);
 
 		// bind using naming convention
+		//binder.bindInstanceFields(this);
+		binder.forField(nombre)
+		.asRequired("No puede estar vacío")
+		.withValidator(new StringLengthValidator("Este campo debe ser una cadena entre 4 y 32 caracteres", 4, 32))
+		.bind(Zona::getNombre, Zona::setNombre);
+		
+		
 		binder.forField(aforo)
 		  .withNullRepresentation("")
+		  .asRequired("No puede estar vacío")
 		  .withConverter(
 		    new StringToIntegerConverter("Por favor introduce un número"))
 		  .bind("aforo");
 		
-		binder.bindInstanceFields(this);
+		binder.forField(select).bind("establecimiento");
 
 		// Configure and style components
 		setSpacing(true);
@@ -90,12 +108,23 @@ public class ZonaEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(this::salvar);
-		//borrar.addClickListener(e -> repoZona.delete(zona));
+		//guardar.addClickListener(this::salvar);
+		guardar.addClickListener(e -> {
+			if(binder.isValid())
+				repoZona.save(zona);
+			else
+				mostrarNotificacion(new Notification("Algunos campos del formulario deben corregirse"));
+		});
+		
 		borrar.addClickListener(e -> borrarZona());
 		cancelar.addClickListener(e -> editarZona(zona));
 		setVisible(false);
 	}
+	
+	private void mostrarNotificacion(Notification notification) {
+        notification.setDelayMsec(1500);
+        notification.show(Page.getCurrent());
+    }
 	
 	public void salvar(ClickEvent e) {
 		binder.setBean(zona);
@@ -114,7 +143,6 @@ public class ZonaEditor extends VerticalLayout {
 	}
 
 	public interface ChangeHandler {
-
 		void onChange();
 	}
 
@@ -148,9 +176,12 @@ public class ZonaEditor extends VerticalLayout {
 	}
 
 	public void setChangeHandler(ChangeHandler h) {
-		// ChangeHandler is notified when either guardar or borrar
-		// is clicked
-		guardar.addClickListener(e -> h.onChange());
+		// ChangeHandler is notified when either guardar or borrar is clicked
+		//guardar.addClickListener(e -> h.onChange());
+		guardar.addClickListener(e -> {
+			if(binder.isValid())
+				h.onChange();
+		});
 		borrar.addClickListener(e -> h.onChange());
 	}
 

@@ -1,5 +1,6 @@
 package mcuca.zona;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,8 +16,10 @@ public class Zona {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
+	@Column(length = 32)
 	private String nombre;
 
+	@Column(length = 3)
 	private Integer aforo;
 	
 	@ManyToOne
