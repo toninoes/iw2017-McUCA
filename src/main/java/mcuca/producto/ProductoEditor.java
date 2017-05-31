@@ -1,12 +1,12 @@
 package mcuca.producto;
 
 import java.util.Collection;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.converter.StringToDoubleConverter;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -19,7 +19,6 @@ import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.ingrediente.Ingrediente;
@@ -28,28 +27,15 @@ import mcuca.ingrediente.IngredienteRepository;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import com.vaadin.data.Binder;
-import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FileResource;
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Image;
-import com.vaadin.ui.JavaScript;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload.SucceededEvent;
-import com.vaadin.ui.Upload.SucceededListener;
-import com.vaadin.ui.themes.ValoTheme;
+
 
 @SpringComponent
 @UIScope
@@ -58,8 +44,6 @@ public class ProductoEditor extends VerticalLayout {
 	
 	private final ProductoRepository repoProducto;
 	private final IngredienteRepository repoIngrediente;
-	
-	private Set<Ingrediente> sSelected;
 	
 	private Producto producto;
 	
@@ -70,7 +54,6 @@ public class ProductoEditor extends VerticalLayout {
 	TextField iva = new TextField("I.V.A.");
 	TextField foto = new TextField("Foto");
 	TwinColSelect<Ingrediente> ingredientes = new TwinColSelect<>("Ingrediente");
-	
 	
 	/* Action buttons */
 	Button guardar = new Button("Guardar");
@@ -115,23 +98,33 @@ public class ProductoEditor extends VerticalLayout {
 		upload.setImmediateMode(true);
 		upload.addSucceededListener(receiver);
 		foto.setVisible(false);
-				
+		
+		nombre.setMaxLength(32);
+		precio.setMaxLength(5);
+		iva.setMaxLength(5);
+		foto.setMaxLength(255);
 		addComponents(title, nombre, precio, iva, upload, imagen, ingredientes, acciones, foto);
 
 		// bind using naming convention
+		//binder.bindInstanceFields(this);
+		binder.forField(nombre)
+		.asRequired("No puede estar vacío")
+		.withValidator(new StringLengthValidator("Este campo debe ser una cadena entre 4 y 32 caracteres", 4, 32))
+		.bind(Producto::getNombre, Producto::setNombre);
+		
 		binder.forField(precio)
 		  .withNullRepresentation("")
+		  .asRequired("No puede estar vacío")
 		  .withConverter(
-		    new StringToDoubleConverter("Por favor introduce un número"))
+		    new StringToDoubleConverter("Por favor introduce un número decimal"))
 		  .bind("precio");
 		
 		binder.forField(iva)
 		  .withNullRepresentation("")
+		  .asRequired("No puede estar vacío")
 		  .withConverter(
-		    new StringToDoubleConverter("Por favor introduce un número"))
+		    new StringToDoubleConverter("Por favor introduce un número decimal"))
 		  .bind("iva");
-		
-		binder.bindInstanceFields(this);
 
 		// Configure and style components
 		setSpacing(true);
@@ -140,30 +133,32 @@ public class ProductoEditor extends VerticalLayout {
 		guardar.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to guardar, borrar and reset
-		guardar.addClickListener(this::salvar);
+		//guardar.addClickListener(this::salvar);
+		guardar.addClickListener(e -> {
+			if(binder.isValid()){				
+				binder.setBean(producto);
+				producto.setNombre(nombre.getValue());
+				producto.setPrecio(Double.valueOf(precio.getValue().replace(',', '.')));
+				producto.setIva(Double.valueOf(iva.getValue()));
+				producto.setFoto(foto.getValue());
+				producto.setIngredientes(ingredientes.getSelectedItems());
+				repoProducto.save(producto);
+				ProductoView.parrilla.asSingleSelect().setValue(producto);
+			}else
+				mostrarNotificacion(new Notification("Algunos campos del formulario deben corregirse"));
+		});
 		borrar.addClickListener(e -> repoProducto.delete(producto));
 		cancelar.addClickListener(e -> editarProducto(producto));
-		
-		ingredientes.addSelectionListener(e -> {
-			sSelected = e.getAddedSelection();
-		});
 		
 		setVisible(false);
 	}
 	
-	public void salvar(ClickEvent event) {
-		binder.setBean(producto);
-		producto.setNombre(nombre.getValue());
-		producto.setPrecio(Double.valueOf(precio.getValue().replace(',', '.')));
-		producto.setIva(Double.valueOf(iva.getValue()));
-		producto.setFoto(foto.getValue());
-		producto.setIngredientes(ingredientes.getSelectedItems());
-		repoProducto.save(producto);
-		ProductoView.parrilla.asSingleSelect().setValue(producto);
-	}
+	private void mostrarNotificacion(Notification notification) {
+        notification.setDelayMsec(1500);
+        notification.show(Page.getCurrent());
+    }
 
 	public interface ChangeHandler {
-
 		void onChange();
 	}
 
@@ -191,14 +186,16 @@ public class ProductoEditor extends VerticalLayout {
 
 		// A hack to ensure the whole form is visible
 		guardar.focus();
-		// Select all text in nombre field automatically
-		//nombre.selectAll();
+		nombre.selectAll();
 	}
 
 	public void setChangeHandler(ChangeHandler h) {
-		// ChangeHandler is notified when either guardar or borrar
-		// is clicked
-		guardar.addClickListener(e -> h.onChange());
+		// ChangeHandler is notified when either guardar or borrar is clicked
+		//guardar.addClickListener(e -> h.onChange());
+		guardar.addClickListener(e -> {
+			if(binder.isValid())
+				h.onChange();
+		});
 		borrar.addClickListener(e -> h.onChange());
 	}
 

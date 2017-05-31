@@ -2,6 +2,7 @@ package mcuca.producto;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,12 +20,16 @@ public class Producto {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
+	@Column(length = 32)
 	private String nombre;
 	
+	@Column(length = 5)
 	private Double precio;
 	
+	@Column(length = 5)
 	private Double iva;
 	
+	@Column(length = 255)
 	private String foto; //la url
 	
 	//@ManyToMany(targetEntity=Pedido.class, fetch=FetchType.EAGER)
