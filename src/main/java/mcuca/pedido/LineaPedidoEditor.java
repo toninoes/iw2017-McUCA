@@ -81,7 +81,7 @@ public class LineaPedidoEditor extends VerticalLayout {
 			setTotal(0.0f);
 			salvar(e);
 		});
-		borrar.addClickListener(e -> repoLineaPedido.delete(lineaPedido));
+		borrar.addClickListener(e -> borrar());
 		cancelar.addClickListener(e -> editarLineaPedido(lineaPedido));
 		select.addSelectionListener(e -> select(select.getSelectedItem().get()));
 		
@@ -93,6 +93,17 @@ public class LineaPedidoEditor extends VerticalLayout {
 		cantidad.setVisible(true);
 		menu.setVisible(selected == "Menú");
 		producto.setVisible(selected == "Producto");
+	}
+	
+	public void borrar()
+	{
+		Pedido pedido = lineaPedido.getPedido();
+		if(lineaPedido.getProducto() != null)
+			pedido.setPrecio(pedido.getPrecio() - (lineaPedido.getCantidad() * lineaPedido.getProducto().getPrecio()));
+		else
+			pedido.setPrecio(pedido.getPrecio() - (lineaPedido.getCantidad() * lineaPedido.getMenu().getPrecio()));
+		repoPedido.save(pedido);
+		repoLineaPedido.delete(lineaPedido);
 	}
 	
 	public void salvar(ClickEvent e) {
