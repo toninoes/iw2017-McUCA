@@ -38,6 +38,7 @@ public class LineaPedidoEditor extends VerticalLayout {
 	
 	/* Fields to edit properties in LineaPedido entity */
 	Label title = new Label("Nueva Linea de Pedido");
+	NativeSelect<String> select = new NativeSelect<>("Menú o producto");
 	NativeSelect<Integer> cantidad = new NativeSelect<>("Cantidad");
 	NativeSelect<Producto> producto = new NativeSelect<>("Producto");
 	NativeSelect<Menu> menu = new NativeSelect<>("Menu");
@@ -60,7 +61,11 @@ public class LineaPedidoEditor extends VerticalLayout {
 		cantidad.setItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);	
 		producto.setItems((Collection<Producto>) this.repoProducto.findAll());
 		menu.setItems((Collection<Menu>) this.repoMenu.findAll());
-		addComponents(title, cantidad, producto, menu, acciones);		
+		producto.setVisible(false);
+		menu.setVisible(false);
+		cantidad.setVisible(false);
+		select.setItems("Menú", "Producto");
+		addComponents(title, select, cantidad, producto, menu, acciones);		
 		
 		binder.bindInstanceFields(this);
 
@@ -78,8 +83,16 @@ public class LineaPedidoEditor extends VerticalLayout {
 		});
 		borrar.addClickListener(e -> repoLineaPedido.delete(lineaPedido));
 		cancelar.addClickListener(e -> editarLineaPedido(lineaPedido));
+		select.addSelectionListener(e -> select(select.getSelectedItem().get()));
 		
 		setVisible(false);
+	}
+	
+	public void select(String selected)
+	{
+		cantidad.setVisible(true);
+		menu.setVisible(selected == "Menú");
+		producto.setVisible(selected == "Producto");
 	}
 	
 	public void salvar(ClickEvent e) {
