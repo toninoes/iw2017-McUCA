@@ -24,7 +24,7 @@ public class Producto {
 	private String nombre;
 	
 	@Column(length = 5)
-	private Double precio;
+	private float precio;
 	
 	@Column(length = 5)
 	private Double iva;
@@ -43,7 +43,7 @@ public class Producto {
 	protected Producto() {
 	}
 	
-	public Producto(String nombre, Double precio, Double iva, String foto, Set<Ingrediente> ingredientes) {
+	public Producto(String nombre, float precio, Double iva, String foto, Set<Ingrediente> ingredientes) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.iva = iva;
@@ -63,11 +63,11 @@ public class Producto {
 		this.nombre = nombre;
 	}
 
-	public Double getPrecio() {
+	public float getPrecio() {
 		return precio;
 	}
 
-	public void setPrecio(Double precio) {
+	public void setPrecio(float precio) {
 		this.precio = precio;
 	}
 

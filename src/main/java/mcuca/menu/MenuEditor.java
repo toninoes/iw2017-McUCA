@@ -1,6 +1,7 @@
 package mcuca.menu;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,10 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.pedido.LineaPedidoRepository;
+import mcuca.pedido.Pedido;
+import mcuca.pedido.PedidoRepository;
+import mcuca.pedido.LineaPedido;
 import mcuca.producto.Producto;
 import mcuca.producto.ProductoRepository;
 
@@ -29,6 +34,8 @@ public class MenuEditor  extends VerticalLayout{
 	private final MenuRepository almacen;
 	private final ProductoRepository repoProducto;
 	private final MenuRepository repoMenu;
+	private final LineaPedidoRepository repoLinea;
+	private final PedidoRepository repoPedido;
 
 	private Menu menu;
 
@@ -53,7 +60,10 @@ public class MenuEditor  extends VerticalLayout{
 	Binder<Menu> binder = new Binder<>(Menu.class);
 	
 	@Autowired
-	public MenuEditor(MenuRepository almacen, ProductoRepository repoProducto, MenuRepository repoMenu) {
+	public MenuEditor(MenuRepository almacen, ProductoRepository repoProducto, MenuRepository repoMenu,
+			LineaPedidoRepository linea, PedidoRepository ped) {
+		this.repoPedido = ped;
+		this.repoLinea = linea;
 		this.almacen = almacen;
 		this.repoProducto = repoProducto;
 		this.repoMenu = repoMenu;
@@ -89,7 +99,7 @@ public class MenuEditor  extends VerticalLayout{
 		
 		// wire action buttons to guardar, borrar and reset
 				guardar.addClickListener(e -> guardarMenu(menu));
-				borrar.addClickListener(e -> almacen.delete(menu));
+				borrar.addClickListener(e -> borrar());
 				cancelar.addClickListener(e -> editarMenu(menu));
 				setVisible(false);
 			}
@@ -97,6 +107,20 @@ public class MenuEditor  extends VerticalLayout{
 	public interface ChangeHandler {
 
 		void onChange();
+	}
+	
+	public void borrar()
+	{
+		List<LineaPedido> lineas = repoLinea.findByMenu(menu);
+		for(LineaPedido linea : lineas)
+		{
+			Pedido pedido = linea.getPedido();
+			
+			pedido.setPrecio(pedido.getPrecio() - (linea.getCantidad() * linea.getMenu().getPrecio()));
+			repoPedido.save(pedido);
+			repoLinea.delete(linea);
+		}
+		almacen.delete(menu);
 	}
 	
 	public void guardarMenu(Menu menu){

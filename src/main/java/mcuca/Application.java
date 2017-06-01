@@ -124,9 +124,9 @@ public class Application extends SpringBootServletInitializer {
 				si1.add(i6);
 				Set<Ingrediente> si3 = new HashSet<Ingrediente>();
 				si1.add(i7);
-				Producto p1 = new Producto("Hamburguesa Super IW", 6.8, 21.0, "", si1);
-				Producto p2 = new Producto("Super Bocata Vejer&Benalup Fashion", 15.8, 21.0, "", si2);
-				Producto p3 = new Producto("Patatas Fritas", 2.2, 21.0, "", si3);
+				Producto p1 = new Producto("Hamburguesa Super IW", 6.8f, 21.0, "", si1);
+				Producto p2 = new Producto("Super Bocata Vejer&Benalup Fashion", 15.8f, 21.0, "", si2);
+				Producto p3 = new Producto("Patatas Fritas", 2.2f, 21.0, "", si3);
 				repoProd.save(p1);
 				repoProd.save(p2);
 				repoProd.save(p3);

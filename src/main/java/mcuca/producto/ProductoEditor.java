@@ -1,6 +1,7 @@
 package mcuca.producto;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,6 +24,10 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import mcuca.ingrediente.Ingrediente;
 import mcuca.ingrediente.IngredienteRepository;
+import mcuca.pedido.LineaPedido;
+import mcuca.pedido.LineaPedidoRepository;
+import mcuca.pedido.Pedido;
+import mcuca.pedido.PedidoRepository;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,6 +49,8 @@ public class ProductoEditor extends VerticalLayout {
 	
 	private final ProductoRepository repoProducto;
 	private final IngredienteRepository repoIngrediente;
+	private final LineaPedidoRepository repoLinea;
+	private final PedidoRepository repoPedido;
 	
 	private Producto producto;
 	
@@ -64,7 +71,10 @@ public class ProductoEditor extends VerticalLayout {
 	Binder<Producto> binder = new Binder<>(Producto.class);
 	
 	@Autowired
-	public ProductoEditor(ProductoRepository repoProducto, IngredienteRepository repoIngrediente) {
+	public ProductoEditor(ProductoRepository repoProducto, IngredienteRepository repoIngrediente, LineaPedidoRepository linea,
+			PedidoRepository ped) {
+		this.repoPedido = ped;
+		this.repoLinea = linea;
 		this.repoProducto = repoProducto;
 		this.repoIngrediente = repoIngrediente; 
 		ingredientes.setItems((Collection<Ingrediente>) repoIngrediente.findAll());
@@ -138,7 +148,7 @@ public class ProductoEditor extends VerticalLayout {
 			if(binder.isValid()){				
 				binder.setBean(producto);
 				producto.setNombre(nombre.getValue());
-				producto.setPrecio(Double.valueOf(precio.getValue().replace(',', '.')));
+				producto.setPrecio(Float.valueOf(precio.getValue().replace(',', '.')));
 				producto.setIva(Double.valueOf(iva.getValue()));
 				producto.setFoto(foto.getValue());
 				producto.setIngredientes(ingredientes.getSelectedItems());
@@ -147,7 +157,7 @@ public class ProductoEditor extends VerticalLayout {
 			}else
 				mostrarNotificacion(new Notification("Algunos campos del formulario deben corregirse"));
 		});
-		borrar.addClickListener(e -> repoProducto.delete(producto));
+		borrar.addClickListener(e -> borrar());
 		cancelar.addClickListener(e -> editarProducto(producto));
 		
 		setVisible(false);
@@ -157,6 +167,19 @@ public class ProductoEditor extends VerticalLayout {
         notification.setDelayMsec(1500);
         notification.show(Page.getCurrent());
     }
+	
+	public void borrar()
+	{
+		List<LineaPedido> lineas = repoLinea.findByProducto(producto);
+		for(LineaPedido linea : lineas)
+		{
+			Pedido pedido = linea.getPedido();
+			pedido.setPrecio(pedido.getPrecio() - (linea.getCantidad() * linea.getProducto().getPrecio()));
+			repoPedido.save(pedido);
+			repoLinea.delete(linea);
+		}
+		repoProducto.delete(producto);
+	}
 
 	public interface ChangeHandler {
 		void onChange();
