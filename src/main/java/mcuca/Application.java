@@ -25,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
+import mcuca.cierre.CierreCaja;
+import mcuca.cierre.CierreCajaRepository;
 import mcuca.cliente.Cliente;
 import mcuca.cliente.ClienteRepository;
 import mcuca.establecimiento.Establecimiento;
@@ -65,6 +67,9 @@ public class Application extends SpringBootServletInitializer {
 	
 	@Autowired
 	private ProductoRepository repoProd;
+	
+	@Autowired
+	private CierreCajaRepository repoCierre;
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -126,12 +131,20 @@ public class Application extends SpringBootServletInitializer {
 				repoProd.save(p2);
 				repoProd.save(p3);
 				
+				
 				//Establecimientos de prueba
 				Establecimiento benalup = new Establecimiento("McUCA - Benalup", "Avenida Bahía Blanca, s/n");
 				Establecimiento vejer = new Establecimiento("McUCA - Vejer", "Plaza de España, s/n");
 				
 				repoEst.save(benalup);
 				repoEst.save(vejer);
+				
+				//Cierre de caja de prueba
+				CierreCaja cierre = new CierreCaja(0.0f);
+				cierre.setEstablecimiento(benalup);
+				repoCierre.save(cierre);
+				
+				
 				
 				// Guardar algunos usuarios de prueba:	
 				Usuario manu = new Usuario("11111111", "Manuel Jesús", "López Jiménez", "manu", Rol.GERENTE);
