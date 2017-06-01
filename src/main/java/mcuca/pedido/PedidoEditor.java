@@ -15,6 +15,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
@@ -155,24 +156,27 @@ public class PedidoEditor extends VerticalLayout {
 	}
 	
 	public void salvar(ClickEvent e) {
-		binder.setBean(pedido);
-		pedido.setNombre(nombre.getValue());
-		if(pedido.getId() == null)
-			pedido.setPrecio(0.0f);
-		
-		pedido.setTipo(tipos.getValue());
-		pedido.setAbierto(true);
-		pedido.setUsuario(
-				this.repoUsuario.findByUsername(
-						(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")));
-		if(tipos.getValue() == Tipo.DOMICILIO)
-			pedido.setCliente(repoCliente.findOne((Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id")));
-		else if(tipos.getValue() == Tipo.ESTABLECIMIENTO) {
-			pedido.setZona(zonas.getValue());
-			pedido.setMesa(mesas.getValue());
+		try{
+			binder.setBean(pedido);
+			pedido.setNombre(nombre.getValue());
+			if(pedido.getId() == null)
+				pedido.setPrecio(0.0f);
+			
+			pedido.setTipo(tipos.getValue());
+			pedido.setAbierto(true);
+			pedido.setUsuario(
+					this.repoUsuario.findByUsername(
+							(String)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("username")));
+			if(tipos.getValue() == Tipo.DOMICILIO)
+				pedido.setCliente(repoCliente.findOne((Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("cliente_id")));
+			else if(tipos.getValue() == Tipo.ESTABLECIMIENTO) {
+				pedido.setZona(zonas.getValue());
+				pedido.setMesa(mesas.getValue());
+			}
+			pedido.setFecha(new Date());
+			repoPedido.save(pedido);
 		}
-		pedido.setFecha(new Date());
-		repoPedido.save(pedido);
+		catch(Exception ex) { Notification.show("Para introducir un pedido a domicilio, debe indicar un cliente en la vista de clientes."); }
 	}
 	
 	public void cerrar(ClickEvent e) {		

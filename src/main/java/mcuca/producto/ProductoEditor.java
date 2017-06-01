@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.converter.StringToDoubleConverter;
+import com.vaadin.data.converter.StringToFloatConverter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -126,7 +127,7 @@ public class ProductoEditor extends VerticalLayout {
 		  .withNullRepresentation("")
 		  .asRequired("No puede estar vacío")
 		  .withConverter(
-		    new StringToDoubleConverter("Por favor introduce un número decimal"))
+		    new StringToFloatConverter("Por favor introduce un número decimal"))
 		  .bind("precio");
 		
 		binder.forField(iva)
