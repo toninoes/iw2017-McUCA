@@ -108,8 +108,12 @@ public class LineaPedidoEditor extends VerticalLayout {
 	
 	public void salvar(ClickEvent e) {
 		binder.setBean(lineaPedido);
-		Pedido pedido = repoPedido.findOne(
+		Pedido pedido;
+		if(lineaPedido.getPedido() == null)
+		pedido = repoPedido.findOne(
 				(Long)VaadinSessionSecurityContextHolderStrategy.getSession().getAttribute("pedido_id"));
+		else
+			pedido = lineaPedido.getPedido();
 		
 		//pedido.setPrecio(Total);
 		lineaPedido.setCantidad(cantidad.getValue());
@@ -117,11 +121,11 @@ public class LineaPedidoEditor extends VerticalLayout {
 		lineaPedido.setEnCocina(false);
 		if(lineaPedido.getProducto() == null){
 			//pedido.setPrecio((float)0);
-			pedido.setPrecio((float)(pedido.getPrecio() + (lineaPedido.getMenu().getPrecio() * lineaPedido.getCantidad())));
+			pedido.setPrecio(pedido.getPrecio() + (lineaPedido.getMenu().getPrecio() * lineaPedido.getCantidad()));
 			lineaPedido.setPedido(pedido);
 }
 		else{
-			pedido.setPrecio((float)(pedido.getPrecio() + (lineaPedido.getProducto().getPrecio() * lineaPedido.getCantidad())));
+			pedido.setPrecio((pedido.getPrecio() + (lineaPedido.getProducto().getPrecio() * lineaPedido.getCantidad())));
 			lineaPedido.setPedido(pedido);
 		}
 		

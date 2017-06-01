@@ -16,6 +16,9 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import mcuca.cierre.CierreCaja;
+import mcuca.cierre.CierreCajaRepository;
+
 
 @SuppressWarnings("serial")
 @SpringComponent
@@ -23,6 +26,8 @@ import com.vaadin.ui.themes.ValoTheme;
 public class EstablecimientoEditor extends VerticalLayout {
 
 	private final EstablecimientoRepository repoEst;
+	
+	private final CierreCajaRepository repoCierre;
 
 	private Establecimiento est;
 
@@ -40,7 +45,8 @@ public class EstablecimientoEditor extends VerticalLayout {
 	Binder<Establecimiento> binder = new Binder<>(Establecimiento.class);
 
 	@Autowired
-	public EstablecimientoEditor(EstablecimientoRepository almacen) {
+	public EstablecimientoEditor(EstablecimientoRepository almacen, CierreCajaRepository repoCierre) {
+		this.repoCierre = repoCierre;
 		repoEst = almacen;
 
 		nombre.setMaxLength(32);
@@ -71,7 +77,12 @@ public class EstablecimientoEditor extends VerticalLayout {
 		//guardar.addClickListener(e -> almacen.save(est));
 		guardar.addClickListener(e -> {
 			if(binder.isValid())
+			{
 				repoEst.save(est);
+				CierreCaja cierre = new CierreCaja(0.0f);
+				cierre.setEstablecimiento(est);
+				repoCierre.save(cierre);
+			}
 			else
 				mostrarNotificacion(new Notification("Algunos campos del formulario deben corregirse"));
 		});
