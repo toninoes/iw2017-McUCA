@@ -1,4 +1,4 @@
-# McUCA - Ingeniería Web 2017 - Universidad de Cádiz
+# McUCA
 
 Aplicación web en Java para la gestión de un establecimiento de comida rápida.
 
